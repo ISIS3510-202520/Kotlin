@@ -2,10 +2,186 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/homeRoot"
+    android:id="@+id/homeRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".home">
 
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/welcome_you"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Botón usuario -->
+
+    <!-- Icono Fuego -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/userboton"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="51dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text=""
+        android:textColor="@color/buttonText"
+        app:backgroundTint="@color/buttonColor"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/usuario"
+        app:iconGravity="textStart"
+        app:iconTint="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivFire"
+        android:layout_width="78dp"
+        android:layout_height="69dp"
+        android:layout_marginTop="32dp"
+        android:contentDescription="@string/fire_icon"
+        android:src="@drawable/fuego"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvWelcome" />
+
+    <!-- Texto Streak -->
+    <TextView
+        android:id="@+id/tvStreak"
+        android:layout_width="128dp"
+        android:layout_height="69dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/streak_n_5_days"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@id/ivFire"
+        app:layout_constraintTop_toTopOf="@id/ivFire" />
+
+    <!-- Botón Achievements -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAchievements"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="161dp"
+        android:layout_height="71dp"
+        android:text="Achievements"
+        android:textColor="@color/buttonText"
+        app:backgroundTint="@color/buttonColor"
+        app:cornerRadius="16dp"
+        app:iconTint="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivFire" />
+
+    <!-- Mood -->
+    <TextView
+        android:id="@+id/tvMood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="40dp"
+        android:text="How are you feeling now?"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivFire" />
+
+    <ImageView
+        android:id="@+id/ivHappy"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="52dp"
+        android:contentDescription="Happy"
+        android:src="@drawable/sonrisa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvMood" />
+
+    <ImageView
+        android:id="@+id/ivmad"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:contentDescription="Mad"
+        android:src="@drawable/enojado"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivHappy" />
+
+    <ImageView
+        android:id="@+id/ivSad"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="132dp"
+        android:contentDescription="Sad"
+        android:src="@drawable/llorar"
+        app:layout_constraintStart_toEndOf="@id/ivHappy"
+        app:layout_constraintTop_toBottomOf="@id/ivFire" />
+
+    <!-- Botón Register Mood -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRegisterMood"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="155dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="188dp"
+        android:layout_marginTop="80dp"
+        android:text="Register Mood"
+        android:textColor="@color/buttonText"
+        app:backgroundTint="@color/buttonColor"
+        app:cornerRadius="16dp"
+        app:iconTint="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvMood" />
+
+    <!-- Botón Daily Exercises -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnExercises"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="172dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="100dp"
+        android:text="Daily Exercises"
+        android:textColor="@color/buttonText"
+        app:backgroundTint="@color/buttonColor"
+        app:cornerRadius="16dp"
+        app:iconTint="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivSad" />
+
+    <!-- Botón Emergency -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnEmergency"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="343dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="28dp"
+        android:text="Emergency"
+        android:textColor="@color/buttonText"
+        app:backgroundTint="@color/buttonEmergency"
+        app:cornerRadius="16dp"
+        app:iconTint="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.352"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnExercises" />
+
+    <!-- Botón Navegación (buttonSecond) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSecond"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Go Back"
+        android:textColor="@color/buttonText"
+        app:backgroundTint="@color/buttonColor"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnEmergency" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
