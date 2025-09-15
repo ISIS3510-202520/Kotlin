@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Here4U</string>
     <string name="logo">Logo</string>
+    <string name="welcome_you">Welcome you !!</string>
+    <string name="fire_icon">Fire Icon</string>
+    <string name="streak_n_5_days">Streak\n 5 Days</string>
 </resources>
