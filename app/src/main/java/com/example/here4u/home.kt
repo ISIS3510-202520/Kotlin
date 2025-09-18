@@ -1,13 +1,25 @@
 package com.example.here4u
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
-class home : AppCompatActivity() { // Note: Class names in Kotlin usually start with an uppercase letter, like 'Home'
+class home : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge() // This is for edge-to-edge display, not directly related to the crash
-        setContentView(R.layout.activity_home) // This should link to your 'activity_home.xml' layout
+        setContentView(R.layout.activity_home)
+
+        val trendsButton = findViewById<Button>(R.id.btnRecap)
+        val fragmentContainer = findViewById<androidx.fragment.app.FragmentContainerView>(R.id.fragmentContainer)
+
+        trendsButton.setOnClickListener {
+            fragmentContainer.visibility = View.VISIBLE // show container
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, TrendsFragment())
+                .addToBackStack(null) // allows back navigation
+                .commit()
+        }
     }
 }
