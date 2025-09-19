@@ -1,9 +1,7 @@
 package com.example.here4u
 
+import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.GridLayoutManager
@@ -44,7 +42,12 @@ class IdentifyingEmotions : AppCompatActivity() {
 
         binding = ActivityIdentifyingEmotionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.rvEmotions.adapter = EmotionsAdapter(emotions)
+        binding.rvEmotions.adapter = EmotionsAdapter(emotions) {
+            element -> val intent = Intent (this, Journaling::class.java)
+            intent.putExtra("emotion_name",element.name)
+            intent.putExtra("emotion_color",element.color)
+            startActivity(intent)
+        }
         binding.rvEmotions.layoutManager = GridLayoutManager(this, 2)
 
 

@@ -17,7 +17,8 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="12sp"
         app:autoSizeMaxTextSize="20sp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:fontFamily="sans-serif"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
