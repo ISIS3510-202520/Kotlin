@@ -2,7 +2,8 @@
 <resources>
     <color name="buttonColor">#86D9F0</color>
     <color name="buttonText">#000000</color>
-    <color name="buttonEmergency">#FFDBD2</color>
+    <color name="buttonPink">#FFDBD2</color>
     <color name="teal_200">#F44336</color>
     <color name="black">#000000</color>
+    <color name="buttonGreen">#8CC0CF</color>
 </resources>
