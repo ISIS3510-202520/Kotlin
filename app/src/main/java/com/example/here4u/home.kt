@@ -36,7 +36,9 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
             startActivity(intent)
         }
 
+
         val trendsButton = findViewById<Button>(R.id.btnRecap)
+
         val fragmentContainer = findViewById<androidx.fragment.app.FragmentContainerView>(R.id.fragmentContainer)
 
         trendsButton.setOnClickListener {
@@ -49,5 +51,7 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
 
 
     }
+
 }
+
 
