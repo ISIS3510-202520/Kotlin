@@ -2,15 +2,16 @@ package com.example.here4u
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.content.Intent
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        // Instead of showing activity_home directly:
+        val intent = Intent(this, home::class.java)
+        startActivity(intent)
+        finish()
 
-        // Load ExercisesFragment when the app starts
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, ExercisesFragment())
-            .commit()
     }
 }

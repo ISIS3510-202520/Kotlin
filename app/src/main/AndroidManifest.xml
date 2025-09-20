@@ -23,5 +23,12 @@
 
         <activity
             android:name=".home"
-            android:exported="false"/> </application>
+            android:exported="false"/>
+
+        <activity
+            android:name=".ExercisesActivity"
+            android:exported="false"/>
+
+    </application>
+
 </manifest>
