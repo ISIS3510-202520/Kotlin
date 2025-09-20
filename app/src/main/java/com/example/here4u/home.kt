@@ -1,17 +1,49 @@
 package com.example.here4u
 
+import android.content.Intent
 import android.os.Bundle
+
 import android.view.View
 import android.widget.Button
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
-class home : AppCompatActivity() {
+import com.google.android.material.button.MaterialButton
+import android.content.Intent
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
+
+import com.example.here4u.databinding.ActivityHomeBinding
+import com.example.here4u.databinding.ActivityIdentifyingEmotionsBinding
+import com.example.here4u.databinding.ActivityJournalingBinding
+
+class home : AppCompatActivity() { // Note: Class names in Kotlin usually start with an uppercase letter, like 'Home'
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        enableEdgeToEdge() // This is for edge-to-edge display, not directly related to the crash
 
-        val trendsButton = findViewById<Button>(R.id.btnRecap)
+        
+        setContentView(R.layout.activity_home) // This should link to your 'activity_home.xml' layout
+
+        // Botón Daily Exercises
+        val btnExercises = findViewById<MaterialButton>(R.id.btnExercises)
+        btnExercises.setOnClickListener {
+            val intent = Intent(this, ExercisesActivity::class.java)
+            startActivity(intent)
+            
+           
+       
+        }
+
+        val registermood = findViewById<Button>(R.id.btnRegisterMood)
+
+        registermood.setOnClickListener {
+            val intent = Intent(this, IdentifyingEmotions::class.java) // Creates an Intent to go to 'home' Activity
+            startActivity(intent)
+        }
+
+         val trendsButton = findViewById<Button>(R.id.btnRecap)
         val fragmentContainer = findViewById<androidx.fragment.app.FragmentContainerView>(R.id.fragmentContainer)
 
         trendsButton.setOnClickListener {
@@ -21,5 +53,7 @@ class home : AppCompatActivity() {
                 .addToBackStack(null) // allows back navigation
                 .commit()
         }
+
+
     }
-}
+
