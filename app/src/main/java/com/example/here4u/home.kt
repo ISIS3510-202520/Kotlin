@@ -1,24 +1,17 @@
 package com.example.here4u
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-
 import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-
 import com.google.android.material.button.MaterialButton
-import android.content.Intent
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
-
-import com.example.here4u.databinding.ActivityHomeBinding
-import com.example.here4u.databinding.ActivityIdentifyingEmotionsBinding
-import com.example.here4u.databinding.ActivityJournalingBinding
 
 class home : AppCompatActivity() { // Note: Class names in Kotlin usually start with an uppercase letter, like 'Home'
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge() // This is for edge-to-edge display, not directly related to the crash
@@ -43,7 +36,9 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
             startActivity(intent)
         }
 
-         val trendsButton = findViewById<Button>(R.id.btnRecap)
+
+        val trendsButton = findViewById<Button>(R.id.btnRecap)
+
         val fragmentContainer = findViewById<androidx.fragment.app.FragmentContainerView>(R.id.fragmentContainer)
 
         trendsButton.setOnClickListener {
@@ -56,4 +51,7 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
 
 
     }
+
+}
+
 
