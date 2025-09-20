@@ -2,6 +2,8 @@ package com.example.here4u
 
 import android.content.Intent
 import android.os.Bundle
+
+import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +31,8 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
         btnExercises.setOnClickListener {
             val intent = Intent(this, ExercisesActivity::class.java)
             startActivity(intent)
+            
+           
        
         }
 
@@ -39,6 +43,17 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
             startActivity(intent)
         }
 
+         val trendsButton = findViewById<Button>(R.id.btnRecap)
+        val fragmentContainer = findViewById<androidx.fragment.app.FragmentContainerView>(R.id.fragmentContainer)
+
+        trendsButton.setOnClickListener {
+            fragmentContainer.visibility = View.VISIBLE // show container
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, TrendsFragment())
+                .addToBackStack(null) // allows back navigation
+                .commit()
+        }
 
 
     }
+
