@@ -1,24 +1,16 @@
-package com.example.here4u
+package com.example.here4u.view.journaling
 
-import android.R.id.bold
 import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
+import android.graphics.Color
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
-import com.example.here4u.databinding.ActivityIdentifyingEmotionsBinding
+import com.example.here4u.R
 import com.example.here4u.databinding.ActivityJournalingBinding
-
-
 
 class Journaling : AppCompatActivity() {
 
@@ -32,7 +24,7 @@ class Journaling : AppCompatActivity() {
         setContentView(binding.root)
 
         val name = intent.getStringExtra("emotion_name")
-        val color = intent.getIntExtra("emotion_color", android.graphics.Color.BLACK)
+        val color = intent.getIntExtra("emotion_color", Color.BLACK)
         val smile = "#FFDBD2".toColorInt()
         val calm  = "#8CC0CF".toColorInt()
         val joy   = "#86D9F0".toColorInt()
@@ -52,6 +44,3 @@ class Journaling : AppCompatActivity() {
         }
 
     }}
-
-
-

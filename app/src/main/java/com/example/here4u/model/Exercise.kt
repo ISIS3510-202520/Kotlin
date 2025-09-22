@@ -1,4 +1,4 @@
-package com.example.here4u
+package com.example.here4u.model
 
 data class Exercise(
     val title: String,

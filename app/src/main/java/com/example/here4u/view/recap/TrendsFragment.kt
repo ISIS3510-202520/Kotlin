@@ -1,4 +1,4 @@
-package com.example.here4u
+package com.example.here4u.view.recap
 
 import android.os.Bundle
 import android.view.LayoutInflater

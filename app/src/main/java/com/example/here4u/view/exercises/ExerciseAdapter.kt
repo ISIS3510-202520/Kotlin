@@ -1,10 +1,13 @@
-package com.example.here4u
+package com.example.here4u.view.exercises
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.here4u.R
+import com.example.here4u.model.Exercise
 
 class ExerciseAdapter(private val exercises: List<Exercise>) :
     RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {

@@ -1,4 +1,4 @@
-package com.example.here4u
+package com.example.here4u.view.exercises
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.here4u.view.exercises.ExerciseAdapter
+import com.example.here4u.R
+import com.example.here4u.model.Exercise
 
 class ExercisesFragment : Fragment() {
 
@@ -20,8 +23,16 @@ class ExercisesFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val sampleExercises = listOf(
-            Exercise("Breathing Exercise", "Calm your mind with deep breathing.", R.drawable.ic_breathing),
-            Exercise("Gratitude Journal", "Write down 3 things you’re grateful for today.", R.drawable.ic_journal),
+            Exercise(
+                "Breathing Exercise",
+                "Calm your mind with deep breathing.",
+                R.drawable.ic_breathing
+            ),
+            Exercise(
+                "Gratitude Journal",
+                "Write down 3 things you’re grateful for today.",
+                R.drawable.ic_journal
+            ),
             Exercise("Mindful Walk", "Take a 10-minute mindful walk outside.", R.drawable.ic_walk)
         )
 

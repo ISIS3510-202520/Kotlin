@@ -1,8 +1,8 @@
-// ExercisesActivity.kt
-package com.example.here4u
+package com.example.here4u.view.exercises
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.here4u.R
 
 class ExercisesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

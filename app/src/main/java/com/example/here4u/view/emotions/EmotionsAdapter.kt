@@ -1,10 +1,11 @@
-package com.example.here4u
+package com.example.here4u.view.emotions
 
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.here4u.databinding.ItemEmotionBinding
+import com.example.here4u.model.Emotion
 
 class EmotionsAdapter (private val emotions: List<Emotion>, private val onEmotionSelected: (Emotion) -> Unit):
     RecyclerView.Adapter<EmotionsAdapter.ViewHolder>() {
@@ -18,14 +19,14 @@ class EmotionsAdapter (private val emotions: List<Emotion>, private val onEmotio
         return ViewHolder(binding)
 
     }
-    class ViewHolder(val binding:ItemEmotionBinding ) : RecyclerView.ViewHolder(binding.root){
+    class ViewHolder(val binding: ItemEmotionBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(emotion: Emotion){
             binding.btnEmotion.text = emotion.name
             binding.btnEmotion.backgroundTintList= ColorStateList.valueOf(emotion.color)
         }
     }
 
-    override fun onBindViewHolder(holder: EmotionsAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val element =emotions[position]
         holder.bind(element)
         holder.binding.btnEmotion.setOnClickListener { onEmotionSelected(element) }

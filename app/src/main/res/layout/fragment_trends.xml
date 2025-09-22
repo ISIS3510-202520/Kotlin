@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".TrendsFragment">
+    tools:context=".view.recap.TrendsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
