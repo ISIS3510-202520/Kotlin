@@ -12,7 +12,7 @@ import com.example.here4u.model.Exercise
 class ExerciseAdapter(private val exercises: List<Exercise>) :
     RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {
 
-    // ViewHolder class: holds the references to the views in each item
+    // ViewH lder class: holds the references to the views in each item
     class ExerciseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val icon: ImageView = itemView.findViewById(R.id.exerciseIcon)
         val title: TextView = itemView.findViewById(R.id.exerciseTitle)
