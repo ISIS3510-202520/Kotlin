@@ -1,15 +1,25 @@
 package com.example.here4u.view.emotions
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.here4u.databinding.ItemEmotionBinding
-import com.example.here4u.model.Emotion
+import com.example.here4u.data.local.entity.EmotionEntity
 
-class EmotionsAdapter (private val emotions: List<Emotion>, private val onEmotionSelected: (Emotion) -> Unit):
+class EmotionsAdapter ( private val onEmotionSelected: (EmotionEntity) -> Unit):
     RecyclerView.Adapter<EmotionsAdapter.ViewHolder>() {
 
+    private var emotionEntities: List<EmotionEntity> = emptyList()
+
+
+
+    fun updateData(newItems: List<EmotionEntity>) {
+        emotionEntities = newItems
+        notifyDataSetChanged()
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemEmotionBinding.inflate(
@@ -20,14 +30,14 @@ class EmotionsAdapter (private val emotions: List<Emotion>, private val onEmotio
 
     }
     class ViewHolder(val binding: ItemEmotionBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(emotion: Emotion){
-            binding.btnEmotion.text = emotion.name
-            binding.btnEmotion.backgroundTintList= ColorStateList.valueOf(emotion.color)
+        fun bind(emotionEntity: EmotionEntity){
+            binding.btnEmotion.text = emotionEntity.name
+            binding.btnEmotion.backgroundTintList= ColorStateList.valueOf(emotionEntity.color)
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val element =emotions[position]
+        val element =emotionEntities[position]
         holder.bind(element)
         holder.binding.btnEmotion.setOnClickListener { onEmotionSelected(element) }
 
@@ -35,7 +45,7 @@ class EmotionsAdapter (private val emotions: List<Emotion>, private val onEmotio
 
 
     override fun getItemCount(): Int {
-        return emotions.size
+        return emotionEntities.size
 
     }
 
