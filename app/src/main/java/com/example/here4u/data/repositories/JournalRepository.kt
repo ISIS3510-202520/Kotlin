@@ -4,29 +4,30 @@ import com.example.here4u.data.local.dao.JournalDao
 import com.example.here4u.data.local.entity.EmotionEntity
 import com.example.here4u.data.local.entity.JournalEntity
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class JournalRepository (private val journalDao: JournalDao){
+class JournalRepository @Inject constructor(
+    private val journalDao: JournalDao
+) {
 
-    suspend fun insert(entry: JournalEntity) {
-        journalDao.insert(entry)
+    suspend fun addTextJournal(emotionId: Long, content: String) {
+        val entryEntity = JournalEntity(
+            emotionId = emotionId,
+            content = content,
+            date = System.currentTimeMillis()
+        )
+        journalDao.insert(entryEntity)
     }
 
     suspend fun delete(entry: JournalEntity) {
         journalDao.delete(entry)
     }
 
-    fun getByDateRange(from: Long): Flow<List<JournalEntity>> {
-        return journalDao.getSince(from,)
+    fun getByDateRange(fromInclusive: Long, limit: Int= 100): Flow<List<JournalEntity>> {
+        return journalDao.getSince(fromInclusive, limit)
     }
 
-    fun getByEmotion(entry: EmotionEntity): Flow<List<JournalEntity>> {
-        return journalDao.getForEmotion(entry.id)}
-
-
-
-
-
-
-
-
+    fun getByEmotion(emotion: EmotionEntity): Flow<List<JournalEntity>> {
+        return journalDao.getForEmotion(emotion.id)
+    }
 }
