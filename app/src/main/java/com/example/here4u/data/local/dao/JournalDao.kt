@@ -9,10 +9,8 @@ import androidx.room.Update
 import com.example.here4u.data.local.entity.JournalEntity
 import kotlinx.coroutines.flow.Flow
 
-
 @Dao
 interface JournalDao {
-
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entry: JournalEntity): Long
@@ -24,24 +22,23 @@ interface JournalDao {
     suspend fun delete(entry: JournalEntity)
 
     @Query("DELETE FROM Journal_table WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    suspend fun deleteById(id: Long)
 
     @Query("""
-    SELECT * FROM Journal_table
-    WHERE date >= :fromInclusive
-    ORDER BY date DESC
-    LIMIT :limit
-""")
+        SELECT * FROM Journal_table
+        WHERE date >= :fromInclusive
+        ORDER BY date DESC
+        LIMIT :limit
+    """)
     fun getSince(
         fromInclusive: Long,
-        limit: Long = 100
+        limit: Int = 100
     ): Flow<List<JournalEntity>>
 
     @Query("""
-    SELECT * FROM Journal_table
-    WHERE emotionId = :emotionId
-    ORDER BY date DESC
-""")
+        SELECT * FROM Journal_table
+        WHERE emotionId = :emotionId
+        ORDER BY date DESC
+    """)
     fun getForEmotion(emotionId: Long): Flow<List<JournalEntity>>
-
 }

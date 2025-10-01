@@ -10,9 +10,7 @@
     android:scrollbars="vertical"
     tools:context=".view.journaling.Journaling">
 
-        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -82,6 +80,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:id="@+id/textViewerror"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No entry written"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@+id/btnAdd"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="8dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

@@ -20,6 +20,7 @@ class IdentifyingEmotions : AppCompatActivity() {
     private lateinit var binding: ActivityIdentifyingEmotionsBinding
     private lateinit var adapter: EmotionsAdapter
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityIdentifyingEmotionsBinding.inflate(layoutInflater)
@@ -30,6 +31,7 @@ class IdentifyingEmotions : AppCompatActivity() {
                 putExtra("emotion_name", emotion.name)
                 putExtra("emotion_color", emotion.color)
                 putExtra("emotion_description", emotion.description)
+                putExtra("emotion_id",emotion.id)
             }
             startActivity(intent)
         }
