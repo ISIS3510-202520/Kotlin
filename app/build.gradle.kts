@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.crashlytics)
+    alias(libs.plugins.googleServices)
 }
 
 hilt {
@@ -119,6 +121,9 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    //------ Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
 }
 
 // Fuerza JavaPoet 1.13.0 para TODAS las configuraciones (incluida ksp)

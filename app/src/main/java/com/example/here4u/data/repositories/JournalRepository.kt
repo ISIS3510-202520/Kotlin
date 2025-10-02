@@ -15,8 +15,13 @@ class JournalRepository @Inject constructor(
     private val journalDao: JournalDao
 ) {
 
-    suspend fun insert(entry: JournalEntity) {
-        journalDao.insert(entry)
+    suspend fun addTextJournal(emotionId: Long, content: String) {
+        val entryEntity = JournalEntity(
+            emotionId = emotionId,
+            content = content,
+            date = System.currentTimeMillis()
+        )
+        journalDao.insert(entryEntity)
     }
 
     suspend fun delete(entry: JournalEntity) {
@@ -61,3 +66,6 @@ class JournalRepository @Inject constructor(
         )
     }
 }
+
+
+

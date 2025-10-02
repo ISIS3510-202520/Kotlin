@@ -15,6 +15,7 @@ import androidx.room.Transaction
 @Dao
 interface JournalDao {
 
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entry: JournalEntity): Long
 

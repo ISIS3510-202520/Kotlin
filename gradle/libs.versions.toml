@@ -34,6 +34,11 @@ espressoCore = "3.6.1"
 # Para fixear el problema de JavaPoet en processors (opcional)
 javapoet = "1.13.0"
 
+#FIREBASEBOOM
+firebaseBom = "34.3.0"
+services = "4.4.3"
+crashlytics="3.0.2"
+
 [libraries]
 # Core / UI
 androidx-core-ktx         = { group = "androidx.core",            name = "core-ktx",              version.ref = "coreKtx" }
@@ -82,9 +87,16 @@ androidx-espresso-core   = { group = "androidx.test.espresso", name = "espresso-
 # Opcional: JavaPoet (por si quieres usar compileOnly en el módulo app)
 javapoet                 = { module = "com.squareup:javapoet", version.ref = "javapoet" }
 
+
+#Firebase BOM
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 [plugins]
 android-application = { id = "com.android.application",           version.ref = "agp" }
 kotlin-android      = { id = "org.jetbrains.kotlin.android",      version.ref = "kotlin" }
 kotlin-compose      = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp                 = { id = "com.google.devtools.ksp",           version.ref = "ksp" }
 hiltAndroid         = { id = "com.google.dagger.hilt.android",    version.ref = "hilt" }
+# service
+googleServices= {id="com.google.gms.google-services",version.ref="services"}
+crashlytics = {id= "com.google.firebase.crashlytics", version.ref="crashlytics"}
