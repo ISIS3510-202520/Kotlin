@@ -1,7 +1,13 @@
 package com.example.here4u.model
 
+
 data class Recap(
-    //val trend: List<Journal>,
     val highlights: List<String>,
-    val summary: String
+    val summary: String,
+    val trendPoints: List<TrendPoint>   // NEW
+)
+
+data class TrendPoint(
+    val date: Long,    // epoch millis
+    val score: Float   // emotion score
 )

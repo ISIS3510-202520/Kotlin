@@ -32,14 +32,14 @@
             android:textColor="#666666"
             android:paddingBottom="16dp" />
 
-        <!-- Chart Placeholder -->
-        <ImageView
+
+        <!-- Replace the ImageView with LineChart -->
+        <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/trendsChart"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:src="@drawable/chart_placeholder"
-            android:scaleType="fitCenter"
-            android:contentDescription="Chart" />
+            android:layout_height="200dp"
+            android:contentDescription="Weekly Emotion Trend Chart" />
+
 
         <!-- Highlights Card -->
         <androidx.cardview.widget.CardView
