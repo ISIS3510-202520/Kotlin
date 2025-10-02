@@ -9,22 +9,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.here4u.databinding.FragmentTrendsBinding
 import com.example.here4u.viewmodel.TrendsViewModel
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
-@AndroidEntryPoint   // 👈 Add this
+@AndroidEntryPoint
 class TrendsFragment : Fragment() {
 
     private var _binding: FragmentTrendsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: TrendsViewModel by viewModels() // Hilt provides it
+    private val viewModel: TrendsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,43 +31,17 @@ class TrendsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.recap.observe(viewLifecycleOwner, Observer { recap ->
-            binding.highlightsText.text = recap.highlights.joinToString("\n") { "• $it" }
-            binding.summaryText.text = recap.summary
+            binding.highlightsText.text =
+                if (recap.highlights.isNotEmpty())
+                    recap.highlights.joinToString("\n") { "• $it" }
+                else
+                    "No highlights available."
 
-            val entries = recap.trendPoints.mapIndexed { index, point ->
-                Entry(index.toFloat(), point.score)
-            }
-
-            val dateLabels = recap.trendPoints.map { point ->
-                val sdf = SimpleDateFormat("MM/dd", Locale.getDefault())
-                sdf.format(Date(point.date))
-            }
-
-            val dataSet = LineDataSet(entries, "Emotion Trend").apply {
-                color = android.graphics.Color.BLUE
-                valueTextSize = 10f
-                setDrawCircles(true)
-                setDrawValues(false)
-                lineWidth = 2f
-            }
-
-            binding.trendsChart.apply {
-                data = LineData(dataSet)
-                description.isEnabled = false
-                axisRight.isEnabled = false
-
-                xAxis.apply {
-                    granularity = 1f
-                    valueFormatter = IndexAxisValueFormatter(dateLabels)
-                    setDrawGridLines(false)
-                    position = com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
-                }
-
-                axisLeft.axisMinimum = -5f
-                axisLeft.axisMaximum = 5f
-
-                invalidate()
-            }
+            binding.summaryText.text =
+                if (recap.summary.isNotBlank())
+                    recap.summary
+                else
+                    "No summary available."
         })
 
         viewModel.loadWeeklyRecap()

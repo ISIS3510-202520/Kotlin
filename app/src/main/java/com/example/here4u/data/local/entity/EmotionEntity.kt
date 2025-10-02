@@ -8,6 +8,6 @@ data class EmotionEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
     val color: Int,
-    val description: String,
-    val score: Float   // new attribute for trend graph
+    val description: String
+    // val score: Float   // new attribute for trend graph
 )

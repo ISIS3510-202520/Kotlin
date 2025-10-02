@@ -55,8 +55,8 @@ class JournalRepository @Inject constructor(
                 id = emotion.id,
                 name = emotion.name,
                 color = emotion.color,
-                description = emotion.description,
-                score = emotion.score
+                description = emotion.description
+                // score = emotion.score
             )
         )
     }

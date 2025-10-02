@@ -27,25 +27,16 @@
             android:id="@+id/trendsSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Emotional Trend Through the Week"
+            android:text="AI-powered weekly insights"
             android:textSize="14sp"
             android:textColor="#666666"
             android:paddingBottom="16dp" />
-
-
-        <!-- Replace the ImageView with LineChart -->
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/trendsChart"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:contentDescription="Weekly Emotion Trend Chart" />
-
 
         <!-- Highlights Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:elevation="4dp"
             android:padding="12dp"
             android:backgroundTint="#F5F9FF"
@@ -69,7 +60,7 @@
                     android:id="@+id/highlightsText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="• Most positive days: Week 2\n• Stress peaks: Mondays" />
+                    android:text="(Highlights will appear here)" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -100,7 +91,7 @@
                     android:id="@+id/summaryText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Your emotional journey this month was a mix of highs and lows. Week 2 stood out as particularly positive..." />
+                    android:text="(Summary will appear here)" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

@@ -5,10 +5,8 @@ import com.example.here4u.data.remote.openai.ChatMessage
 import com.example.here4u.data.remote.openai.ChatRequest
 import com.example.here4u.data.remote.openai.OpenAIApi
 import com.example.here4u.model.Journal
-import com.example.here4u.model.TrendPoint
 import com.google.gson.Gson
 import com.example.here4u.data.remote.openai.RecapResponse
-import org.json.JSONObject
 import javax.inject.Inject
 
 class RecapRepository @Inject constructor(
@@ -52,28 +50,17 @@ class RecapRepository @Inject constructor(
             )
         }
 
-        // 4. Build trend points from local journals
-        val trendPoints = journals.map {
-            TrendPoint(date = it.date, score = it.emotion.score)
-        }
-
-        val recap = Recap(
-            highlights = recapResponse.highlights,
-            summary = recapResponse.summary,
-            trendPoints = trendPoints
-        )
-        // 5. Return Recap object ✅
+        // 4. Return Recap object ✅
         return Recap(
             highlights = recapResponse.highlights,
-            summary = recapResponse.summary,
-            trendPoints = trendPoints
+            summary = recapResponse.summary
         )
-
     }
+
     private fun buildPromptFromJournals(journals: List<Journal>): String {
         return "Here are the journals for this week:\n\n" +
                 journals.joinToString("\n") { j ->
-                    "Date: ${j.date}, Emotion: ${j.emotion.name}, Score: ${j.emotion.score}, Note: ${j.content}"
+                    "Date: ${j.date}, Emotion: ${j.emotion.name}, Note: ${j.content}"
                 }
     }
 }

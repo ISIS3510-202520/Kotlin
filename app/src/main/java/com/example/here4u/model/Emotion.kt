@@ -6,6 +6,6 @@ data class Emotion(
     val id: Long,
     val name: String,
     val color: Int,
-    val description: String,
-    val score: Float
+    val description: String
+    // val score: Float
 )

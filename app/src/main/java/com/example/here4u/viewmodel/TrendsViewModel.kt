@@ -9,16 +9,16 @@ import com.example.here4u.data.repositories.JournalRepository
 import com.example.here4u.data.repositories.RecapRepository
 import com.example.here4u.model.Journal
 import com.example.here4u.model.Recap
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class TrendsViewModel @Inject constructor(
     private val journalRepository: JournalRepository,
     private val recapRepository: RecapRepository
-) : ViewModel(){
+) : ViewModel() {
 
     private val _recap = MutableLiveData<Recap>()
     val recap: LiveData<Recap> get() = _recap
@@ -32,15 +32,14 @@ class TrendsViewModel @Inject constructor(
                     if (journals.isNotEmpty()) {
                         try {
                             val recapData = recapRepository.generateRecapWithAI(journals)
-                            Log.d("TrendsVM", "Recap trendPoints count = ${recapData.trendPoints.size}")
+                            Log.d("TrendsVM", "Recap received: highlights=${recapData.highlights.size}, summary length=${recapData.summary.length}")
                             _recap.postValue(recapData)
                         } catch (e: Exception) {
                             Log.e("TrendsVM", "Error generating recap with AI", e)
                             _recap.postValue(
                                 Recap(
                                     highlights = listOf("Error generating recap"),
-                                    summary = "Please try again later.",
-                                    trendPoints = emptyList()
+                                    summary = "Please try again later."
                                 )
                             )
                         }
@@ -48,8 +47,7 @@ class TrendsViewModel @Inject constructor(
                         _recap.postValue(
                             Recap(
                                 highlights = listOf("No journals this week"),
-                                summary = "Try writing your thoughts daily to see your weekly trends.",
-                                trendPoints = emptyList()
+                                summary = "Try writing your thoughts daily to see your weekly recap."
                             )
                         )
                     }

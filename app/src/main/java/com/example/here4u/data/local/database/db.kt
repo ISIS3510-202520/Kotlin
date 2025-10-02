@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [EmotionEntity::class, JournalEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class db : RoomDatabase() {
@@ -46,6 +46,7 @@ abstract class db : RoomDatabase() {
                         }
                     }
                 })
+                .fallbackToDestructiveMigration() //rebuilds to new schemas
                 .build()
         }
     }
