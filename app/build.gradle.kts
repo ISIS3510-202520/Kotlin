@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -11,6 +13,17 @@ plugins {
 hilt {
     enableAggregatingTask = false
 }
+
+// Use Properties (no need to prefix with java.util)
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        load(file.inputStream())
+    }
+}
+
+val openAiKey: String = localProperties.getProperty("OPENAI_API_KEY") ?: ""
+
 android {
     namespace = "com.example.here4u"
     compileSdk = 36
@@ -22,6 +35,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
     }
 
     packaging {
@@ -47,6 +61,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -99,6 +114,13 @@ dependencies {
     // --- Fix agresivo JavaPoet (además del force de abajo) ---
     implementation("com.squareup:javapoet:1.13.0")
     ksp("com.squareup:javapoet:1.13.0")
+    // Recap Line graph
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // Open AI API connection dependencies
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     //------ Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)

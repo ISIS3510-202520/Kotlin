@@ -1,10 +1,10 @@
 package com.example.here4u.data.local
+
 import com.example.here4u.data.local.entity.EmotionEntity
 import com.example.here4u.ui.theme.C_PEACH
 import com.example.here4u.ui.theme.C_TEAL
 import com.example.here4u.ui.theme.C_SKY
 import com.example.here4u.ui.theme.C_SLATE
-
 
 object SeedEmotions {
     val list = listOf(
