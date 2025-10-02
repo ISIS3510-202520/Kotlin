@@ -3,25 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".Here4UApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Here4u"
         tools:targetApi="31">
         <activity
-            android:name=".Journaling"
+            android:name=".view.journaling.Journaling"
             android:exported="false" />
         <activity
-            android:name=".IdentifyingEmotions"
+            android:name=".view.emotions.IdentifyingEmotions"
             android:exported="false"
             android:label="@string/title_activity_identifying_emotions"
             android:theme="@style/Theme.Here4u.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name=".view.login.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,8 +31,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".home"
-            android:exported="false" />
+            android:name=".view.home.home"
+                  
+            android:exported="false"/>
+
+        <activity
+            android:name=".view.exercises.ExercisesActivity"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
