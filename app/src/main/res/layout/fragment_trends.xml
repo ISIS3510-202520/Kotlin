@@ -17,7 +17,7 @@
             android:id="@+id/trendsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Monthly Trends"
+            android:text="Weekly Recap"
             android:textSize="20sp"
             android:textStyle="bold"
             android:paddingBottom="8dp" />
@@ -27,7 +27,7 @@
             android:id="@+id/trendsSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Emotional Trend Through the Month"
+            android:text="Emotional Trend Through the Week"
             android:textSize="14sp"
             android:textColor="#666666"
             android:paddingBottom="16dp" />
