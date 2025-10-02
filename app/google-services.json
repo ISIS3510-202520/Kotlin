@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "844006398648",
+    "project_id": "here4-u",
+    "storage_bucket": "here4-u.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844006398648:android:9537e4616bea71d122b24d",
+        "android_client_info": {
+          "package_name": "com.example.here4u"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2aarP_1TyjPJa2_f0kfzZSF13l6VoVX0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

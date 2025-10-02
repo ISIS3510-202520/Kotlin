@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, home::class.java)
             startActivity(intent)
             finish()
+
+
         }
     }
 }

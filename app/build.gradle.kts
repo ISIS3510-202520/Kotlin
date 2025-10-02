@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.crashlytics)
+    alias(libs.plugins.googleServices)
 }
 
 hilt {
@@ -97,6 +99,9 @@ dependencies {
     // --- Fix agresivo JavaPoet (además del force de abajo) ---
     implementation("com.squareup:javapoet:1.13.0")
     ksp("com.squareup:javapoet:1.13.0")
+    //------ Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
 }
 
 // Fuerza JavaPoet 1.13.0 para TODAS las configuraciones (incluida ksp)
