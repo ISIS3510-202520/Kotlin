@@ -17,7 +17,7 @@ interface JournalDao {
     suspend fun insert(entry: JournalEntity)
 
     @Query("SELECT * FROM Emotions")
-    fun getAll(): Flow<List<EmotionEntity>>
+    fun getAll(): Flow<List<JournalEntity>>
     @Update
     suspend fun update(entry: JournalEntity)
 

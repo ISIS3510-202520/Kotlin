@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Required for API calls -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".Here4UApp"
         android:allowBackup="true"

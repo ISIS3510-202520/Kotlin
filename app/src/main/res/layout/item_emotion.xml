@@ -17,6 +17,7 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="12sp"
         app:autoSizeMaxTextSize="20sp"
+        android:textColor="@color/black"
         tools:ignore="MissingConstraints"
         android:fontFamily="sans-serif"/>
 
