@@ -13,6 +13,23 @@ object FirebaseModule {
 
     @Provides
     @Singleton
+    fun provideFirebaseService(): FirebaseService = FirebaseService()
+
+    @Provides
+    @Singleton
+    fun provideEmotionRepository(service: FirebaseService): EmotionRemoteRepository =
+        EmotionRemoteRepository(service)
+
+    @Provides
+    @Singleton
+    fun provideJournalRepository(service: FirebaseService): JournalRemoteRepository =
+        JournalRemoteRepository(service)
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(service: FirebaseService): UserRemoteRepository =
+        UserRemoteRepository(service)
+
     fun provideFirebaseAuth(): FirebaseAuth {
         return FirebaseAuth.getInstance()
     }
