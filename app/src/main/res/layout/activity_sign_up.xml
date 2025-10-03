@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.login.MainActivity"
-    android:padding="16dp">
+    android:fillViewport="true"
+    android:padding="16dp"
+    tools:context=".view.login.Signup">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,37 +15,37 @@
 
         <!-- Título -->
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/tvCreateAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Welcome to"
-            android:textSize="28sp"
+            android:text="Create Account"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
-        <!-- Logo -->
-        <ImageView
-            android:id="@+id/ivLogo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/logo"
-            android:contentDescription="@string/logo"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:scaleType="centerCrop" />
-
-        <!-- Usuario -->
+        <!-- Campo Nombre -->
         <EditText
-            android:id="@+id/etUser"
+            android:id="@+id/etName"
             android:layout_width="247dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@drawable/rounded_edittext"
-            android:hint="User/Email"
+            android:hint="Name"
+            android:inputType="textPersonName"
+            android:padding="12dp" />
+
+        <!-- Campo Email -->
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="247dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_edittext"
+            android:hint="Email"
             android:inputType="textEmailAddress"
             android:padding="12dp" />
 
-        <!-- Contraseña -->
+        <!-- Campo Password -->
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="247dp"
@@ -55,54 +56,42 @@
             android:inputType="textPassword"
             android:padding="12dp" />
 
-        <!-- Recuperar contraseña -->
-        <TextView
-            android:id="@+id/tvForgotPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="14sp"
-            android:clickable="true"
-            android:focusable="true"
-            android:textColor="@android:color/black"
-            android:text="@string/forgot_password_text" />
-
-
-        <!-- Botón Login -->
+        <!-- Botón Signup -->
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/btnSignup"
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/rounded_button"
             android:backgroundTint="@color/buttonColor"
-            android:drawableStart="@drawable/ic_log"
-            android:drawablePadding="4dp"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:padding="4dp"
-            android:text="Login"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <!-- Botón Sign Up -->
-        <Button
-            android:id="@+id/SignUp"
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/buttonGreen"
             android:drawableStart="@drawable/ic_sign"
             android:drawablePadding="4dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:padding="4dp"
-            android:text="Sign Up"
+            android:text="Signup"
             android:textColor="@android:color/black"
             android:textSize="12sp"
             android:textStyle="bold" />
+
+        <!-- Botón Back -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/buttonGreen"
+            android:drawableStart="@drawable/ic_log"
+            android:drawablePadding="4dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:padding="4dp"
+            android:text="Back"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
 
     </LinearLayout>
 </ScrollView>
