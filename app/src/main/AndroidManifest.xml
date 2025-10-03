@@ -36,6 +36,13 @@
             android:exported="false"/>
 
         <activity
+          android:name=".view.login.Signup"
+          android:exported="false" />
+
+        <activity
+            android:name=".view.login.ForgotPassword"
+            android:exported="false"/>
+        <activity
             android:name=".view.exercises.ExercisesActivity"
             android:exported="false"/>
 
