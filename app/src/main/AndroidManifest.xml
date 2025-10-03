@@ -17,6 +17,10 @@
         android:theme="@style/Theme.Here4u"
         tools:targetApi="31">
         <activity
+            android:name=".view.emergency.Emergency"
+            android:exported="false"
+            android:theme="@style/Theme.Here4u" />
+        <activity
             android:name=".view.journaling.Journaling"
             android:exported="false" />
         <activity
@@ -35,9 +39,7 @@
         </activity>
         <activity
             android:name=".view.home.home"
-                  
-            android:exported="false"/>
-
+            android:exported="false" />
         <activity
             android:name=".view.exercises.ExercisesActivity"
             android:exported="false"/>

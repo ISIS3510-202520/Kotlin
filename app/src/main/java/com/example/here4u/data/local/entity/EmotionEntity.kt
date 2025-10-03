@@ -4,6 +4,7 @@ import androidx.annotation.ColorInt
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.UUID
 
-@Entity(tableName = "Emotions_table")
-data class EmotionEntity (@PrimaryKey(autoGenerate = true) val  id: Long = 0, @ColumnInfo val name: String, @ColorInt val color: Int, val description: String )
+@Entity(tableName = "Emotions")
+data class EmotionEntity (@PrimaryKey val id: String = UUID.randomUUID().toString(), @ColumnInfo val name: String, @ColumnInfo val colorHex: String, @ColumnInfo val description: String )

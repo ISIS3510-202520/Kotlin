@@ -7,39 +7,53 @@ object SeedJournals {
 
     val list = listOf(
         JournalEntity(
-            emotionId = 1, // Serenity
-            content = "Felt calm and relaxed during meditation today.",
-            date = System.currentTimeMillis() - 6 * ONE_DAY_MS
+            userId = "AAAA",
+            emotionId = "1", // Serenity
+            description = "Felt calm and relaxed during meditation today.",
+            shareWithTherapist = false,
+            createdAt = System.currentTimeMillis() - 6 * ONE_DAY_MS
         ),
         JournalEntity(
-            emotionId = 2, // Joy
-            content = "Had a great lunch with friends, laughed a lot.",
-            date = System.currentTimeMillis() - 5 * ONE_DAY_MS
+            userId = "AAAA",
+            emotionId = "2", // Joy
+            shareWithTherapist = false,
+            description = "Had a great lunch with friends, laughed a lot.",
+            createdAt = System.currentTimeMillis() - 5 * ONE_DAY_MS
         ),
         JournalEntity(
-            emotionId = 14, // Sadness
-            content = "Missed a family call, feeling a bit down.",
-            date = System.currentTimeMillis() - 4 * ONE_DAY_MS
+            userId = "AAAA",
+            emotionId = "14", // Sadness
+            description = "Missed a family call, feeling a bit down.",
+            shareWithTherapist = false,
+            createdAt = System.currentTimeMillis() - 4 * ONE_DAY_MS
         ),
         JournalEntity(
-            emotionId = 25, // Anger
-            content = "Got frustrated at work with a deadline.",
-            date = System.currentTimeMillis() - 3 * ONE_DAY_MS
+            userId = "AAAA",
+            shareWithTherapist = false,
+            emotionId = "25", // Anger
+            description = "Got frustrated at work with a deadline.",
+            createdAt = System.currentTimeMillis() - 3 * ONE_DAY_MS
         ),
         JournalEntity(
-            emotionId = 19, // Fear
-            content = "Nervous about the upcoming presentation.",
-            date = System.currentTimeMillis() - 2 * ONE_DAY_MS
+            userId = "AAAA",
+            shareWithTherapist = false,
+            emotionId = "19", // Fear
+            description = "Nervous about the upcoming presentation.",
+            createdAt = System.currentTimeMillis() - 2 * ONE_DAY_MS
         ),
         JournalEntity(
-            emotionId = 28, // Surprise
-            content = "Unexpectedly received a nice compliment.",
-            date = System.currentTimeMillis() - 1 * ONE_DAY_MS
+            userId = "AAAA",
+            shareWithTherapist = false,
+            emotionId = "28", // Surprise
+            description = "Unexpectedly received a nice compliment.",
+            createdAt = System.currentTimeMillis() - 1 * ONE_DAY_MS
         ),
         JournalEntity(
-            emotionId = 8, // Optimism
-            content = "Feeling hopeful about starting a new project.",
-            date = System.currentTimeMillis()
+            userId = "AAAA",
+            shareWithTherapist = false,
+            emotionId = "8", // Optimism
+            description = "Feeling hopeful about starting a new project.",
+            createdAt = System.currentTimeMillis()
         )
     )
 }

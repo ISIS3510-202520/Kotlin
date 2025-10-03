@@ -6,52 +6,50 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.here4u.data.local.entity.EmotionEntity
 import com.example.here4u.data.local.entity.JournalEntity
-import kotlinx.coroutines.flow.Flow
 import com.example.here4u.model.JournalWithEmotion
-import androidx.room.Transaction
-
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface JournalDao {
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(entry: JournalEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entry: JournalEntity): Long
+    suspend fun insertAll(journals: List<JournalEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(entries: List<JournalEntity>)
-
+    @Query("SELECT * FROM Emotions")
+    fun getAll(): Flow<List<JournalEntity>>
     @Update
     suspend fun update(entry: JournalEntity)
 
     @Delete
     suspend fun delete(entry: JournalEntity)
 
-    @Query("DELETE FROM Journal_table WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    @Query("DELETE FROM Journals WHERE id = :id")
+    suspend fun deleteById(id: String)
+    @Query("SELECT createdAt FROM Journals ORDER BY createdAt ASC")
+    fun getAllJournalDates(): Flow<List<Long>>
 
-    // ✅ Updated to return JournalWithEmotion
-    @Transaction
     @Query("""
-        SELECT * FROM Journal_table
-        WHERE date >= :fromInclusive
-        ORDER BY date ASC
-        LIMIT :limit
+        SELECT * FROM Journals
+        WHERE createdAt >= :fromInclusive
+        ORDER BY createdAt DESC
     """)
     fun getSince(
         fromInclusive: Long,
-        limit: Long = 100
     ): Flow<List<JournalWithEmotion>>
 
-    @Transaction
-    @Query("""
-        SELECT * FROM Journal_table
-        WHERE emotionId = :emotionId
-        ORDER BY date DESC
-    """)
-    fun getForEmotion(emotionId: Long): Flow<List<JournalWithEmotion>>
 
-    @Query("SELECT date FROM Journal_table ORDER BY date ASC")
-    fun getAllJournalDates(): Flow<List<Long>>
+
+    @Query("""
+        SELECT * FROM Journals
+        WHERE emotionId = :emotionId
+        ORDER BY createdAt DESC
+    """)
+    fun getForEmotion(emotionId: String): Flow<List<JournalEntity>>
+
+
 }

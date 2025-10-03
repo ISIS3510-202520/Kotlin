@@ -3,9 +3,9 @@ package com.example.here4u.model
 import androidx.annotation.ColorInt
 
 data class Emotion(
-    val id: Long,
+    val id: String,
     val name: String,
-    val color: Int,
+    val color: String,
     val description: String
     // val score: Float
 )
