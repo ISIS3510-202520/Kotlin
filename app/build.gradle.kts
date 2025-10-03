@@ -102,9 +102,21 @@ dependencies {
     //------ Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.auth)
+    //implementation(libs.firebase.firestore)
+    //implementation(libs.firebase.auth)
 
+
+    // Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+
+    // Firebase Authentication
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Firestore
+    implementation("com.google.firebase:firebase-firestore-ktx")
+
+    // Coroutines support for Firebase Tasks
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 }
 
 // Fuerza JavaPoet 1.13.0 para TODAS las configuraciones (incluida ksp)
