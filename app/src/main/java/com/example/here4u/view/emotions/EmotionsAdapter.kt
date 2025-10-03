@@ -1,22 +1,26 @@
 package com.example.here4u.view.emotions
 
-import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.example.here4u.databinding.ItemEmotionBinding
 import com.example.here4u.data.local.entity.EmotionEntity
+import com.example.here4u.data.remote.entity.EmotionRemote
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
-class EmotionsAdapter ( private val onEmotionSelected: (EmotionEntity) -> Unit):
+class EmotionsAdapter ( private val onEmotionSelected: (EmotionRemote) -> Unit):
     RecyclerView.Adapter<EmotionsAdapter.ViewHolder>() {
 
-    private var emotionEntities: List<EmotionEntity> = emptyList()
+    private val items = mutableListOf<EmotionRemote>()
 
 
 
-    fun updateData(newItems: List<EmotionEntity>) {
-        emotionEntities = newItems
+    fun updateData(newItems: List<EmotionRemote>) {
+        items.clear()
+        items.addAll(newItems)
         notifyDataSetChanged()
 
     }
@@ -30,14 +34,14 @@ class EmotionsAdapter ( private val onEmotionSelected: (EmotionEntity) -> Unit):
 
     }
     class ViewHolder(val binding: ItemEmotionBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(emotionEntity: EmotionEntity){
+        fun bind(emotionEntity: EmotionRemote){
             binding.btnEmotion.text = emotionEntity.name
-            binding.btnEmotion.backgroundTintList= ColorStateList.valueOf(emotionEntity.color)
+            binding.btnEmotion.backgroundTintList= ColorStateList.valueOf(emotionEntity.colorHex.toColorInt())
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val element =emotionEntities[position]
+        val element =items[position]
         holder.bind(element)
         holder.binding.btnEmotion.setOnClickListener { onEmotionSelected(element) }
 
@@ -45,7 +49,7 @@ class EmotionsAdapter ( private val onEmotionSelected: (EmotionEntity) -> Unit):
 
 
     override fun getItemCount(): Int {
-        return emotionEntities.size
+        return items.size
 
     }
 

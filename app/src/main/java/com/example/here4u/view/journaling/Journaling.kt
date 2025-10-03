@@ -14,7 +14,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.example.here4u.R
 import com.example.here4u.databinding.ActivityJournalingBinding
-import com.example.here4u.viewmodel.JournalingViewModel
+//import com.example.here4u.viewmodel.JournalingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.here4u.view.home.home
 
@@ -22,7 +22,7 @@ import com.example.here4u.view.home.home
 class Journaling : AppCompatActivity() {
 
     private lateinit var binding: ActivityJournalingBinding
-    private val viewModel: JournalingViewModel by viewModels()
+    //private val viewModel: JournalingViewModel by viewModels()
 
     private var emotionId: Long = 0L
 
@@ -62,16 +62,16 @@ class Journaling : AppCompatActivity() {
             }
 
             binding.textViewerror.visibility = View.GONE
-            val job = viewModel.saveText(emotionId, text)
-            job.invokeOnCompletion {
-                runOnUiThread {
-                    val i = Intent(this@Journaling, home::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    }
-                    startActivity(i)
-                    finish()
-                }
-            }
+            //val job = viewModel.saveText(emotionId, text)
+            //job.invokeOnCompletion {
+            //    runOnUiThread {
+             //       val i = Intent(this@Journaling, home::class.java).apply {
+             //           flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            //        }
+            //        startActivity(i)
+            //        finish()
+            //    }
+           // }
         }
     }}
 
