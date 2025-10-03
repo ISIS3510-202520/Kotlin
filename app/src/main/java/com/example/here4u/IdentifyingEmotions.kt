@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.here4u.databinding.ActivityIdentifyingEmotionsBinding
+import com.example.here4u.model.Emotion
 
 class IdentifyingEmotions : AppCompatActivity() {
     val C_PEACH = "#FFDBD2".toColorInt()
@@ -16,24 +17,24 @@ class IdentifyingEmotions : AppCompatActivity() {
 
     val emotions = listOf(
         // JOY (peach)
-        Emotion("Serenity",  C_PEACH),
-        Emotion("Joy",       C_PEACH),
-        Emotion("Ecstasy",   C_PEACH),
+        Emotion("Serenity", C_PEACH),
+        Emotion("Joy", C_PEACH),
+        Emotion("Ecstasy", C_PEACH),
 
         // TRUST (teal)
         Emotion("Acceptance", C_TEAL),
-        Emotion("Trust",      C_TEAL),
+        Emotion("Trust", C_TEAL),
         Emotion("Admiration", C_TEAL),
 
         // SURPRISE (sky)
         Emotion("Distraction", C_SKY),
-        Emotion("Surprise",    C_SKY),
-        Emotion("Amazement",   C_SKY),
+        Emotion("Surprise", C_SKY),
+        Emotion("Amazement", C_SKY),
 
         // SADNESS (slate)
         Emotion("Pensiveness", C_SLATE),
-        Emotion("Sadness",     C_SLATE),
-        Emotion("Grief",       C_SLATE)
+        Emotion("Sadness", C_SLATE),
+        Emotion("Grief", C_SLATE)
     )
     private lateinit var binding: ActivityIdentifyingEmotionsBinding
 

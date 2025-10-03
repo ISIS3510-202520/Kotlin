@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.here4u.databinding.ItemEmotionBinding
+import com.example.here4u.model.Emotion
 
 class EmotionsAdapter (private val emotions: List<Emotion>, private val onEmotionSelected: (Emotion) -> Unit):
     RecyclerView.Adapter<EmotionsAdapter.ViewHolder>() {
