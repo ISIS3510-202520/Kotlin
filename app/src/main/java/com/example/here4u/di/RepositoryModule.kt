@@ -11,7 +11,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import com.example.here4u.BuildConfig
-import com.example.here4u.data.repositories.EmotionRepository
 import com.example.here4u.data.local.dao.EmotionDao
 
 @Module

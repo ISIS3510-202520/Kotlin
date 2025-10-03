@@ -24,7 +24,7 @@ class Journaling : AppCompatActivity() {
     private lateinit var binding: ActivityJournalingBinding
     private val viewModel: JournalingViewModel by viewModels()
 
-    private var emotionId: Long = 0L
+    private var emotionId: String = ""
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,24 +33,24 @@ class Journaling : AppCompatActivity() {
         setContentView(binding.root)
 
         // ---- toma los extras UNA sola vez y sin sombras ----
-        emotionId = intent.getLongExtra("emotion_id", 0L)
+        emotionId = intent.getStringExtra("emotion_id")?:""
         val name  = intent.getStringExtra("emotion_name") ?: ""
-        val color = intent.getIntExtra("emotion_color", Color.BLACK)
+        val color = intent.getStringExtra("emotion_color")?:""
 
         val smile = "#FFDBD2".toColorInt()
         val calm  = "#8CC0CF".toColorInt()
         val joy   = "#86D9F0".toColorInt()
 
-        val iconRes = when (color) {
+        val iconRes = when (color.toColorInt()) {
             smile, calm, joy -> R.drawable.sonrisa
             else             -> R.drawable.llorar
         }
 
         binding.ivEmoji.setImageResource(iconRes)
-        binding.ivEmoji.imageTintList = ColorStateList.valueOf(color)
+        binding.ivEmoji.imageTintList = ColorStateList.valueOf(color.toColorInt())
         binding.tvEmotion.text = buildSpannedString {
             append("Describe what makes you feel\n")
-            color(color) { bold { append(name) } }
+            color(color.toColorInt()) { bold { append(name) } }
         }
 
         binding.btnAdd.setOnClickListener {
