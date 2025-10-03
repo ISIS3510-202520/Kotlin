@@ -35,9 +35,7 @@ class JournalRepository @Inject constructor(
         journalDao.deleteById(id)
     }
 
-    fun getByDateRange(fromInclusive: Long, limit: Int = 100): Flow<List<JournalEntity>> {
-        return journalDao.getSince(fromInclusive)
-    }
+
 
     fun getAll(): Flow<List<JournalEntity>> {
         return journalDao.getAll()
@@ -48,7 +46,7 @@ class JournalRepository @Inject constructor(
     }
     fun getLast7Days(): Flow<List<Journal>> {
         val sevenDaysAgo = System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000
-        return journalDao.getSince(sevenDaysAgo, limit = 100).map { relations ->
+        return journalDao.getSince(sevenDaysAgo).map { relations ->
             Log.d("JournalRepository", "Mapping ${relations.size} relations")
             relations.map { it.toDomain() }
         }
