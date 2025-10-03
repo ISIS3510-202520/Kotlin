@@ -51,4 +51,7 @@ interface JournalDao {
         ORDER BY date DESC
     """)
     fun getForEmotion(emotionId: Long): Flow<List<JournalWithEmotion>>
+
+    @Query("SELECT date FROM Journal_table ORDER BY date ASC")
+    fun getAllJournalDates(): Flow<List<Long>>
 }
