@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import com.example.here4u.model.JournalWithEmotion
 import javax.inject.Inject
+import kotlinx.coroutines.flow.map
+import java.util.concurrent.TimeUnit
+
 
 class JournalRepository @Inject constructor(
     private val journalDao: JournalDao
@@ -47,6 +50,55 @@ class JournalRepository @Inject constructor(
             relations.map { it.toDomain() }
         }
     }
+
+    fun getCurrentStreak(): Flow<Int> {
+        return journalDao.getAllJournalDates().map { dates ->
+            if (dates.isEmpty()) {
+                Log.d("JournalRepository", "No journal entries found.")
+                return@map 0
+            }
+
+            // Normalize all dates to day precision
+            val dayTimestamps = dates.map { it.toDayOnly() }.distinct().sorted()
+            Log.d("JournalRepository", "Raw dates: $dates")
+            Log.d("JournalRepository", "Day-only dates (sorted): $dayTimestamps")
+
+            var streak = 1
+
+            for (i in dayTimestamps.size - 1 downTo 1) {
+                val diffDays = dayTimestamps[i] - dayTimestamps[i - 1]
+                Log.d("JournalRepository", "Comparing ${dayTimestamps[i]} and ${dayTimestamps[i - 1]} -> diffDays=$diffDays")
+
+                if (diffDays == 1L) {
+                    streak++
+                } else {
+                    Log.d("JournalRepository", "Streak broken at index $i")
+                    break
+                }
+            }
+
+            // Check if the last entry is today
+            val today = System.currentTimeMillis().toDayOnly()
+            Log.d("JournalRepository", "Today (dayOnly): $today, Last entry: ${dayTimestamps.last()}")
+
+            if (dayTimestamps.last() != today) {
+                Log.d("JournalRepository", "No entry for today, resetting streak to 0")
+                //streak = 0
+            }
+
+            Log.d("JournalRepository", "Final streak = $streak")
+            streak
+        }
+    }
+
+
+    /**
+     * Helper to normalize timestamp to midnight (day precision).
+     */
+    private fun Long.toDayOnly(): Long {
+        return this / TimeUnit.DAYS.toMillis(1)
+    }
+
 
 
 
