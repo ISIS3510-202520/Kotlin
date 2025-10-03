@@ -1,5 +1,9 @@
 package com.example.here4u.di
 
+import com.example.here4u.data.remote.repositories.EmotionRemoteRepository
+import com.example.here4u.data.remote.repositories.JournalRemoteRepository
+import com.example.here4u.data.remote.repositories.UserRemoteRepository
+import com.example.here4u.data.remote.service.FirebaseService
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -30,7 +34,9 @@ object FirebaseModule {
     fun provideUserRepository(service: FirebaseService): UserRemoteRepository =
         UserRemoteRepository(service)
 
+    @Provides
+    @Singleton
     fun provideFirebaseAuth(): FirebaseAuth {
         return FirebaseAuth.getInstance()
-    }
+        }
 }
