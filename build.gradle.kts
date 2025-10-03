@@ -8,5 +8,4 @@ plugins {
     alias(libs.plugins.ksp) apply false
 
 
-    //cambios para verificar mugre rama :)
 }
