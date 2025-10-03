@@ -13,6 +13,8 @@ import com.example.here4u.view.emotions.IdentifyingEmotions
 import com.example.here4u.R
 import com.example.here4u.view.recap.TrendsFragment
 import com.google.android.material.button.MaterialButton
+import com.example.here4u.view.emergency.Emergency
+
 
 class home : AppCompatActivity() { // Note: Class names in Kotlin usually start with an uppercase letter, like 'Home'
 
@@ -56,6 +58,12 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
                 .addToBackStack(null) // allows back navigation
                 .commit()
         }
+        val  btnEmergency = findViewById<Button>(R.id.btnEmergency)
+        btnEmergency.setOnClickListener {
+            val intent = Intent(this, Emergency::class.java)
+            startActivity(intent)
+        }
+
 
 
     }

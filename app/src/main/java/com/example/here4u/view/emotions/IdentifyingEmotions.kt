@@ -5,12 +5,16 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.here4u.databinding.ActivityIdentifyingEmotionsBinding
 import com.example.here4u.data.local.entity.EmotionEntity
 import com.example.here4u.view.journaling.Journaling
 import com.example.here4u.viewmodel.EmotionsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -29,7 +33,7 @@ class IdentifyingEmotions : AppCompatActivity() {
         adapter = EmotionsAdapter { emotion->
             val intent = Intent(this@IdentifyingEmotions, Journaling::class.java).apply {
                 putExtra("emotion_name", emotion.name)
-                putExtra("emotion_color", emotion.color)
+                putExtra("emotion_color", emotion.colorHex)
                 putExtra("emotion_description", emotion.description)
                 putExtra("emotion_id",emotion.id)
             }
@@ -39,8 +43,12 @@ class IdentifyingEmotions : AppCompatActivity() {
         binding.rvEmotions.layoutManager = GridLayoutManager(this, 2)
         binding.rvEmotions.adapter = adapter
 
-        viewModel.emotions.observe(this){
-            list-> adapter.updateData(list)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.emotions.collect { list ->
+                    adapter.updateData(list)
+                }
+            }
         }
 
 
