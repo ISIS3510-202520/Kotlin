@@ -14,11 +14,10 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.lang.Exception
 import kotlin.coroutines.resume
-import javax.inject.Inject
-import javax.inject.Singleton
-@Singleton // It's good practice to make repositories singletons
-class EmotionRemoteRepository @Inject constructor()
-{
+
+
+class EmotionRemoteRepository(
+) {
 
     val db = Firebase.firestore
     fun getAll(): Flow<List<EmotionRemote>> = callbackFlow {

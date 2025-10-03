@@ -1,5 +1,7 @@
 package com.example.here4u.di
 
+import com.example.here4u.data.remote.repositories.EmotionRemoteRepository
+import com.example.here4u.data.remote.repositories.JournalRemoteRepository
 import com.example.here4u.data.remote.repositories.UserRemoteRepository
 import com.example.here4u.data.remote.service.FirebaseService
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +20,10 @@ object FirebaseModule {
     fun provideFirebaseService(): FirebaseService = FirebaseService()
 
 
+    @Provides
+    @Singleton
+    fun provideEmotionRepository(): EmotionRemoteRepository =
+        EmotionRemoteRepository()
 
     @Provides
     @Singleton
