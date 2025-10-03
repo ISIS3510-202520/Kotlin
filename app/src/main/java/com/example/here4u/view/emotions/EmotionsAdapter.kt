@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.example.here4u.databinding.ItemEmotionBinding
 import com.example.here4u.data.local.entity.EmotionEntity
@@ -32,7 +33,7 @@ class EmotionsAdapter ( private val onEmotionSelected: (EmotionEntity) -> Unit):
     class ViewHolder(val binding: ItemEmotionBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(emotionEntity: EmotionEntity){
             binding.btnEmotion.text = emotionEntity.name
-            binding.btnEmotion.backgroundTintList= ColorStateList.valueOf(emotionEntity.color)
+            binding.btnEmotion.backgroundTintList= ColorStateList.valueOf(emotionEntity.colorHex.toColorInt())
         }
     }
 

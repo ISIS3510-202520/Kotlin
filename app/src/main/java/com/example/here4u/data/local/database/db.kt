@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import com.example.here4u.data.local.SeedEmotions
 import com.example.here4u.data.local.entity.JournalEntity
 
-@Database(entities = [EmotionEntity::class, JournalEntity::class], version = 2, exportSchema = false)
+@Database(entities = [EmotionEntity::class, JournalEntity::class], version = 3, exportSchema = false)
 abstract class db : RoomDatabase() {
 
     abstract fun emotionDao(): EmotionDao

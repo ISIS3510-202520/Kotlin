@@ -1,4 +1,4 @@
-package com.example.here4u.data.repositories
+package com.example.here4u.data.repositories.journal
 
 import com.example.here4u.data.local.dao.JournalDao
 import com.example.here4u.data.local.entity.EmotionEntity
@@ -10,21 +10,28 @@ class JournalRepository @Inject constructor(
     private val journalDao: JournalDao
 ) {
 
-    suspend fun addTextJournal(emotionId: Long, content: String) {
+    suspend fun addTextJournal(emotionId: String, userId:String,content: String):String {
         val entryEntity = JournalEntity(
             emotionId = emotionId,
-            content = content,
-            date = System.currentTimeMillis()
+            userId = userId,
+            description = content,
+            createdAt = System.currentTimeMillis(),
+            shareWithTherapist = false
         )
         journalDao.insert(entryEntity)
+        return entryEntity.id
     }
 
-    suspend fun delete(entry: JournalEntity) {
-        journalDao.delete(entry)
+    suspend fun deletebyid(id: String) {
+        journalDao.deleteById(id)
     }
 
     fun getByDateRange(fromInclusive: Long, limit: Int= 100): Flow<List<JournalEntity>> {
-        return journalDao.getSince(fromInclusive, limit)
+        return journalDao.getSince(fromInclusive)
+    }
+
+    fun getAll():Flow<List<EmotionEntity>>{
+        return journalDao.getAll()
     }
 
     fun getByEmotion(emotion: EmotionEntity): Flow<List<JournalEntity>> {

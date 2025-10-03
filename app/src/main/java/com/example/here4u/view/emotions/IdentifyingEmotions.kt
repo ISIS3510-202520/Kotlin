@@ -29,7 +29,7 @@ class IdentifyingEmotions : AppCompatActivity() {
         adapter = EmotionsAdapter { emotion->
             val intent = Intent(this@IdentifyingEmotions, Journaling::class.java).apply {
                 putExtra("emotion_name", emotion.name)
-                putExtra("emotion_color", emotion.color)
+                putExtra("emotion_color", emotion.colorHex)
                 putExtra("emotion_description", emotion.description)
                 putExtra("emotion_id",emotion.id)
             }
