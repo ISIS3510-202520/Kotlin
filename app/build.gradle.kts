@@ -124,6 +124,7 @@ dependencies {
     //------ Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.auth)
 }
 
 // Fuerza JavaPoet 1.13.0 para TODAS las configuraciones (incluida ksp)
