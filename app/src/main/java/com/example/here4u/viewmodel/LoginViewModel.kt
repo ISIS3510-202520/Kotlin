@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.here4u.data.remote.repositories.UserRemoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 // Representa el estado del resultado del login
@@ -17,7 +20,8 @@ sealed class LoginResult {
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginModel: LoginModel
+    private val loginModel: LoginModel,
+    private val userRemoteRepository: UserRemoteRepository
 ) : ViewModel() {
 
     private val _loginResult = MutableLiveData<LoginResult>(LoginResult.Idle)
@@ -27,10 +31,23 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             loginModel.login(email, password) { success, errorMsg ->
                 if (success) {
-                    _loginResult.value = LoginResult.Success
-                } else {
 
-                    _loginResult.value = LoginResult.Error(errorMsg ?: "User or Password are incorrect")
+                    viewModelScope.launch {
+                        try {
+                            withContext(Dispatchers.IO) {
+                                userRemoteRepository.updateLoginStreak()
+                            }
+                            _loginResult.postValue(LoginResult.Success)
+                        } catch (e: Exception) {
+
+                            e.printStackTrace()
+                            _loginResult.postValue(LoginResult.Success)
+                        }
+                    }
+                } else {
+                    _loginResult.postValue(
+                        LoginResult.Error(errorMsg ?: "User or Password are incorrect")
+                    )
                 }
             }
         }

@@ -45,6 +45,8 @@
         <activity
             android:name=".view.exercises.ExercisesActivity"
             android:exported="false"/>
+        <activity android:name=".view.emergency.Emergency"
+            android:exported="false"/>
 
     </application>
 
