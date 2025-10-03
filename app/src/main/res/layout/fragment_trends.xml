@@ -17,7 +17,7 @@
             android:id="@+id/trendsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Monthly Trends"
+            android:text="Weekly Recap"
             android:textSize="20sp"
             android:textStyle="bold"
             android:paddingBottom="8dp" />
@@ -27,25 +27,16 @@
             android:id="@+id/trendsSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Emotional Trend Through the Month"
+            android:text="AI-powered weekly insights"
             android:textSize="14sp"
             android:textColor="#666666"
             android:paddingBottom="16dp" />
-
-        <!-- Chart Placeholder -->
-        <ImageView
-            android:id="@+id/trendsChart"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:src="@drawable/chart_placeholder"
-            android:scaleType="fitCenter"
-            android:contentDescription="Chart" />
 
         <!-- Highlights Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:elevation="4dp"
             android:padding="12dp"
             android:backgroundTint="#F5F9FF"
@@ -69,7 +60,7 @@
                     android:id="@+id/highlightsText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="• Most positive days: Week 2\n• Stress peaks: Mondays" />
+                    android:text="(Highlights will appear here)" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -100,7 +91,7 @@
                     android:id="@+id/summaryText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Your emotional journey this month was a mix of highs and lows. Week 2 stood out as particularly positive..." />
+                    android:text="(Summary will appear here)" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
