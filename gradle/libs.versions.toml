@@ -39,6 +39,7 @@ firebaseBom = "34.3.0"
 services = "4.4.3"
 crashlytics="3.0.2"
 
+
 [libraries]
 # Core / UI
 androidx-core-ktx         = { group = "androidx.core",            name = "core-ktx",              version.ref = "coreKtx" }
@@ -91,6 +92,9 @@ javapoet                 = { module = "com.squareup:javapoet", version.ref = "ja
 #Firebase BOM
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+
 [plugins]
 android-application = { id = "com.android.application",           version.ref = "agp" }
 kotlin-android      = { id = "org.jetbrains.kotlin.android",      version.ref = "kotlin" }
