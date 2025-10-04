@@ -166,4 +166,25 @@ class UserRemoteRepository @Inject constructor(
         }
     }
 
+    suspend fun getUserStreak(): Pair<Int, Int>? {
+        val userId = getUserId() ?: return null
+        val db = Firebase.firestore
+        val userRef = db.collection("users").document(userId)
+
+        return try {
+            val snapshot = userRef.get().await()
+            if (snapshot.exists()) {
+                val current = snapshot.getLong("currentStreak")?.toInt() ?: 0
+                val longest = snapshot.getLong("longestStreak")?.toInt() ?: 0
+                Pair(current, longest)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("STREAK", "❌ Error fetching streak: ${e.message}")
+            null
+        }
+    }
+
+
 }

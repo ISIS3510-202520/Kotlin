@@ -3,6 +3,7 @@ package com.example.here4u.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.here4u.data.remote.repositories.UserRemoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.isActive
@@ -17,15 +18,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val userRepository: UserRemoteRepository,
     @ApplicationContext private val context: Context
 ): ViewModel(){
 
     private val mood= MutableStateFlow("")
     val moodText: StateFlow<String> = mood.asStateFlow()
 
+    private val _streak = MutableStateFlow(0)
+    val streak: StateFlow<Int> = _streak.asStateFlow()
+
     init {
         refreshMoodText()
         startAutoUpdate()
+        refreshUserStreak()
+
     }
 
 
@@ -42,9 +49,14 @@ class HomeViewModel @Inject constructor(
 
         mood.value = resId
 
-
-
 }
+
+    fun refreshUserStreak() = viewModelScope.launch {
+        val streakPair = userRepository.getUserStreak()
+        streakPair?.let {
+            _streak.value = it.first
+        }
+    }
 
     private fun startAutoUpdate() = viewModelScope.launch {
         while (isActive) {
