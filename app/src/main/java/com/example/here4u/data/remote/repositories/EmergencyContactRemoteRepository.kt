@@ -116,7 +116,7 @@ class EmergencyContactRemoteRepository @Inject constructor(
                     return@launch
                 }
 
-                val senderName = userRepository.getName() ?: "Anónimo"
+                val senderName = userRepository.getName()
                 var successCount = 0
 
                 for (contact in contacts) {

@@ -14,7 +14,7 @@ object EmailSender {
         recipientEmail: String,
         recipientName: String,
         locationMessage: String,
-        senderName: String,
+        senderName: String?,
         username: String,
         appPassword: String
     ): Boolean = withContext(Dispatchers.IO) {
