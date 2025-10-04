@@ -38,6 +38,7 @@ javapoet = "1.13.0"
 firebaseBom = "34.3.0"
 services = "4.4.3"
 crashlytics="3.0.2"
+playServicesLocation = "21.3.0"
 
 
 [libraries]
@@ -94,6 +95,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application",           version.ref = "agp" }
