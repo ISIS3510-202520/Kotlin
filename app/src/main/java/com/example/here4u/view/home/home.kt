@@ -6,31 +6,46 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.here4u.view.exercises.ExercisesActivity
 import com.example.here4u.view.emotions.IdentifyingEmotions
 import com.example.here4u.R
+import com.example.here4u.databinding.ActivityHomeBinding
 import com.example.here4u.view.recap.TrendsFragment
 import com.google.android.material.button.MaterialButton
 import com.example.here4u.view.emergency.Emergency
-import dagger.hilt.android.AndroidEntryPoint
 
+import com.example.here4u.viewmodel.EmotionsViewModel
+import com.example.here4u.viewmodel.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import kotlin.getValue
 
 @AndroidEntryPoint
 class home : AppCompatActivity() { // Note: Class names in Kotlin usually start with an uppercase letter, like 'Home'
+    private val viewModel: HomeViewModel by viewModels()
 
+
+    private lateinit var binding: ActivityHomeBinding
     @SuppressLint("MissingInflatedId")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge() // This is for edge-to-edge display, not directly related to the crash
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-
-        setContentView(R.layout.activity_home) // This should link to your 'activity_home.xml' layout
+         // This should link to your 'activity_home.xml' layout
 
         // Botón Daily Exercises
-        val btnExercises = findViewById<MaterialButton>(R.id.btnExercises)
-        btnExercises.setOnClickListener {
+
+        binding.btnExercises.setOnClickListener {
             val intent = Intent(this, ExercisesActivity::class.java)
             startActivity(intent)
 
@@ -38,9 +53,9 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
 
         }
 
-        val registermood = findViewById<Button>(R.id.btnRegisterMood)
 
-        registermood.setOnClickListener {
+
+        binding.btnRegisterMood.setOnClickListener {
             val intent = Intent(
                 this,
                 IdentifyingEmotions::class.java
@@ -51,23 +66,37 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
 
         val trendsButton = findViewById<Button>(R.id.btnRecap)
 
-        val fragmentContainer = findViewById<FragmentContainerView>(R.id.fragmentContainer)
 
-        trendsButton.setOnClickListener {
-            fragmentContainer.visibility = View.VISIBLE // show container
+
+        binding.btnRecap.setOnClickListener {
+           binding.fragmentContainer.visibility = View.VISIBLE // show container
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, TrendsFragment())
                 .addToBackStack(null) // allows back navigation
                 .commit()
         }
-        val  btnEmergency = findViewById<Button>(R.id.btnEmergency)
-        btnEmergency.setOnClickListener {
+        binding.btnEmergency.setOnClickListener {
             val intent = Intent(this, Emergency::class.java)
             startActivity(intent)
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.moodText.collect { text ->
+                    binding.btnRegisterMood.text = text
+                }
+            }
 
-
+    }}
+    // Fragment
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshMoodText() // calcula y publica el texto
     }
+
+
+
+
+
 
 }
