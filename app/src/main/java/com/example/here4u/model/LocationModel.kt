@@ -9,8 +9,9 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class LocationModelImpl(
+class LocationModelImpl @Inject constructor(
     private val fusedClient: FusedLocationProviderClient
 )  {
 

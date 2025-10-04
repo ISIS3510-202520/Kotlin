@@ -6,10 +6,18 @@ import com.example.here4u.data.remote.repositories.EmotionRemoteRepository
 import com.example.here4u.data.remote.repositories.JournalRemoteRepository
 import com.example.here4u.data.remote.repositories.UserRemoteRepository
 import com.example.here4u.data.remote.service.FirebaseService
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import android.content.Context
+import com.example.here4u.data.remote.repositories.EmergencyContactRemoteRepository
+import com.example.here4u.data.remote.repositories.EmergencyRequestRemoteRepository
+import com.example.here4u.model.LocationModelImpl
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import com.example.here4u.BuildConfig
@@ -19,9 +27,25 @@ import com.example.here4u.BuildConfig
 @InstallIn(SingletonComponent::class)
 object FirebaseModule {
 
+
+    @Provides
+    @Singleton
+    fun provideFusedLocation(
+        @ApplicationContext ctx: Context
+    ): FusedLocationProviderClient {
+        return LocationServices.getFusedLocationProviderClient(ctx)
+
+    }
+
     @Provides
     @Singleton
     fun provideFirebaseService(): FirebaseService = FirebaseService()
+
+    @Provides
+    @Singleton
+    fun provideEmergencyRequestRepository(serviceauth: FirebaseAuth, service: FirebaseFirestore, location: LocationModelImpl,
+        contact: EmergencyContactRemoteRepository
+    ,): EmergencyRequestRemoteRepository = EmergencyRequestRemoteRepository(service,serviceauth,location,contact)
 
 
     @Provides
@@ -39,6 +63,8 @@ object FirebaseModule {
     fun provideFirebaseAuth(): FirebaseAuth {
         return FirebaseAuth.getInstance()
         }
+    @Provides @Singleton
+    fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
 
     @Provides
     @Singleton

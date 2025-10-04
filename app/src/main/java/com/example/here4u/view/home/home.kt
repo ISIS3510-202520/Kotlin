@@ -1,16 +1,26 @@
 package com.example.here4u.view.home
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentContainerView
+import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+
 import com.example.here4u.view.exercises.ExercisesActivity
 import com.example.here4u.view.emotions.IdentifyingEmotions
 import com.example.here4u.R
@@ -26,6 +36,8 @@ import kotlinx.coroutines.launch
 class home : AppCompatActivity() {
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var binding: ActivityHomeBinding
+
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +62,13 @@ class home : AppCompatActivity() {
                 .addToBackStack(null)
                 .commit()
         }
+        val  btnEmergency = findViewById<Button>(R.id.btnEmergency)
+        btnEmergency.setOnClickListener {
+
+            val intent = Intent(this, Emergency::class.java)
+            startActivity(intent)
+        }
+
 
         binding.btnEmergency.setOnClickListener {
             startActivity(Intent(this, Emergency::class.java))
