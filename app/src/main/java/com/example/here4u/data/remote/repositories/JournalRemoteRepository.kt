@@ -91,8 +91,9 @@ class JournalRemoteRepository @Inject constructor(
             )
 
             val ref = service.journals.add(journal)
-                .addOnSuccessListener { cont.resume(journal.createdAt) }
-                .addOnFailureListener { e -> cont.resumeWithException(e) }
+                .addOnSuccessListener { cont.resume(journal.createdAt)
+                    }
+                .addOnFailureListener { throw RuntimeException("Failed submmit") }//cont.resumeWithException(e) }
         }
 
     // 🔹 Delete journal by ID
