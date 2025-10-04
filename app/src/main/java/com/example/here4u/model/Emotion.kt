@@ -7,5 +7,4 @@ data class Emotion(
     val name: String,
     val color: Int,
     val description: String
-    // val score: Float
 )
