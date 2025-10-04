@@ -31,6 +31,7 @@ class EmergencyRequestRemoteRepository @Inject constructor(
             val uid = auth.currentUser?.uid
                 ?: return Result.failure(IllegalStateException("No user logged in"))
             Log.d("FS", "UID=$uid")
+
             val loc = suspendCancellableCoroutine<android.location.Location?> { cont ->
                 locationProvider.getCurrentLocation { location ->
                     cont.resume(location)

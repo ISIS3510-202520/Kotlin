@@ -56,7 +56,7 @@ class EmergencyContactsViewModel @Inject constructor(
 
     // 🔹 Enviar correo de alerta a todos los contactos
     fun sendMail(locationMessage: GeoPoint?) {
-        val location:String = locationMessage?.latitude.toString() + " " + locationMessage?.longitude.toString()
+        val location:String = locationMessage?.latitude.toString() + "," + locationMessage?.longitude.toString()
         viewModelScope.launch {
             try {
                 checkEnvVars()
@@ -74,13 +74,16 @@ class EmergencyContactsViewModel @Inject constructor(
     }
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
-    fun createEmergency(){
+    fun createEmergency(): Boolean{
+        var answer = false
         viewModelScope.launch {
        val res = emergencyRepository.insert(true)
             res.onSuccess { id -> _createdId.value= id
-            sendMail(id)}
+            sendMail(id)
+            answer=true}
                 .onFailure { e ->
                     _error.value = e.message ?: "Error desconocido" }}
+        return answer
 
     }
 
