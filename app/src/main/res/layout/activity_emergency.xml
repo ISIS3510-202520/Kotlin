@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -12,7 +14,6 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
-
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
@@ -24,37 +25,47 @@
             android:layout_marginBottom="24dp" />
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvContacts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:padding="8dp"
+            android:scrollbars="vertical"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:layout_marginBottom="24dp"/>
 
+        <!-- RecyclerView agregado -->
 
         <Button
             android:id="@+id/btnCall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=" Call"
+            android:layout_marginBottom="12dp"
             android:backgroundTint="@color/buttonPink"
-            android:textColor="#000000"
-            android:layout_marginBottom="12dp"/>
-
+            android:text=" Notify All "
+            android:textColor="#000000" />
 
         <Button
             android:id="@+id/btnAddContact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Contact"
+            android:layout_marginBottom="24dp"
             android:backgroundTint="@color/buttonPink"
-            android:textColor="#000000"
-            android:layout_marginBottom="24dp"/>
+            android:text="Add Contact"
+            android:textColor="#000000" />
+
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Stay calm breath\ndeeply"
+            android:text="Stay calm, breathe deeply"
             android:textSize="18sp"
             android:textAlignment="center"
             android:gravity="center"
             android:layout_marginBottom="24dp"/>
-
 
         <Button
             android:id="@+id/btnBack"
@@ -62,8 +73,9 @@
             android:layout_height="wrap_content"
             android:text="Back"
             android:backgroundTint="#90CAF9"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"/>
+
     </LinearLayout>
 </ScrollView>
