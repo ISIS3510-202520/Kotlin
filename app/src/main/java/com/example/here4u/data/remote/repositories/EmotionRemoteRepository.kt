@@ -13,9 +13,10 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.lang.Exception
+import javax.inject.Singleton
 import kotlin.coroutines.resume
 
-
+@Singleton
 class EmotionRemoteRepository(
 ) {
 
