@@ -26,7 +26,7 @@ class EmergencyRequestRemoteRepository @Inject constructor(
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION]
     )
-    suspend fun insert(requireLocation: Boolean = false): Result<String> {
+    suspend fun insert(requireLocation: Boolean = false): Result<GeoPoint?> {
         return try {
             val uid = auth.currentUser?.uid
                 ?: return Result.failure(IllegalStateException("No user logged in"))
@@ -52,7 +52,7 @@ class EmergencyRequestRemoteRepository @Inject constructor(
             )
 
             val ref = db.collection("emergencyRequests").add(emergency).await()
-            Result.success(ref.id)
+            Result.success(geo)
 
         } catch (e: Exception) {
             Log.e("EmergencyRepo", "Failed to insert emergency request", e)

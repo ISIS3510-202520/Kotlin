@@ -64,13 +64,7 @@ class Emergency : AppCompatActivity() {
         // 🔹 Botón para notificar a todos los contactos
         binding.btnCall.setOnClickListener {
             checkPermission()
-            try {
-                viewModel.sendMail(locationMessage)
-            } catch (e: Exception) {
-                android.util.Log.e("EmergencyActivity", "❌ Error al enviar alerta: ${e.message}", e)
-            }
 
-            
             // Aquí va tu lógica para notificar a todos
         }
 

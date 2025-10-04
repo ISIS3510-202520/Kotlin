@@ -13,6 +13,7 @@ import com.example.here4u.data.remote.repositories.EmergencyRequestRemoteReposit
 import com.example.here4u.data.remote.repositories.UserRemoteRepository
 import com.example.here4u.model.LocationModelImpl
 import com.example.here4u.view.emergency.Emergency
+import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,8 +32,8 @@ class EmergencyContactsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val userId: String? = userRepository.getUserId()
-    private val _createdId = MutableStateFlow<String?>(null)
-    val createdId: StateFlow<String?> = _createdId
+    private val _createdId = MutableStateFlow<GeoPoint?>(null)
+    val createdId: StateFlow<GeoPoint?> = _createdId
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
@@ -54,12 +55,13 @@ class EmergencyContactsViewModel @Inject constructor(
         }
 
     // 🔹 Enviar correo de alerta a todos los contactos
-    fun sendMail(locationMessage: String) {
+    fun sendMail(locationMessage: GeoPoint?) {
+        val location:String = locationMessage?.latitude.toString() + " " + locationMessage?.longitude.toString()
         viewModelScope.launch {
             try {
                 checkEnvVars()
                 Log.d("EmergencyVM", "🚀 Llamando a notifyAllContacts() desde ViewModel...")
-                repository.notifyAllContacts(locationMessage)
+                repository.notifyAllContacts(location)
                 Log.d("EmergencyVM", "✅ notifyAllContacts() ejecutado correctamente")
             } catch (e: Exception) {
                 Log.e("EmergencyVM", "❌ Error ejecutando notifyAllContacts: ${e.message}", e)
@@ -75,7 +77,8 @@ class EmergencyContactsViewModel @Inject constructor(
     fun createEmergency(){
         viewModelScope.launch {
        val res = emergencyRepository.insert(true)
-            res.onSuccess { id -> _createdId.value= id }
+            res.onSuccess { id -> _createdId.value= id
+            sendMail(id)}
                 .onFailure { e ->
                     _error.value = e.message ?: "Error desconocido" }}
 
