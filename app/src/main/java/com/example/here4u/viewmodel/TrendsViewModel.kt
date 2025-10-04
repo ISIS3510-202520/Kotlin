@@ -22,6 +22,9 @@ class TrendsViewModel @Inject constructor(
     private val userRemoteRepository: UserRemoteRepository
 ) : ViewModel() {
 
+    //private val _isLoading = MutableLiveData(false)
+    //val isLoading: LiveData<Boolean> get() = _isLoading
+
     private val _recap = MutableLiveData<Recap>()
     val recap: LiveData<Recap> get() = _recap
 
