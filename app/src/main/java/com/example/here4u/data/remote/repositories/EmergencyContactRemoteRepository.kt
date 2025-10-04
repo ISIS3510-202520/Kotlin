@@ -94,6 +94,7 @@ class EmergencyContactRemoteRepository @Inject constructor(
     }
 
     // 🔹 Eliminar todos los contactos
+    // 🔹 Eliminar todos los contactos de un usuario
     suspend fun deleteContactsForCurrentUser() {
         val userId = userRepository.getUserId() ?: return
         val contacts = getContactsForCurrentUser()

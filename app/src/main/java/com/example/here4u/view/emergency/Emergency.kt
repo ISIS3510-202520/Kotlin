@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.here4u.databinding.ActivityEmergencyBinding
 import com.example.here4u.viewmodel.EmergencyContactsViewModel
 import dagger.hilt.android.AndroidEntryPoint

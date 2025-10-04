@@ -10,62 +10,56 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
+import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 
 import com.example.here4u.view.exercises.ExercisesActivity
 import com.example.here4u.view.emotions.IdentifyingEmotions
 import com.example.here4u.R
+import com.example.here4u.databinding.ActivityHomeBinding
 import com.example.here4u.view.recap.TrendsFragment
 import com.google.android.material.button.MaterialButton
 import com.example.here4u.view.emergency.Emergency
+import com.example.here4u.viewmodel.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-
-class home : AppCompatActivity() { // Note: Class names in Kotlin usually start with an uppercase letter, like 'Home'
+@AndroidEntryPoint
+class home : AppCompatActivity() {
+    private val viewModel: HomeViewModel by viewModels()
+    private lateinit var binding: ActivityHomeBinding
 
 
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge() // This is for edge-to-edge display, not directly related to the crash
+        enableEdgeToEdge()
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-
-        setContentView(R.layout.activity_home) // This should link to your 'activity_home.xml' layout
-
-        // Botón Daily Exercises
-        val btnExercises = findViewById<MaterialButton>(R.id.btnExercises)
-        btnExercises.setOnClickListener {
-            val intent = Intent(this, ExercisesActivity::class.java)
-            startActivity(intent)
-
-
-
+        // --- Navigation Buttons ---
+        binding.btnExercises.setOnClickListener {
+            startActivity(Intent(this, ExercisesActivity::class.java))
         }
 
-        val registermood = findViewById<Button>(R.id.btnRegisterMood)
-
-        registermood.setOnClickListener {
-            val intent = Intent(
-                this,
-                IdentifyingEmotions::class.java
-            ) // Creates an Intent to go to 'home' Activity
-            startActivity(intent)
+        binding.btnRegisterMood.setOnClickListener {
+            startActivity(Intent(this, IdentifyingEmotions::class.java))
         }
 
-
-        val trendsButton = findViewById<Button>(R.id.btnRecap)
-
-        val fragmentContainer = findViewById<FragmentContainerView>(R.id.fragmentContainer)
-
-        trendsButton.setOnClickListener {
-            fragmentContainer.visibility = View.VISIBLE // show container
+        binding.btnRecap.setOnClickListener {
+            binding.fragmentContainer.visibility = View.VISIBLE
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, TrendsFragment())
-                .addToBackStack(null) // allows back navigation
+                .addToBackStack(null)
                 .commit()
         }
         val  btnEmergency = findViewById<Button>(R.id.btnEmergency)
@@ -76,10 +70,31 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
         }
 
 
+        binding.btnEmergency.setOnClickListener {
+            startActivity(Intent(this, Emergency::class.java))
+        }
 
+        // --- Collect both mood text and streak from ViewModel ---
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.moodText.collect { text ->
+                        binding.btnRegisterMood.text = text
+                    }
+                }
+
+                launch {
+                    viewModel.streak.collect { current ->
+                        binding.tvStreak.text = "🔥 Streak\n${current} Days"
+                    }
+                }
+            }
+        }
     }
 
-
-
-
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshMoodText()
+        viewModel.refreshUserStreak() // refresh streak whenever user returns to Home
+    }
 }

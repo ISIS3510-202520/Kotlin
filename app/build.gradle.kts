@@ -24,6 +24,16 @@ if (envFile.exists()) {
     println("⚠️ No se encontró el archivo .env en ${envFile.absolutePath}")
 }
 
+// Use Properties (no need to prefix with java.util)
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        load(file.inputStream())
+    }
+}
+
+val openAiKey: String = localProperties.getProperty("OPENAI_API_KEY") ?: ""
+
 android {
     namespace = "com.example.here4u"
     compileSdk = 36
@@ -35,6 +45,8 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
+    }
 
 
         buildConfigField("String", "EMAIL_USERNAME", "\"${env.getProperty("GMAIL_USERNAME") ?: ""}\"")
@@ -113,6 +125,12 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
 
+    // Open AI API connection dependencies
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+    // Coroutines support for Firebase Tasks
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     implementation("com.google.android.gms:play-services-location:21.3.0")
