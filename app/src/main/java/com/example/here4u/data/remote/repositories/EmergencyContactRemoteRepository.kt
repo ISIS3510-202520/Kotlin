@@ -16,7 +16,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.here4u.BuildConfig
 
+import com.example.here4u.data.remote.entity.EmotionRemote
+import javax.inject.Singleton
 
+@Singleton
 class EmergencyContactRemoteRepository @Inject constructor(
     private val userRepository: UserRemoteRepository
 ) {

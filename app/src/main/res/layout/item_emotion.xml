@@ -11,14 +11,16 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnEmotion"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
+        android:layout_width="167dp"
+        android:layout_height="164dp"
         android:background="@drawable/circle"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="12sp"
+        android:fontFamily="sans-serif"
         app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeTextType="uniform"
         tools:ignore="MissingConstraints"
-        android:fontFamily="sans-serif"/>
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
