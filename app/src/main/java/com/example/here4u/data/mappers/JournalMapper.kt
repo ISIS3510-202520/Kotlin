@@ -28,7 +28,7 @@ object JournalMapper {
         )
 
         return Journal(
-            id = remote.id.hashCode().toLong(),  // Firestore id → Long
+            id = remote.id,  // Firestore id → Long
             date = remote.createdAt,
             content = remote.description,
             emotion = emotionModel

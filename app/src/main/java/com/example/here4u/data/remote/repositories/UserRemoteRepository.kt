@@ -1,5 +1,6 @@
 package com.example.here4u.data.remote.repositories
 
+import android.util.Log.e
 import com.example.here4u.model.entity.UserEntity
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
@@ -124,7 +125,7 @@ class UserRemoteRepository @Inject constructor(
                 return
             }
 
-            val lastEntry = user.lastEntryDate?.toDate()
+            val lastEntry = user.lastLogin?.toDate()
             val now = Calendar.getInstance(TimeZone.getTimeZone("UTC")).time
 
             if (lastEntry == null) {
@@ -132,7 +133,6 @@ class UserRemoteRepository @Inject constructor(
                 userRef.update(
                     mapOf(
                         "lastLogin" to Timestamp.now(),
-                        "lastEntryDate" to Timestamp.now(),
                         "currentStreak" to 1,
                         "longestStreak" to 1
                     )
@@ -190,6 +190,35 @@ class UserRemoteRepository @Inject constructor(
             android.util.Log.e("STREAK", "❌ Error actualizando racha: ${e.message}", e)
         }
     }
+    suspend fun updateLastEntry(timestamp: Timestamp?){
+        val userId = getUserId() ?: return
+        val db = Firebase.firestore
+        val userRef = db.collection("users").document(userId)
+        try {
+            val snapshot = userRef.get().await()
+            if (!snapshot.exists()) {
+                android.util.Log.d("Journal Update", "❌ Documento no encontrado")
+                return
+            }
+
+            val user = snapshot.toObject(com.example.here4u.model.entity.UserEntity::class.java)
+            if (user == null) {
+                android.util.Log.d("Journal Update", "❌ No se pudo mapear el usuario")
+                return
+            }
+
+            userRef.update(
+                mapOf(
+                    "lastLogin" to Timestamp.now(),
+                )
+            )
+
+
+        } catch (e: Exception) {
+            android.util.Log.e("v", "❌ Error actualizando last entry date: ${e.message}", e)
+        }
+    }
+
 
     suspend fun getUserStreak(): Pair<Int, Int>? {
         val userId = getUserId() ?: return null
