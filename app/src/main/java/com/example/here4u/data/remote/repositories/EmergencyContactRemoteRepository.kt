@@ -12,7 +12,9 @@ import javax.inject.Inject
 import com.example.here4u.data.local.entity.EmergencyContactEntity
 import com.example.here4u.data.remote.entity.EmergencyContactRemote
 import com.example.here4u.data.remote.entity.EmotionRemote
+import javax.inject.Singleton
 
+@Singleton
 class EmergencyContactRemoteRepository @Inject constructor(
     private val userRepository: UserRemoteRepository
 ) {
