@@ -51,6 +51,7 @@
         <activity android:name=".view.emergency.Emergency"
             android:exported="false"/>
 
+
     </application>
 
 </manifest>
