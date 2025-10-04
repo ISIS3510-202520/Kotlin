@@ -29,8 +29,11 @@ class Emergency : AppCompatActivity() {
     private val viewModel: EmergencyContactsViewModel by viewModels()
     private lateinit var adapter: ContactsAdapter
 
+    @SuppressLint("MissingPermission")
     private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) @androidx.annotation.RequiresPermission(
+            allOf = [android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION]
+        ) { granted ->
             if (granted) {
 
                 viewModel.createEmergency()
