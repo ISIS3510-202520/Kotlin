@@ -1,3 +1,4 @@
+package com.example.here4u.data.remote.repositories
 import android.Manifest
 import android.util.Log
 import androidx.annotation.RequiresPermission
@@ -7,6 +8,8 @@ import com.example.here4u.model.LocationModelImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -27,7 +30,7 @@ class EmergencyRequestRemoteRepository @Inject constructor(
         return try {
             val uid = auth.currentUser?.uid
                 ?: return Result.failure(IllegalStateException("No user logged in"))
-
+            Log.d("FS", "UID=$uid")
             val loc = suspendCancellableCoroutine<android.location.Location?> { cont ->
                 locationProvider.getCurrentLocation { location ->
                     cont.resume(location)
@@ -39,12 +42,12 @@ class EmergencyRequestRemoteRepository @Inject constructor(
                 return Result.failure(IllegalStateException("Location unavailable"))
             }
 
-            val contacts = contactRepo.getContactsForCurrentUser().orEmpty()
+            val contacts = contactRepo.getAll().first()
 
             val emergency = EmergencyRequestRemote(
                 userId = uid,
                 location = geo,
-                contacted = contacts.mapNotNull { it.id },
+                contacted = contacts.mapNotNull { it.documentId },
                 timestamp = null
             )
 

@@ -1,13 +1,21 @@
 package com.example.here4u.view.home
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
+
 import com.example.here4u.view.exercises.ExercisesActivity
 import com.example.here4u.view.emotions.IdentifyingEmotions
 import com.example.here4u.R
@@ -17,6 +25,8 @@ import com.example.here4u.view.emergency.Emergency
 
 
 class home : AppCompatActivity() { // Note: Class names in Kotlin usually start with an uppercase letter, like 'Home'
+
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +70,7 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
         }
         val  btnEmergency = findViewById<Button>(R.id.btnEmergency)
         btnEmergency.setOnClickListener {
+
             val intent = Intent(this, Emergency::class.java)
             startActivity(intent)
         }
@@ -67,5 +78,8 @@ class home : AppCompatActivity() { // Note: Class names in Kotlin usually start 
 
 
     }
+
+
+
 
 }
