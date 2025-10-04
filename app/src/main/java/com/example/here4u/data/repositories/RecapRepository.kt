@@ -17,6 +17,14 @@ class RecapRepository @Inject constructor(
     private val summaryRequestRepo: SummaryRequestRemoteRepository
 ) {
     suspend fun generateRecapWithAI(userId: String, journals: List<Journal>): Recap {
+
+        // 0. Find the most common emotion among the journals
+        val mostCommonEmotion = journals
+            .groupingBy { it.emotion.name }
+            .eachCount()
+            .maxByOrNull { it.value }
+            ?.key ?: "Unknown"
+
         // 1. Build the AI prompt
         val prompt = buildPromptFromJournals(journals)
 
@@ -53,9 +61,12 @@ class RecapRepository @Inject constructor(
             )
         }
 
+        // Prepend the emotion line to the summary
+        val modifiedSummary = "Most common emotion: $mostCommonEmotion\n\n${recapResponse.summary}"
+
         val recap = Recap(
             highlights = recapResponse.highlights,
-            summary = recapResponse.summary
+            summary = modifiedSummary
         )
 
         // 4. Automatically save SummaryRequestRemote in Firestore
@@ -83,5 +94,5 @@ class RecapRepository @Inject constructor(
         )
 
         summaryRequestRepo.insertOne(summaryRequest)
-    }
+        }
 }
