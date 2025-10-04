@@ -44,7 +44,7 @@ class EmergencyRequestRemoteRepository @Inject constructor(
             val emergency = EmergencyRequestRemote(
                 userId = uid,
                 location = geo,
-                contacted = contacts.mapNotNull { it.id },
+                contacted = contacts.mapNotNull { it.documentId },
                 timestamp = null
             )
 
