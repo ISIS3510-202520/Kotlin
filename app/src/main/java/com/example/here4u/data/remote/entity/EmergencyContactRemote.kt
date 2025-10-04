@@ -10,3 +10,4 @@ data class EmergencyContactRemote(
     val email: String = "",
     val relation: String = ""
 )
+

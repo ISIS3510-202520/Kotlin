@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.play.services.location)
     debugImplementation(libs.androidx.compose.ui.tooling)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -108,6 +109,9 @@ dependencies {
 
     // Coroutines support for Firebase Tasks
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
+    //LOCATION
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 }
 
 // Fuerza JavaPoet 1.13.0 para TODAS las configuraciones (incluida ksp)
