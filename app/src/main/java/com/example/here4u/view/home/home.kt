@@ -14,8 +14,10 @@ import com.example.here4u.R
 import com.example.here4u.view.recap.TrendsFragment
 import com.google.android.material.button.MaterialButton
 import com.example.here4u.view.emergency.Emergency
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class home : AppCompatActivity() { // Note: Class names in Kotlin usually start with an uppercase letter, like 'Home'
 
     @SuppressLint("MissingInflatedId")
