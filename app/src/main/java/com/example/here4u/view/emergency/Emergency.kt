@@ -9,7 +9,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.here4u.databinding.ActivityEmergencyBinding
 import com.example.here4u.viewmodel.EmergencyContactsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,26 +26,31 @@ class Emergency : AppCompatActivity() {
         binding = ActivityEmergencyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Inicializar adapter
+        // 🔹 Inicializar adapter
+        adapter = ContactsAdapter()
 
-        adapter= ContactsAdapter()
-
-
-        // Configurar RecyclerView
-        binding.rvContacts.layoutManager = GridLayoutManager(this,2)
+        // 🔹 Configurar RecyclerView
+        binding.rvContacts.layoutManager = GridLayoutManager(this, 2)
         binding.rvContacts.adapter = adapter
 
-        // Botón para agregar contacto
+        // 🔹 Botón para agregar contacto
         binding.btnAddContact.setOnClickListener {
             startActivity(Intent(this, CreateContact::class.java))
         }
 
-        // Botón para notificar a todos
+        // 🔹 Mensaje de prueba (puedes reemplazarlo por la ubicación real)
+        val locationMessage = "🚨 ¡Alerta! Se detectó una emergencia en tu ubicación."
+
+        // 🔹 Botón para notificar a todos los contactos
         binding.btnCall.setOnClickListener {
-            // Aquí va tu lógica para notificar a todos
+            try {
+                viewModel.sendMail(locationMessage)
+            } catch (e: Exception) {
+                android.util.Log.e("EmergencyActivity", "❌ Error al enviar alerta: ${e.message}", e)
+            }
         }
 
-        // Botón de regreso
+        // 🔹 Botón de regreso
         binding.btnBack.setOnClickListener {
             finish()
         }
@@ -55,10 +59,12 @@ class Emergency : AppCompatActivity() {
     @SuppressLint("RepeatOnLifecycleWrongUsage")
     override fun onResume() {
         super.onResume()
-        // Actualizar lista de contactos al volver de CreateContact
+
+        // 🔹 Actualizar lista de contactos al volver de CreateContact
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.contacts.collect { list ->
+                    android.util.Log.d("EmergencyActivity", "📋 Se recibieron ${list.size} contactos.")
                     adapter.updateData(list)
                 }
             }

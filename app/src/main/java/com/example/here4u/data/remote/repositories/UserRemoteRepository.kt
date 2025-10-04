@@ -54,6 +54,10 @@ class UserRemoteRepository @Inject constructor(
         return firebaseAuth.currentUser?.uid
 
     }
+    fun getName(): String? {
+        return firebaseAuth.currentUser?.displayName
+
+    }
 
     private fun createUserDocument(
         uid: String,
