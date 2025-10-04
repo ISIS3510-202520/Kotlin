@@ -73,4 +73,7 @@ object FirebaseModule {
         android.util.Log.d("RepositoryModule", "API KEY from BuildConfig = '$apiKey'")
         return OpenAIClient.create(apiKey)
     }
+
+
+
 }

@@ -24,7 +24,7 @@ if (envFile.exists()) {
     println("⚠️ No se encontró el archivo .env en ${envFile.absolutePath}")
 }
 
-// Use Properties (no need to prefix with java.util)
+// local.properties (para claves locales como OPENAI_API_KEY)
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
     if (file.exists()) {
@@ -32,7 +32,10 @@ val localProperties = Properties().apply {
     }
 }
 
+// Lee llaves/usuarios
 val openAiKey: String = localProperties.getProperty("OPENAI_API_KEY") ?: ""
+val gmailUser: String = env.getProperty("GMAIL_USERNAME") ?: ""
+val gmailAppPassword: String = env.getProperty("GMAIL_APP_PASSWORD") ?: ""
 
 android {
     namespace = "com.example.here4u"
@@ -45,12 +48,11 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // ✅ TODOS los buildConfigField deben estar dentro de defaultConfig o buildTypes
         buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
-    }
-
-
-        buildConfigField("String", "EMAIL_USERNAME", "\"${env.getProperty("GMAIL_USERNAME") ?: ""}\"")
-        buildConfigField("String", "EMAIL_APP_PASSWORD", "\"${env.getProperty("GMAIL_APP_PASSWORD") ?: ""}\"")
+        buildConfigField("String", "EMAIL_USERNAME", "\"$gmailUser\"")
+        buildConfigField("String", "EMAIL_APP_PASSWORD", "\"$gmailAppPassword\"")
     }
 
     packaging {
@@ -125,12 +127,12 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
 
-    // Open AI API connection dependencies
+    // OpenAI API / Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
-    // Coroutines support for Firebase Tasks
+    // Coroutines + Play Services
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     implementation("com.google.android.gms:play-services-location:21.3.0")

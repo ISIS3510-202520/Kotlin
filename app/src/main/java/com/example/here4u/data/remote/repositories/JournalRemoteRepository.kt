@@ -1,6 +1,7 @@
 package com.example.here4u.data.remote.repositories
 
 import com.example.here4u.data.remote.entity.JournalRemote
+import com.example.here4u.data.remote.entity.JournalRemoteDocuments
 import com.example.here4u.data.remote.service.FirebaseService
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.channels.awaitClose
@@ -13,12 +14,16 @@ import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.tasks.await
 
 @Singleton
 class JournalRemoteRepository @Inject constructor(
-    private val service: FirebaseService
+    private val service: FirebaseService,
+    private val auth: FirebaseAuth
 ) {
+    val uid = auth.currentUser?.uid
 
     // 🔹 Helper: map Firestore doc → JournalRemote
     private fun DocumentSnapshot.toJournal(): JournalRemote? {
@@ -72,19 +77,21 @@ class JournalRemoteRepository @Inject constructor(
     }
 
     // 🔹 Insert a new journal
-    suspend fun insertOne(emotionId: String, userId: String, content: String): String =
+
+    suspend fun insertOne(emotionId: String, content: String): Timestamp? =
+
         suspendCancellableCoroutine { cont ->
-            val docRef = service.journals.document()
-            val journal = JournalRemote(
-                id = docRef.id,
+            val userId = uid
+            val journal = JournalRemoteDocuments(
                 emotionId = emotionId,
                 userId = userId,
                 description = content,
-                createdAt = System.currentTimeMillis(),
+                createdAt = null,
                 sharedWithTherapist = false
             )
-            docRef.set(journal)
-                .addOnSuccessListener { cont.resume(docRef.id) }
+
+            val ref = service.journals.add(journal)
+                .addOnSuccessListener { cont.resume(journal.createdAt) }
                 .addOnFailureListener { e -> cont.resumeWithException(e) }
         }
 
@@ -97,25 +104,7 @@ class JournalRemoteRepository @Inject constructor(
                 .addOnFailureListener { e -> cont.resumeWithException(e) }
         }
 
-    // 🔹 Get journals from last 7 days for a user THIS IS THE REAL METHOD
-//    suspend fun getLast7Days(userId: String): List<JournalRemote> =
-//        suspendCancellableCoroutine { cont ->
-//            val sevenDaysAgoMillis = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)
-//            val sevenDaysAgo = Timestamp(sevenDaysAgoMillis / 1000, 0) // <-- Timestamp for Firestore
-//
-//            service.journals
-//                .whereEqualTo("userId", userId)
-//                .whereGreaterThanOrEqualTo("createdAt", sevenDaysAgo)
-//                .orderBy("createdAt", Query.Direction.DESCENDING)
-//                .get()
-//                .addOnSuccessListener { snapshot ->
-//                    val list = snapshot.documents.mapNotNull { it.toJournal() }
-//                    cont.resume(list)
-//                }
-//                .addOnFailureListener { e -> cont.resumeWithException(e) }
-//        }
 
-    // Just for testing
 
     suspend fun getLast7Days(userId: String): List<JournalRemote> =
         suspendCancellableCoroutine { cont ->
