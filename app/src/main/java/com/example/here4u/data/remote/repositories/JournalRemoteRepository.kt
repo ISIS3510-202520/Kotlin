@@ -12,6 +12,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.Query
 
 @Singleton
 class JournalRemoteRepository @Inject constructor(
@@ -24,7 +26,7 @@ class JournalRemoteRepository @Inject constructor(
         val emotionId = getString("emotionId") ?: return null
         val userId = getString("userId") ?: return null
         val description = getString("description") ?: ""
-        val createdAt = getLong("createdAt") ?: 0L
+        val createdAt = getTimestamp("createdAt")?.toDate()?.time ?: 0L
         val shared = getBoolean("sharedWithTherapist") ?: false
 
         return JournalRemote(
@@ -95,13 +97,30 @@ class JournalRemoteRepository @Inject constructor(
                 .addOnFailureListener { e -> cont.resumeWithException(e) }
         }
 
-    // 🔹 Get journals from last 7 days for a user
+    // 🔹 Get journals from last 7 days for a user THIS IS THE REAL METHOD
+//    suspend fun getLast7Days(userId: String): List<JournalRemote> =
+//        suspendCancellableCoroutine { cont ->
+//            val sevenDaysAgoMillis = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)
+//            val sevenDaysAgo = Timestamp(sevenDaysAgoMillis / 1000, 0) // <-- Timestamp for Firestore
+//
+//            service.journals
+//                .whereEqualTo("userId", userId)
+//                .whereGreaterThanOrEqualTo("createdAt", sevenDaysAgo)
+//                .orderBy("createdAt", Query.Direction.DESCENDING)
+//                .get()
+//                .addOnSuccessListener { snapshot ->
+//                    val list = snapshot.documents.mapNotNull { it.toJournal() }
+//                    cont.resume(list)
+//                }
+//                .addOnFailureListener { e -> cont.resumeWithException(e) }
+//        }
+
+    // Just for testing
+
     suspend fun getLast7Days(userId: String): List<JournalRemote> =
         suspendCancellableCoroutine { cont ->
-            val sevenDaysAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)
             service.journals
                 .whereEqualTo("userId", userId)
-                .whereGreaterThanOrEqualTo("createdAt", sevenDaysAgo)
                 .get()
                 .addOnSuccessListener { snapshot ->
                     val list = snapshot.documents.mapNotNull { it.toJournal() }
@@ -110,16 +129,17 @@ class JournalRemoteRepository @Inject constructor(
                 .addOnFailureListener { e -> cont.resumeWithException(e) }
         }
 
+
     // 🔹 Get last journal date for a user
     suspend fun getLastJournalDate(userId: String): Long? =
         suspendCancellableCoroutine { cont ->
             service.journals
                 .whereEqualTo("userId", userId)
-                .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(1)
                 .get()
                 .addOnSuccessListener { snapshot ->
-                    val date = snapshot.documents.firstOrNull()?.getLong("createdAt")
+                    val date = snapshot.documents.firstOrNull()?.getTimestamp("createdAt")?.toDate()?.time
                     cont.resume(date)
                 }
                 .addOnFailureListener { e -> cont.resumeWithException(e) }
