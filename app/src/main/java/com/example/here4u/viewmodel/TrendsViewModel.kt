@@ -50,7 +50,7 @@ class TrendsViewModel @Inject constructor(
                     Log.d("TrendsVM", "Flow emitted ${journals.size} journals")
                     if (journals.isNotEmpty()) {
                         try {
-                            val recapData = recapRepository.generateRecapWithAI(journals)
+                            val recapData = recapRepository.generateRecapWithAI(userId,journals)
                             Log.d(
                                 "TrendsVM",
                                 "Recap received: highlights=${recapData.highlights.size}, summary length=${recapData.summary.length}"
