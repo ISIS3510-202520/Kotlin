@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -11,6 +13,17 @@ plugins {
 hilt {
     enableAggregatingTask = false
 }
+
+// 🟢 Cargar el archivo .env
+val envFile = rootProject.file(".env")
+val env = Properties()
+if (envFile.exists()) {
+    println("✅ Cargando variables desde .env")
+    env.load(envFile.inputStream())
+} else {
+    println("⚠️ No se encontró el archivo .env en ${envFile.absolutePath}")
+}
+
 android {
     namespace = "com.example.here4u"
     compileSdk = 36
@@ -22,10 +35,34 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
+        buildConfigField("String", "EMAIL_USERNAME", "\"${env.getProperty("GMAIL_USERNAME") ?: ""}\"")
+        buildConfigField("String", "EMAIL_APP_PASSWORD", "\"${env.getProperty("GMAIL_APP_PASSWORD") ?: ""}\"")
     }
 
     packaging {
-        resources { excludes += "META-INF/atomicfu.kotlin_module" }
+        resources {
+            excludes += "META-INF/atomicfu.kotlin_module"
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+            excludes += "/META-INF/{AL2.0,LGPL2.1,NOTICE.md,LICENSE.md,LICENSE.txt,NOTICE.txt,NOTICE,LICENSE}"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    buildFeatures {
+        compose = true
+        viewBinding = true
+        buildConfig = true
     }
 
     buildTypes {
@@ -37,84 +74,48 @@ android {
             )
         }
     }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions { jvmTarget = "17" }
-
-    buildFeatures {
-        compose = true
-        viewBinding = true
-    }
 }
 
+// ⚙️ Dependencias
 dependencies {
-    // --- Core / UI base ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.fragment.ktx)          // 1.8.5
-
-    // --- Activity / Compose host ---
-    implementation(libs.androidx.activity)              // 1.9.3 (compatible con AGP 8.6.1)
-    implementation(libs.androidx.activity.compose)      // 1.9.3
-
-    // --- Compose ---
-    implementation(platform(libs.androidx.compose.bom)) // 2024.10.01
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.play.services.location)
     debugImplementation(libs.androidx.compose.ui.tooling)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // --- Lifecycle / ViewModel / LiveData ---
-    implementation(libs.androidx.lifecycle.runtime.ktx)   // 2.8.6
-    implementation(libs.androidx.lifecycle.viewmodel.ktx) // 2.8.6
-    implementation(libs.androidx.lifecycle.livedata.ktx)  // 2.8.6
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 
-    // --- Room (KSP) ---
-    implementation(libs.androidx.room.runtime) // 2.6.1
+    implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
-    testImplementation(libs.androidx.room.testing)
-    androidTestImplementation(libs.androidx.room.testing)
 
-    // --- Hilt (KSP) ---
-    implementation(libs.hilt.android) // 2.51.1
+    implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.fragment) // 1.2.0
-    implementation(libs.androidx.hilt.navigation.compose)  // 1.2.0
+    implementation(libs.androidx.hilt.navigation.fragment)
+    implementation(libs.androidx.hilt.navigation.compose)
 
-    // --- Tests ---
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-
-    // --- Fix agresivo JavaPoet (además del force de abajo) ---
-    implementation("com.squareup:javapoet:1.13.0")
-    ksp("com.squareup:javapoet:1.13.0")
-    //------ Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
-    implementation("com.google.firebase:firebase-firestore")
 
-    // Coroutines support for Firebase Tasks
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
-    //LOCATION
     implementation("com.google.android.gms:play-services-location:21.3.0")
-}
-
-// Fuerza JavaPoet 1.13.0 para TODAS las configuraciones (incluida ksp)
-configurations.configureEach {
-    resolutionStrategy.force("com.squareup:javapoet:1.13.0")
+    implementation("com.sun.mail:android-mail:1.6.7")
+    implementation("com.sun.mail:android-activation:1.6.7")
 }

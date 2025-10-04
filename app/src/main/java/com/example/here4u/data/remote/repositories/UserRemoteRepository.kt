@@ -4,7 +4,7 @@ import com.example.here4u.model.entity.UserEntity
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
+import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
@@ -26,20 +26,42 @@ class UserRemoteRepository @Inject constructor(
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
                     if (user != null) {
-                        user.sendEmailVerification().addOnCompleteListener { verifyTask ->
-                            if (verifyTask.isSuccessful) {
-                                createUserDocument(user.uid, email, name) { success, error ->
-                                    if (success) {
-                                        onResult(true, "Verification email sent. User saved in Firestore.")
+
+                        // 🔹 1. Actualizar el perfil de FirebaseAuth con el displayName
+                        val profileUpdates = userProfileChangeRequest {
+                            displayName = name
+                        }
+
+                        user.updateProfile(profileUpdates).addOnCompleteListener { updateTask ->
+                            if (updateTask.isSuccessful) {
+
+                                // 🔹 2. Enviar correo de verificación
+                                user.sendEmailVerification().addOnCompleteListener { verifyTask ->
+                                    if (verifyTask.isSuccessful) {
+
+                                        // 🔹 3. Crear documento en Firestore
+                                        createUserDocument(user.uid, email, name) { success, error ->
+                                            if (success) {
+                                                onResult(true, "Verification email sent. User saved in Firestore.")
+                                            } else {
+                                                onResult(false, error)
+                                            }
+                                        }
+
                                     } else {
+                                        val error = verifyTask.exception?.localizedMessage
+                                            ?: "Error sending verification email"
                                         onResult(false, error)
                                     }
                                 }
+
                             } else {
-                                val error = verifyTask.exception?.localizedMessage ?: "Error sending verification email"
+                                val error = updateTask.exception?.localizedMessage
+                                    ?: "Error updating user profile"
                                 onResult(false, error)
                             }
                         }
+
                     } else {
                         onResult(false, "User is null after registration")
                     }
@@ -52,7 +74,10 @@ class UserRemoteRepository @Inject constructor(
 
     fun getUserId(): String? {
         return firebaseAuth.currentUser?.uid
+    }
 
+    fun getName(): String? {
+        return firebaseAuth.currentUser?.displayName
     }
 
     private fun createUserDocument(
@@ -131,22 +156,21 @@ class UserRemoteRepository @Inject constructor(
                 set(Calendar.MILLISECOND, 0)
             }
 
-            val diffDays = ((calNow.timeInMillis - calLast.timeInMillis) / (1000 * 60 * 60 * 24)).toInt()
+            val diffDays =
+                ((calNow.timeInMillis - calLast.timeInMillis) / (1000 * 60 * 60 * 24)).toInt()
             android.util.Log.d("STREAK", "📊 diffDays=$diffDays")
 
             var newStreak = user.currentStreak
             var longest = user.longestStreak
 
             when (diffDays) {
-                0 ->{}
+                0 -> {}
                 1 -> {
                     newStreak += 1
                     if (newStreak > longest) longest = newStreak
-
                 }
                 else -> {
                     newStreak = 1
-
                 }
             }
 
@@ -165,5 +189,4 @@ class UserRemoteRepository @Inject constructor(
             android.util.Log.e("STREAK", "❌ Error actualizando racha: ${e.message}", e)
         }
     }
-
 }
