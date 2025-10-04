@@ -21,6 +21,8 @@ class JournalingViewModel @Inject constructor(
         viewModelScope.launch {
             val time: Timestamp? = repository.insertOne(emotionId,content)
             repositoryuser.updateLastEntry(time)
+            repositoryuser.updateLoginStreak()
+
 
         }
     }

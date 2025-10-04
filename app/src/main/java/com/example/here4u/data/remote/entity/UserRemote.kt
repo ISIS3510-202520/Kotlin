@@ -6,7 +6,7 @@ data class UserRemote(
     val email: String = "",
     val createdAt: Long = System.currentTimeMillis(),
     val lastLogin: Long = System.currentTimeMillis(),
-    val lastEntryDate: Long = System.currentTimeMillis(),
+    val lastEntryDate: Long? = null,   // 👈 ✅ Ya no se actualiza sola
     val currentStreak: Int = 0,
     val longestStreak: Int = 0
 )

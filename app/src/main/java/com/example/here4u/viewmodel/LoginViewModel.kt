@@ -34,9 +34,7 @@ class LoginViewModel @Inject constructor(
 
                     viewModelScope.launch {
                         try {
-                            withContext(Dispatchers.IO) {
-                                userRemoteRepository.updateLoginStreak()
-                            }
+                            userRemoteRepository.updatelogindate()
                             _loginResult.postValue(LoginResult.Success)
                         } catch (e: Exception) {
 

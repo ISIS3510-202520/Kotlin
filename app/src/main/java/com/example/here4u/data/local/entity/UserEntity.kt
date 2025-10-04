@@ -8,11 +8,11 @@ data class UserEntity(
     var email: String = "",
     var createdAt: Timestamp? = null,
     var lastLogin: Timestamp? = null,
-    var lastEntryDate: Timestamp? = null,
+    var lastEntryDate: Timestamp? = null,  // 🔸 Esta NO se actualiza automáticamente
     var currentStreak: Int = 0,
     var longestStreak: Int = 0
 ) {
-    // 🔸 Constructor vacío requerido por Firebase
+    // 🔸 Constructor vacío requerido por Firebase para la deserialización
     constructor() : this(
         "",
         "",
