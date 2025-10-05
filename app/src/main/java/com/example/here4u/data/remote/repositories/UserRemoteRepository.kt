@@ -1,7 +1,7 @@
 package com.example.here4u.data.remote.repositories
 
 import android.util.Log.e
-import com.example.here4u.model.entity.UserEntity
+import com.example.here4u.data.remote.entity.UserRemote
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -9,9 +9,12 @@ import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
+import java.util.Date
 import java.util.TimeZone
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserRemoteRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) {
@@ -28,7 +31,7 @@ class UserRemoteRepository @Inject constructor(
                     val user = firebaseAuth.currentUser
                     if (user != null) {
 
-                        // 🔹 1. Actualizar el perfil de FirebaseAuth con el displayName
+
                         val profileUpdates = userProfileChangeRequest {
                             displayName = name
                         }
@@ -36,11 +39,11 @@ class UserRemoteRepository @Inject constructor(
                         user.updateProfile(profileUpdates).addOnCompleteListener { updateTask ->
                             if (updateTask.isSuccessful) {
 
-                                // 🔹 2. Enviar correo de verificación
+
                                 user.sendEmailVerification().addOnCompleteListener { verifyTask ->
                                     if (verifyTask.isSuccessful) {
 
-                                        // 🔹 3. Crear documento en Firestore
+
                                         createUserDocument(user.uid, email, name) { success, error ->
                                             if (success) {
                                                 onResult(true, "Verification email sent. User saved in Firestore.")
@@ -90,13 +93,13 @@ class UserRemoteRepository @Inject constructor(
     ) {
         val db = Firebase.firestore
         val now = Timestamp.now()
-        val userEntity = UserEntity(
+        val userEntity = UserRemote(
             id = uid,
             displayName = name,
             email = email,
             createdAt = now,
             lastLogin = now,
-            lastEntryDate = now,
+            lastEntryDate = null ,
             currentStreak = 1,
             longestStreak = 1
         )
@@ -107,6 +110,22 @@ class UserRemoteRepository @Inject constructor(
             .addOnFailureListener { e -> onResult(false, e.localizedMessage) }
     }
 
+    suspend fun updatelogindate(){
+        val userId = getUserId() ?: return
+        val db = Firebase.firestore
+        val userRef = db.collection("users").document(userId)
+
+        try{
+            userRef.update(
+                mapOf(
+                    "lastLogin" to Timestamp.now()
+                )
+            ).await()
+        }
+        catch (e: Exception) {
+            android.util.Log.e("STREAK", "Error actualizando last login :) ${e.message}", e)
+        }
+    }
     suspend fun updateLoginStreak() {
         val userId = getUserId() ?: return
         val db = Firebase.firestore
@@ -115,24 +134,24 @@ class UserRemoteRepository @Inject constructor(
         try {
             val snapshot = userRef.get().await()
             if (!snapshot.exists()) {
-                android.util.Log.d("STREAK", "❌ Documento no encontrado")
+                android.util.Log.d("STREAK", "Documento no encontrado")
                 return
             }
 
-            val user = snapshot.toObject(com.example.here4u.model.entity.UserEntity::class.java)
+            val user = snapshot.toObject(com.example.here4u.data.remote.entity.UserRemote::class.java)
             if (user == null) {
-                android.util.Log.d("STREAK", "❌ No se pudo mapear el usuario")
+                android.util.Log.d("STREAK", "No se pudo mapear el usuario")
                 return
             }
 
-            val lastEntry = user.lastLogin?.toDate()
+            val lastEntry = user.lastEntryDate?.toDate()
             val now = Calendar.getInstance(TimeZone.getTimeZone("UTC")).time
 
             if (lastEntry == null) {
-                android.util.Log.d("STREAK", "⚠️ lastEntry es null, inicializando racha en 1")
+                android.util.Log.d("STREAK", "lastEntry es null, inicializando racha en 1")
                 userRef.update(
                     mapOf(
-                        "lastLogin" to Timestamp.now(),
+                        "lastEntryDate" to Timestamp.now(),
                         "currentStreak" to 1,
                         "longestStreak" to 1
                     )
@@ -157,15 +176,17 @@ class UserRemoteRepository @Inject constructor(
                 set(Calendar.MILLISECOND, 0)
             }
 
-            val diffDays =
-                ((calNow.timeInMillis - calLast.timeInMillis) / (1000 * 60 * 60 * 24)).toInt()
-            android.util.Log.d("STREAK", "📊 diffDays=$diffDays")
+            val diffDays = ((calNow.timeInMillis - calLast.timeInMillis) / (1000 * 60 * 60 * 24)).toInt()
+            android.util.Log.d("STREAK", "diffDays=$diffDays")
 
             var newStreak = user.currentStreak
             var longest = user.longestStreak
 
             when (diffDays) {
-                0 -> {}
+                0 -> {
+                    android.util.Log.d("STREAK", "Ya se registró entrada hoy, no se modifica racha")
+                    return
+                }
                 1 -> {
                     newStreak += 1
                     if (newStreak > longest) longest = newStreak
@@ -177,19 +198,19 @@ class UserRemoteRepository @Inject constructor(
 
             userRef.update(
                 mapOf(
-                    "lastLogin" to Timestamp.now(),
-                    "lastEntryDate" to Timestamp.now(),
+                    "lastEntryDate" to Timestamp.now(), //
                     "currentStreak" to newStreak,
                     "longestStreak" to longest
                 )
             ).await()
 
-            android.util.Log.d("STREAK", "✅ Actualización completada correctamente")
+            android.util.Log.d("STREAK", "Racha actualizada correctamente: $newStreak (max: $longest)")
 
         } catch (e: Exception) {
-            android.util.Log.e("STREAK", "❌ Error actualizando racha: ${e.message}", e)
+            android.util.Log.e("STREAK", "Error actualizando racha: ${e.message}", e)
         }
     }
+
     suspend fun updateLastEntry(timestamp: Timestamp?){
         val userId = getUserId() ?: return
         val db = Firebase.firestore
@@ -197,31 +218,32 @@ class UserRemoteRepository @Inject constructor(
         try {
             val snapshot = userRef.get().await()
             if (!snapshot.exists()) {
-                android.util.Log.d("Journal Update", "❌ Documento no encontrado")
+                android.util.Log.d("Journal Update", "Documento no encontrado")
                 return
             }
 
-            val user = snapshot.toObject(com.example.here4u.model.entity.UserEntity::class.java)
+            val user = snapshot.toObject(com.example.here4u.data.remote.entity.UserRemote::class.java)
             if (user == null) {
-                android.util.Log.d("Journal Update", "❌ No se pudo mapear el usuario")
+                android.util.Log.d("Journal Update", "No se pudo mapear el usuario")
                 return
             }
 
             userRef.update(
                 mapOf(
-                    "lastLogin" to Timestamp.now(),
+                    "lastEntryDate" to Timestamp.now(),
                 )
             )
 
 
         } catch (e: Exception) {
-            android.util.Log.e("v", "❌ Error actualizando last entry date: ${e.message}", e)
+            android.util.Log.e("v", "Error actualizando last entry date: ${e.message}", e)
         }
     }
 
 
+
     suspend fun getUserStreak(): Pair<Int, Int>? {
-        val userId = getUserId() ?: return null
+        val userId = getUserId()?: return null
         val db = Firebase.firestore
         val userRef = db.collection("users").document(userId)
 
@@ -235,7 +257,7 @@ class UserRemoteRepository @Inject constructor(
                 null
             }
         } catch (e: Exception) {
-            android.util.Log.e("STREAK", "❌ Error fetching streak: ${e.message}")
+            android.util.Log.e("STREAK", "Error fetching streak: ${e.message}")
             null
         }
     }

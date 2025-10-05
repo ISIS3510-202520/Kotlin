@@ -14,10 +14,7 @@ class SummaryRequestRemoteRepository @Inject constructor(
     private val firebaseService: FirebaseService
 ) {
 
-    /**
-     * Inserts a new summary request into Firestore.
-     * Returns the generated ID of the new document.
-     */
+
     suspend fun insertOne(request: SummaryRequestRemote): String =
         suspendCancellableCoroutine { cont ->
             val id = if (request.id.isBlank()) UUID.randomUUID().toString() else request.id
@@ -25,7 +22,7 @@ class SummaryRequestRemoteRepository @Inject constructor(
 
             firebaseService.users
                 .document(newRequest.userId)
-                .collection("summaryRequests") // 👈 nested under the user
+                .collection("summaryRequests")
                 .document(id)
                 .set(newRequest)
                 .addOnSuccessListener { cont.resume(id) }

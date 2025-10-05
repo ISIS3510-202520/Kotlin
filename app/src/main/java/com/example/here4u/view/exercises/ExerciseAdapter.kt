@@ -7,12 +7,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.here4u.R
-import com.example.here4u.model.Exercise
+import com.example.here4u.domain.model.Exercise
 
 class ExerciseAdapter(private val exercises: List<Exercise>) :
     RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {
 
-    // ViewH lder class: holds the references to the views in each item
+
     class ExerciseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val icon: ImageView = itemView.findViewById(R.id.exerciseIcon)
         val title: TextView = itemView.findViewById(R.id.exerciseTitle)

@@ -3,8 +3,8 @@ package com.example.here4u.data.mappers
 import android.graphics.Color
 import com.example.here4u.data.remote.entity.EmotionRemote
 import com.example.here4u.data.remote.entity.JournalRemote
-import com.example.here4u.model.Emotion
-import com.example.here4u.model.Journal
+import com.example.here4u.domain.model.Emotion
+import com.example.here4u.domain.model.Journal
 
 object JournalMapper {
 

@@ -1,9 +1,9 @@
-package com.example.here4u.data.repositories
+package com.example.here4u.data.remote.repositories
 
-import com.example.here4u.data.remote.repositories.JournalRemoteRepository
 import com.example.here4u.data.remote.service.FirebaseService
 import com.example.here4u.data.mappers.JournalMapper
-import com.example.here4u.model.Journal
+import com.example.here4u.data.remote.entity.EmotionRemote
+import com.example.here4u.domain.model.Journal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -18,7 +18,7 @@ class JournalRepository @Inject constructor(
 
     fun getLast7Days(userId: String): Flow<List<Journal>> = flow {
         val journalRemotes = remoteRepo.getLast7Days(userId)
-        val emotionCache = mutableMapOf<String, com.example.here4u.data.remote.entity.EmotionRemote>()
+        val emotionCache = mutableMapOf<String, EmotionRemote>()
 
         val journals = journalRemotes.map { journalRemote ->
             val emotionId = journalRemote.emotionId
@@ -28,8 +28,8 @@ class JournalRepository @Inject constructor(
                 service.emotions.document(emotionId)
                     .get()
                     .await()
-                    .toObject(com.example.here4u.data.remote.entity.EmotionRemote::class.java)
-                    ?: com.example.here4u.data.remote.entity.EmotionRemote()
+                    .toObject(EmotionRemote::class.java)
+                    ?: EmotionRemote()
             }
 
             JournalMapper.toDomain(journalRemote, emotion)

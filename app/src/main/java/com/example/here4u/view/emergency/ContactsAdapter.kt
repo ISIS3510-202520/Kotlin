@@ -39,7 +39,7 @@ class ContactsAdapter() : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
         fun bind(contact: EmergencyContactRemote) {
             binding.btnEmotion.text = contact.name
 
-            // Puedes agregar más campos según tu layout
+
         }
     }
 }

@@ -18,7 +18,7 @@ object OpenAIClient {
                 .addHeader("Authorization", "Bearer $apiKey")
                 .build()
 
-            // 👇 DEBUG: Log the header we’re adding
+
             android.util.Log.d("OpenAIClient", "Authorization header = Bearer $apiKey")
 
             chain.proceed(request)

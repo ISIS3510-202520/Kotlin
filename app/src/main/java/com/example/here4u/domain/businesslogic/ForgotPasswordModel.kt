@@ -1,4 +1,4 @@
-package com.example.here4u.model
+package com.example.here4u.domain.businesslogic
 
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject

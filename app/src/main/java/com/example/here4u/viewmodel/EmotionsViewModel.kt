@@ -23,7 +23,6 @@ class EmotionsViewModel @Inject constructor(
 
 
 
-    // Emite en tiempo real la lista remota
     val emotions: StateFlow<List<EmotionRemote>> =
         repository.getAll()
             .stateIn(

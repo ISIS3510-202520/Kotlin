@@ -3,7 +3,7 @@ package com.example.here4u.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.here4u.model.ForgotPasswordModel
+import com.example.here4u.domain.businesslogic.ForgotPasswordModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

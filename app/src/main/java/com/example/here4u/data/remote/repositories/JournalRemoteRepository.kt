@@ -25,7 +25,7 @@ class JournalRemoteRepository @Inject constructor(
 ) {
     val uid = auth.currentUser?.uid
 
-    // 🔹 Helper: map Firestore doc → JournalRemote
+
     private fun DocumentSnapshot.toJournal(): JournalRemote? {
         val id = id
         val emotionId = getString("emotionId") ?: return null
@@ -44,7 +44,7 @@ class JournalRemoteRepository @Inject constructor(
         )
     }
 
-    // 🔹 Get all journals (live updates)
+
     fun getAll(): Flow<List<JournalRemote>> = callbackFlow {
         val listener = service.journals.addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -59,7 +59,7 @@ class JournalRemoteRepository @Inject constructor(
         awaitClose { listener.remove() }
     }
 
-    // 🔹 Get journals for a specific emotion
+
     fun getByEmotion(emotionId: String): Flow<List<JournalRemote>> = callbackFlow {
         val listener = service.journals
             .whereEqualTo("emotionId", emotionId)
@@ -76,7 +76,7 @@ class JournalRemoteRepository @Inject constructor(
         awaitClose { listener.remove() }
     }
 
-    // 🔹 Insert a new journal
+
 
     suspend fun insertOne(emotionId: String, content: String): Timestamp? =
 
@@ -93,10 +93,10 @@ class JournalRemoteRepository @Inject constructor(
             val ref = service.journals.add(journal)
                 .addOnSuccessListener { cont.resume(journal.createdAt)
                     }
-                .addOnFailureListener { throw RuntimeException("Failed submx|mit") }//cont.resumeWithException(e) }
+                .addOnFailureListener { throw RuntimeException("Failed submx|mit") }
         }
 
-    // 🔹 Delete journal by ID
+
     suspend fun deleteById(id: String) =
         suspendCancellableCoroutine { cont ->
             service.journals.document(id)
@@ -120,30 +120,8 @@ class JournalRemoteRepository @Inject constructor(
         }
 
 
-    // 🔹 Get last journal date for a user
-    suspend fun getLastJournalDate(userId: String): Long? =
-        suspendCancellableCoroutine { cont ->
-            service.journals
-                .whereEqualTo("userId", userId)
-                .orderBy("createdAt", Query.Direction.DESCENDING)
-                .limit(1)
-                .get()
-                .addOnSuccessListener { snapshot ->
-                    val date = snapshot.documents.firstOrNull()?.getTimestamp("createdAt")?.toDate()?.time
-                    cont.resume(date)
-                }
-                .addOnFailureListener { e -> cont.resumeWithException(e) }
-        }
 
-    // 🔹 Get most common emotion in last 7 days
-    suspend fun getMostCommonEmotionLast7Days(userId: String): String? {
-        val journals = getLast7Days(userId)
-        if (journals.isEmpty()) return null
 
-        return journals
-            .groupingBy { it.emotionId }
-            .eachCount()
-            .maxByOrNull { it.value }
-            ?.key
-    }
+
+
 }

@@ -13,8 +13,7 @@ import com.example.here4u.data.remote.entity.EmergencyContactRemote
 import com.example.here4u.data.remote.repositories.EmergencyContactRemoteRepository
 import com.example.here4u.data.remote.repositories.EmergencyRequestRemoteRepository
 import com.example.here4u.data.remote.repositories.UserRemoteRepository
-import com.example.here4u.model.LocationModelImpl
-import com.example.here4u.view.emergency.Emergency
+import com.example.here4u.domain.businesslogic.LocationModelImpl
 import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,17 +56,17 @@ class EmergencyContactsViewModel @Inject constructor(
                 )
         }
 
-    // 🔹 Enviar correo de alerta a todos los contactos
+
     fun sendMail(locationMessage: GeoPoint?) {
         val location:String = locationMessage?.latitude.toString() + "," + locationMessage?.longitude.toString()
         viewModelScope.launch {
             try {
                 checkEnvVars()
-                Log.d("EmergencyVM", "🚀 Llamando a notifyAllContacts() desde ViewModel...")
+                Log.d("EmergencyVM", "Llamando a notifyAllContacts() desde ViewModel...")
                 repository.notifyAllContacts(location)
-                Log.d("EmergencyVM", "✅ notifyAllContacts() ejecutado correctamente")
+                Log.d("EmergencyVM", "notifyAllContacts() ejecutado correctamente")
             } catch (e: Exception) {
-                Log.e("EmergencyVM", "❌ Error ejecutando notifyAllContacts: ${e.message}", e)
+                Log.e("EmergencyVM", "Error ejecutando notifyAllContacts: ${e.message}", e)
             }
         }
     }
@@ -92,12 +91,12 @@ class EmergencyContactsViewModel @Inject constructor(
 
     suspend fun addEmergencyContact(contact: EmergencyContactEntity): Boolean {
         return try {
-            repository.addEmergencyContact(contact) // Call insert on EmergencyContactRemoteRepository
-            true // Indicate success
+            repository.addEmergencyContact(contact)
+            true
         } catch (e: Exception) {
             _error.value = "Failed to add contact: ${e.message}"
             Log.e("EmergencyContactsVM", "Error adding emergency contact", e)
-            false // Indicate failure
+            false
         }
     }
 

@@ -42,9 +42,9 @@ class HomeViewModel @Inject constructor(
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
 
     val resId = when {
-        hour < 12 -> "How are you feeling this morning?"    // 00:00–11:59
-        hour < 18 -> "How are you feeling today?"     // 12:00–17:59
-        else      -> "How are you feeling tonight?"     // 18:00–23:59
+        hour < 12 -> "How are you feeling this morning?"
+        hour < 18 -> "How are you feeling today?"
+        else      -> "How are you feeling tonight?"
     }
 
         mood.value = resId

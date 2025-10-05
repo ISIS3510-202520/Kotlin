@@ -1,4 +1,4 @@
-package com.example.here4u.model
+package com.example.here4u.domain.businesslogic
 
 import android.util.Patterns
 import com.example.here4u.data.remote.repositories.UserRemoteRepository

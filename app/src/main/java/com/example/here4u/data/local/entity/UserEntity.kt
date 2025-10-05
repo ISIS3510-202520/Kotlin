@@ -1,4 +1,4 @@
-package com.example.here4u.model.entity
+package com.example.here4u.domain.entity
 
 import com.google.firebase.Timestamp
 

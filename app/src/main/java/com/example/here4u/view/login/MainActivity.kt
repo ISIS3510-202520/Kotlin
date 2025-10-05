@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        // login results
+
         loginViewModel.loginResult.observe(this) { result ->
             when (result) {
                 is LoginResult.Success -> {
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
                 }
                 LoginResult.Idle -> {
-                    // No hace nada por ahora
+
                 }
             }
         }
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            // verify email isnt empty
+
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -61,13 +61,13 @@ class MainActivity : AppCompatActivity() {
 
 
             }
-        // Sign up
+
         SignUp.setOnClickListener {
             val intent = Intent(this, Signup::class.java)
             startActivity(intent)
         }
 
-        // Forgot password
+
         forgotPasswordText.setOnClickListener {
             val intent = Intent(this, ForgotPassword::class.java)
             startActivity(intent)

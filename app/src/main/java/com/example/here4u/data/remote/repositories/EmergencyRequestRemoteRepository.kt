@@ -3,13 +3,11 @@ import android.Manifest
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.example.here4u.data.remote.entity.EmergencyRequestRemote
-import com.example.here4u.data.remote.repositories.EmergencyContactRemoteRepository
-import com.example.here4u.model.LocationModelImpl
+import com.example.here4u.domain.businesslogic.LocationModelImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject

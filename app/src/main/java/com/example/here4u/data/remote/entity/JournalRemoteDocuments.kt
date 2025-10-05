@@ -9,5 +9,5 @@ class JournalRemoteDocuments (
     val emotionId: String? = "",
     val userId: String? = "",
     val description: String = "",
-     @ServerTimestamp val createdAt: Timestamp? = null,// Firestore string → use Long for consistency
+     @ServerTimestamp val createdAt: Timestamp? = null,
     val sharedWithTherapist: Boolean = false)
