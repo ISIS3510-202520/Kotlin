@@ -19,3 +19,4 @@ Antes de ejecutar la aplicación, es necesario realizar algunos pasos de configu
 
    ```properties
    OPENAI_API_KEY=tu_api_key_aquí
+3. Subir el archivo .env a la carpeta del proyecto
