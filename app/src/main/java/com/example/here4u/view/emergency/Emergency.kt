@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,8 @@ class Emergency : AppCompatActivity() {
     private val viewModel: EmergencyContactsViewModel by viewModels()
     private lateinit var adapter: ContactsAdapter
 
+    private var pendingEmergency = false
+
     @SuppressLint("MissingPermission")
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) @androidx.annotation.RequiresPermission(
@@ -36,7 +39,13 @@ class Emergency : AppCompatActivity() {
         ) { granted ->
             if (granted) {
 
-                viewModel.createEmergency()
+                if (isLocationEnabled()){
+                val ans = viewModel.createEmergency()
+                    if (ans){
+                        Toast.makeText(this,"Email Sent!",LENGTH_SHORT).show()
+                    }
+
+                    pendingEmergency = false}
 
             }
             else {Toast.makeText(this, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show()
@@ -66,10 +75,11 @@ class Emergency : AppCompatActivity() {
         binding.btnCall.setOnClickListener {
             checkPermission()
 
-            // Aquí va tu lógica para notificar a todos
+
+
         }
 
-        // 🔹 Botón de regreso
+
         binding.btnBack.setOnClickListener {
             finish()
         }
@@ -81,7 +91,7 @@ class Emergency : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        // 🔹 Actualizar lista de contactos al volver de CreateContact
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.contacts.collect { list ->
@@ -92,13 +102,23 @@ class Emergency : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun checkPermission() {
         when {
             ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
-                viewModel.createEmergency()
+
+                if (isLocationEnabled()){
+                val res = viewModel.createEmergency()
+                    if (res){
+                        Toast.makeText(this,"Email Sent!",LENGTH_SHORT).show()
+                    }
+                }
+                else {
+                    showGpsDialog()
+                }
             }
 
             ActivityCompat.shouldShowRequestPermissionRationale(
@@ -120,4 +140,26 @@ class Emergency : AppCompatActivity() {
             }
         }
     }
+
+
+    private fun isLocationEnabled(): Boolean {
+        val lm = getSystemService(LOCATION_SERVICE) as android.location.LocationManager
+        return androidx.core.location.LocationManagerCompat.isLocationEnabled(lm)
+    }
+
+    private fun openLocationSettings() {
+        startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+    }
+    private fun showGpsDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Ubicación desactivada")
+            .setMessage("Activa el GPS para poder enviar tu ubicación en caso de emergencia.")
+            .setPositiveButton("Abrir ajustes") { _, _ -> openLocationSettings() }
+            .setNegativeButton("Cancelar") { dialog, _ ->
+                dialog.dismiss()
+                pendingEmergency = false
+            }
+            .show()
+    }
+
 }
