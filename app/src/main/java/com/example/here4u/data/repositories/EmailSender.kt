@@ -47,6 +47,7 @@ object EmailSender {
                         <h3 style="color: #d32f2f; margin-top: 0;">Location Information:</h3>
                         <p style="font-family: monospace; background: #f5f5f5; padding: 10px; border-radius: 4px;">
                             ${locationMessage.replace("\n", "<br>")}
+                            <a href=https://www.google.com/maps/search/?api=1&query=${locationMessage} style="color:#1976d2;">Open in Google Maps</a>
                         </p>
                     </div>
 
