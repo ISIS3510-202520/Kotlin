@@ -40,7 +40,7 @@ class Emergency : AppCompatActivity() {
             if (granted) {
 
                 if (isLocationEnabled()){
-                val ans = viewModel.createEmergency()
+                    val ans = viewModel.createEmergency()
                     if (ans){
                         Toast.makeText(this,"Email Sent!",LENGTH_SHORT).show()
                     }
