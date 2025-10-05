@@ -4,9 +4,11 @@ import android.util.Log
 
 import android.Manifest
 import androidx.annotation.RequiresPermission
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.here4u.BuildConfig
+import com.example.here4u.data.local.entity.EmergencyContactEntity
 import com.example.here4u.data.remote.entity.EmergencyContactRemote
 import com.example.here4u.data.remote.repositories.EmergencyContactRemoteRepository
 import com.example.here4u.data.remote.repositories.EmergencyRequestRemoteRepository
@@ -29,6 +31,7 @@ class EmergencyContactsViewModel @Inject constructor(
     private val userRepository: UserRemoteRepository,
     private val  emergencyRepository: EmergencyRequestRemoteRepository,
     private val locationModelImpl: LocationModelImpl
+
 ) : ViewModel() {
 
     private val userId: String? = userRepository.getUserId()
@@ -77,7 +80,7 @@ class EmergencyContactsViewModel @Inject constructor(
     fun createEmergency(): Boolean{
         var answer = false
         viewModelScope.launch {
-       val res = emergencyRepository.insert(true)
+            val res = emergencyRepository.insert(true)
             res.onSuccess { id -> _createdId.value= id
             sendMail(id)
             answer=true}
@@ -85,6 +88,17 @@ class EmergencyContactsViewModel @Inject constructor(
                     _error.value = e.message ?: "Error desconocido" }}
         return answer
 
+    }
+
+    suspend fun addEmergencyContact(contact: EmergencyContactEntity): Boolean {
+        return try {
+            repository.addEmergencyContact(contact) // Call insert on EmergencyContactRemoteRepository
+            true // Indicate success
+        } catch (e: Exception) {
+            _error.value = "Failed to add contact: ${e.message}"
+            Log.e("EmergencyContactsVM", "Error adding emergency contact", e)
+            false // Indicate failure
+        }
     }
 
 }

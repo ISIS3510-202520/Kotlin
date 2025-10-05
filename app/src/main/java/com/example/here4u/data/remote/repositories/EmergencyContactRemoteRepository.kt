@@ -1,22 +1,20 @@
 package com.example.here4u.data.remote.repositories
 
 import android.util.Log
+import com.example.here4u.BuildConfig
+import com.example.here4u.data.local.entity.EmergencyContactEntity
+import com.example.here4u.data.remote.entity.EmergencyContactRemote
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import com.example.here4u.data.local.entity.EmergencyContactEntity
-import com.example.here4u.data.remote.entity.EmergencyContactRemote
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import com.example.here4u.BuildConfig
-
-import com.example.here4u.data.remote.entity.EmotionRemote
 import javax.inject.Singleton
 
 @Singleton
@@ -26,7 +24,7 @@ class EmergencyContactRemoteRepository @Inject constructor(
 
     private val db = Firebase.firestore
 
-    // 🔹 Agregar un contacto
+    // 🔹 Agregar un contacto a Firestore
     suspend fun addEmergencyContact(contact: EmergencyContactEntity): Boolean {
         return try {
             val userId = userRepository.getUserId() ?: return false
@@ -42,14 +40,15 @@ class EmergencyContactRemoteRepository @Inject constructor(
             )
 
             docRef.set(remoteContact).await()
+            Log.d("EmergencyRepo", "✅ Contacto agregado correctamente")
             true
         } catch (e: Exception) {
-            Log.e("EmergencyRepo", "❌ Error adding contact: ${e.message}")
+            Log.e("EmergencyRepo", "❌ Error agregando contacto: ${e.message}", e)
             false
         }
     }
 
-    // 🔹 Obtener todos los contactos (reactivo con Flow)
+    // 🔹 Obtener todos los contactos en tiempo real usando Flow
     fun getAll(): Flow<List<EmergencyContactRemote>> = callbackFlow {
         val userId = userRepository.getUserId()
         if (userId == null) {
@@ -57,24 +56,25 @@ class EmergencyContactRemoteRepository @Inject constructor(
             return@callbackFlow
         }
 
-        val reg: ListenerRegistration =
+        val registration: ListenerRegistration =
             db.collection("EmergencyContact")
                 .whereEqualTo("userId", userId)
-                .addSnapshotListener { snap, err ->
-                    if (err != null) {
-                        close(err)
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null) {
+                        Log.e("EmergencyRepo", "❌ Error en snapshot: ${error.message}", error)
+                        close(error)
                         return@addSnapshotListener
                     }
 
-                    val list = snap?.toObjects(EmergencyContactRemote::class.java) ?: emptyList()
-                    Log.d("EmergencyRepo", "📡 Firestore snapshot: ${list.size} contactos obtenidos")
-                    trySend(list)
+                    val contacts = snapshot?.toObjects(EmergencyContactRemote::class.java) ?: emptyList()
+                    Log.d("EmergencyRepo", "📡 Snapshot actualizado: ${contacts.size} contactos obtenidos")
+                    trySend(contacts).isSuccess
                 }
 
-        awaitClose { reg.remove() }
+        awaitClose { registration.remove() }
     }
 
-    // 🔹 Obtener contactos del usuario actual (una sola vez)
+    // 🔹 Obtener contactos actuales una sola vez
     suspend fun getContactsForCurrentUser(): List<EmergencyContactRemote> {
         return try {
             val userId = userRepository.getUserId() ?: return emptyList()
@@ -93,30 +93,33 @@ class EmergencyContactRemoteRepository @Inject constructor(
         }
     }
 
-    // 🔹 Eliminar todos los contactos
-    // 🔹 Eliminar todos los contactos de un usuario
+    // 🔹 Eliminar todos los contactos del usuario actual
     suspend fun deleteContactsForCurrentUser() {
-        val userId = userRepository.getUserId() ?: return
-        val contacts = getContactsForCurrentUser()
+        try {
+            val userId = userRepository.getUserId() ?: return
+            val contacts = getContactsForCurrentUser()
 
-        contacts.forEach { contact ->
-            contact.documentId?.let { id ->
-                db.collection("EmergencyContact").document(id).delete()
+            for (contact in contacts) {
+                contact.documentId?.let { id ->
+                    db.collection("EmergencyContact").document(id).delete().await()
+                    Log.d("EmergencyRepo", "🗑️ Contacto $id eliminado")
+                }
             }
+        } catch (e: Exception) {
+            Log.e("EmergencyRepo", "❌ Error eliminando contactos: ${e.message}", e)
         }
     }
 
-    // 🔹 Enviar alertas por correo a todos los contactos
+    // 🔹 Notificar por correo a todos los contactos
     fun notifyAllContacts(locationMessage: String) {
         val username = BuildConfig.EMAIL_USERNAME
         val appPassword = BuildConfig.EMAIL_APP_PASSWORD
-
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val contacts = getContactsForCurrentUser()
                 if (contacts.isEmpty()) {
-                    Log.w("EmergencyRepo", "⚠️ No hay contactos registrados para enviar correo")
+                    Log.w("EmergencyRepo", "⚠️ No hay contactos registrados para enviar correos")
                     return@launch
                 }
 
@@ -136,7 +139,10 @@ class EmergencyContactRemoteRepository @Inject constructor(
                     if (success) successCount++
                 }
 
-                Log.d("EmergencyRepo", "✅ $successCount / ${contacts.size} correos enviados correctamente")
+                Log.d(
+                    "EmergencyRepo",
+                    "✅ $successCount / ${contacts.size} correos enviados correctamente"
+                )
             } catch (e: Exception) {
                 Log.e("EmergencyRepo", "❌ Error enviando correos: ${e.message}", e)
             }

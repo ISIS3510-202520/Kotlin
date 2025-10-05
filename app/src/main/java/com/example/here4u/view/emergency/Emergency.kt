@@ -68,10 +68,7 @@ class Emergency : AppCompatActivity() {
             startActivity(Intent(this, CreateContact::class.java))
         }
 
-        // 🔹 Mensaje de prueba (puedes reemplazarlo por la ubicación real)
-        val locationMessage = "🚨 ¡Alerta! Se detectó una emergencia en tu ubicación."
 
-        // 🔹 Botón para notificar a todos los contactos
         binding.btnCall.setOnClickListener {
             checkPermission()
 
