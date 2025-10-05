@@ -64,10 +64,10 @@ object EmailSender {
             }
 
             Transport.send(message)
-            Log.d("EmailSender", "✅ Email sent to $recipientEmail")
+            Log.d("EmailSender", "Email sent to $recipientEmail")
             true
         } catch (e: Exception) {
-            Log.e("EmailSender", "❌ Error sending email to $recipientEmail: ${e.message}")
+            Log.e("EmailSender", "Error sending email to $recipientEmail: ${e.message}")
             false
         }
     }

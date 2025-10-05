@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.here4u.data.repositories.JournalRepository
-import com.example.here4u.data.repositories.RecapRepository
+import com.example.here4u.data.remote.repositories.JournalRepository
+import com.example.here4u.data.remote.repositories.RecapRepository
 import com.example.here4u.data.remote.repositories.UserRemoteRepository
-import com.example.here4u.model.Journal
-import com.example.here4u.model.Recap
+import com.example.here4u.domain.model.Journal
+import com.example.here4u.domain.model.Recap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -22,8 +22,7 @@ class TrendsViewModel @Inject constructor(
     private val userRemoteRepository: UserRemoteRepository
 ) : ViewModel() {
 
-    //private val _isLoading = MutableLiveData(false)
-    //val isLoading: LiveData<Boolean> get() = _isLoading
+
 
     private val _recap = MutableLiveData<Recap>()
     val recap: LiveData<Recap> get() = _recap
@@ -33,7 +32,7 @@ class TrendsViewModel @Inject constructor(
             val userId = userRemoteRepository.getUserId()
 
             if (userId == null) {
-                Log.e("TrendsVM", "⚠️ No user logged in — cannot fetch journals.")
+                Log.e("TrendsVM", "No user logged in — cannot fetch journals.")
                 _recap.postValue(
                     Recap(
                         highlights = listOf("User not authenticated"),

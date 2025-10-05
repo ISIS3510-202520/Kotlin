@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.here4u.view.exercises.ExerciseAdapter
 import com.example.here4u.R
-import com.example.here4u.model.Exercise
+import com.example.here4u.domain.model.Exercise
 
 class ExercisesFragment : Fragment() {
 

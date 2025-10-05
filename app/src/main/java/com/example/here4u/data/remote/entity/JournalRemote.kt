@@ -9,6 +9,6 @@ data class JournalRemote(
     val emotionId: String = "",
     val userId: String = "",
     val description: String = "",
-    val createdAt: Long = 0,// Firestore string → use Long for consistency
+    val createdAt: Long = 0,
     val sharedWithTherapist: Boolean = false
 )

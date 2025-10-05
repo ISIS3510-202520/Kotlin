@@ -1,8 +1,8 @@
-package com.example.here4u.view.login
+package com.example.here4u.domain.businesslogic
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import javax.inject.Inject
 
 class LoginModel @Inject constructor(

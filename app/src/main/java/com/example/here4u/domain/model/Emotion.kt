@@ -1,6 +1,4 @@
-package com.example.here4u.model
-
-import androidx.annotation.ColorInt
+package com.example.here4u.domain.model
 
 data class Emotion(
     val id: Long,

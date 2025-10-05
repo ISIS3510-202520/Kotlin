@@ -56,14 +56,14 @@ class Emergency : AppCompatActivity() {
         binding = ActivityEmergencyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 🔹 Inicializar adapter
+
         adapter = ContactsAdapter()
 
-        // 🔹 Configurar RecyclerView
+
         binding.rvContacts.layoutManager = GridLayoutManager(this, 2)
         binding.rvContacts.adapter = adapter
 
-        // 🔹 Botón para agregar contacto
+
         binding.btnAddContact.setOnClickListener {
             startActivity(Intent(this, CreateContact::class.java))
         }
@@ -92,7 +92,7 @@ class Emergency : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.contacts.collect { list ->
-                    android.util.Log.d("EmergencyActivity", "📋 Se recibieron ${list.size} contactos.")
+                    android.util.Log.d("EmergencyActivity", "Se recibieron ${list.size} contactos.")
                     adapter.updateData(list)
                 }
             }

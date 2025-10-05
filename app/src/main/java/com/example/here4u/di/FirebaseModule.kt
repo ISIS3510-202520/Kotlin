@@ -3,7 +3,6 @@ package com.example.here4u.di
 import com.example.here4u.data.remote.openai.OpenAIApi
 import com.example.here4u.data.remote.openai.OpenAIClient
 import com.example.here4u.data.remote.repositories.EmotionRemoteRepository
-import com.example.here4u.data.remote.repositories.JournalRemoteRepository
 import com.example.here4u.data.remote.repositories.UserRemoteRepository
 import com.example.here4u.data.remote.service.FirebaseService
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -11,7 +10,7 @@ import com.google.android.gms.location.LocationServices
 import android.content.Context
 import com.example.here4u.data.remote.repositories.EmergencyContactRemoteRepository
 import com.example.here4u.data.remote.repositories.EmergencyRequestRemoteRepository
-import com.example.here4u.model.LocationModelImpl
+import com.example.here4u.domain.businesslogic.LocationModelImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module

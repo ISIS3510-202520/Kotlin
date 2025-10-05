@@ -38,7 +38,7 @@ class Journaling : AppCompatActivity() {
         val calm  = "#8CC0CF".toColorInt()
         val joy   = "#86D9F0".toColorInt()
 
-        // ---- toma los extras UNA sola vez y sin sombras ----
+
         emotionId = intent.getStringExtra("emotion_id")?: ""
         val name  = intent.getStringExtra("emotion_name") ?: ""
         val colorString = intent.getStringExtra("emotion_color")
@@ -60,7 +60,7 @@ class Journaling : AppCompatActivity() {
         binding.btnAdd.setOnClickListener {
             val text = binding.etNote.text?.toString() ?: ""
 
-            if (text.isBlank()) { // no trim, solo chequeo
+            if (text.isBlank()) {
                 binding.textViewerror.visibility = View.VISIBLE
                 return@setOnClickListener
             }

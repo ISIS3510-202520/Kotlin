@@ -7,7 +7,7 @@ import com.example.here4u.R
 class ExercisesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_exercises) // This will host the fragment
+        setContentView(R.layout.activity_exercises)
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container_exercises, ExercisesFragment())
             .commit()

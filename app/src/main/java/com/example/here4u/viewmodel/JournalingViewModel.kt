@@ -20,7 +20,9 @@ class JournalingViewModel @Inject constructor(
     fun saveText(emotionId: String, content: String): Job =
         viewModelScope.launch {
             val time: Timestamp? = repository.insertOne(emotionId,content)
+            repositoryuser.updateLoginStreak()
             repositoryuser.updateLastEntry(time)
+
 
         }
     }

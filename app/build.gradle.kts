@@ -14,14 +14,14 @@ hilt {
     enableAggregatingTask = false
 }
 
-// 🟢 Cargar el archivo .env
+// Cargar el archivo .env
 val envFile = rootProject.file(".env")
 val env = Properties()
 if (envFile.exists()) {
-    println("✅ Cargando variables desde .env")
+    println("Cargando variables desde .env")
     env.load(envFile.inputStream())
 } else {
-    println("⚠️ No se encontró el archivo .env en ${envFile.absolutePath}")
+    println("No se encontró el archivo .env en ${envFile.absolutePath}")
 }
 
 // local.properties (para claves locales como OPENAI_API_KEY)
@@ -49,7 +49,7 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // ✅ TODOS los buildConfigField deben estar dentro de defaultConfig o buildTypes
+        // TODOS los buildConfigField deben estar dentro de defaultConfig o buildTypes
         buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
         buildConfigField("String", "EMAIL_USERNAME", "\"$gmailUser\"")
         buildConfigField("String", "EMAIL_APP_PASSWORD", "\"$gmailAppPassword\"")
@@ -90,7 +90,7 @@ android {
     }
 }
 
-// ⚙️ Dependencias
+// Dependencias
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -1,6 +1,4 @@
-package com.example.here4u.model
-
-import com.google.firebase.Timestamp
+package com.example.here4u.domain.model
 
 data class Journal(
     val id: String,

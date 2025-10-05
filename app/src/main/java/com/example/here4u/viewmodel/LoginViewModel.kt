@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.here4u.data.remote.repositories.UserRemoteRepository
+import com.example.here4u.domain.businesslogic.LoginModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-// Representa el estado del resultado del login
+
 sealed class LoginResult {
     object Idle : LoginResult()
     object Success : LoginResult()
@@ -34,11 +35,10 @@ class LoginViewModel @Inject constructor(
 
                     viewModelScope.launch {
                         try {
-                            withContext(Dispatchers.IO) {
-                                userRemoteRepository.updateLoginStreak()
-                            }
+                            userRemoteRepository.updatelogindate()
                             _loginResult.postValue(LoginResult.Success)
                         } catch (e: Exception) {
+
 
                             e.printStackTrace()
                             _loginResult.postValue(LoginResult.Success)

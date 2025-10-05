@@ -1,13 +1,12 @@
-package com.example.here4u.data.repositories
+package com.example.here4u.data.remote.repositories
 
-import com.example.here4u.model.Recap
+import com.example.here4u.domain.model.Recap
 import com.example.here4u.data.remote.openai.ChatMessage
 import com.example.here4u.data.remote.openai.ChatRequest
 import com.example.here4u.data.remote.openai.OpenAIApi
 import com.example.here4u.data.remote.openai.RecapResponse
 import com.example.here4u.data.remote.entity.SummaryRequestRemote
-import com.example.here4u.data.remote.repositories.SummaryRequestRemoteRepository
-import com.example.here4u.model.Journal
+import com.example.here4u.domain.model.Journal
 import com.google.gson.Gson
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -18,14 +17,14 @@ class RecapRepository @Inject constructor(
 ) {
     suspend fun generateRecapWithAI(userId: String, journals: List<Journal>): Recap {
 
-        // 0. Find the most common emotion among the journals
+
         val mostCommonEmotion = journals
             .groupingBy { it.emotion.name }
             .eachCount()
             .maxByOrNull { it.value }
             ?.key ?: "Unknown"
 
-        // 1. Build the AI prompt
+
         val prompt = buildPromptFromJournals(journals)
 
         val request = ChatRequest(
@@ -46,10 +45,10 @@ class RecapRepository @Inject constructor(
             )
         )
 
-        // 2. Call OpenAI API
+
         val response = openAiApi.getChatCompletion(request)
 
-        // 3. Parse JSON safely
+
         val rawContent = response.choices.firstOrNull()?.message?.content ?: "{}"
 
         val recapResponse: RecapResponse = try {
@@ -61,7 +60,7 @@ class RecapRepository @Inject constructor(
             )
         }
 
-        // Prepend the emotion line to the summary
+
         val modifiedSummary = "Most common emotion: $mostCommonEmotion\n\n${recapResponse.summary}"
 
         val recap = Recap(
@@ -69,7 +68,7 @@ class RecapRepository @Inject constructor(
             summary = modifiedSummary
         )
 
-        // 4. Automatically save SummaryRequestRemote in Firestore
+
         saveSummaryRequest(userId, recap.summary)
 
         return recap

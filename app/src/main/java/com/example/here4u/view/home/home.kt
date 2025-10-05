@@ -46,7 +46,7 @@ class home : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // --- Navigation Buttons ---
+
         binding.btnExercises.setOnClickListener {
             startActivity(Intent(this, ExercisesActivity::class.java))
         }
@@ -95,6 +95,6 @@ class home : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.refreshMoodText()
-        viewModel.refreshUserStreak() // refresh streak whenever user returns to Home
+        viewModel.refreshUserStreak()
     }
 }
