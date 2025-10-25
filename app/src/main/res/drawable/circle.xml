@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <size
-        android:width="170dp"
-        android:height="170dp" />
 
-</shape>
+    <item>
+        <shape android:shape="oval">
+            <size
+                android:width="120dp"
+                android:height="120dp" />
+            <solid android:color="@color/buttonColor" />
+            <stroke
+                android:width="2dp"
+                android:color="@android:color/black" />
+        </shape>
+    </item>
+
+
+    <item
+        android:width="60dp"
+        android:height="60dp"
+        android:drawable="@drawable/ic_profile"
+        android:gravity="center"
+        />
+</layer-list>

@@ -263,4 +263,17 @@ class UserRemoteRepository @Inject constructor(
     }
 
 
+    suspend fun logout(): Boolean {
+        try {
+            firebaseAuth.signOut()
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+
+        }
+
+
+    }
+
 }

@@ -11,15 +11,19 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.here4u.R
 import com.example.here4u.view.home.home
 import dagger.hilt.android.AndroidEntryPoint
+import com.google.firebase.analytics.FirebaseAnalytics
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         val emailEditText = findViewById<EditText>(R.id.etUser)
         val passwordEditText = findViewById<EditText>(R.id.etPassword)
@@ -34,6 +38,11 @@ class MainActivity : AppCompatActivity() {
             when (result) {
                 is LoginResult.Success -> {
                     Toast.makeText(this, "Sucessfull Login !", Toast.LENGTH_SHORT).show()
+                    val bundle = Bundle().apply {
+                        putString(FirebaseAnalytics.Param.METHOD, "Login")
+                        putString("User_email", emailEditText.text.toString())
+                    }
+                    firebaseAnalytics.logEvent("Login", bundle)
                     val intent = Intent(this, home::class.java)
                     startActivity(intent)
                     finish()
