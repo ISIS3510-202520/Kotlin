@@ -25,7 +25,6 @@ class CreateContact : AppCompatActivity() {
 
     private val emergencyContactsViewModel: EmergencyContactsViewModel by viewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_contact)
@@ -39,9 +38,7 @@ class CreateContact : AppCompatActivity() {
 
         btnAdd.setOnClickListener { saveContact() }
 
-        btnBack.setOnClickListener {
-            finish()
-        }
+        btnBack.setOnClickListener { finish() }
     }
 
     private fun saveContact() {
@@ -65,10 +62,10 @@ class CreateContact : AppCompatActivity() {
         lifecycleScope.launch {
             val success = emergencyContactsViewModel.addEmergencyContact(contactEntity)
             if (success) {
-                Toast.makeText(this@CreateContact, " Contact saved", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CreateContact, "Contact saved", Toast.LENGTH_SHORT).show()
                 clearFields()
             } else {
-                Toast.makeText(this@CreateContact, " Error saving contact", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CreateContact, "Error saving contact", Toast.LENGTH_SHORT).show()
             }
         }
     }
