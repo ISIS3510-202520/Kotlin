@@ -18,6 +18,7 @@ class LoginModel @Inject constructor(
                             if (reloadTask.isSuccessful) {
                                 if (user.isEmailVerified) {
                                     onResult(true, null)
+
                                 } else {
 
                                     onResult(false, "Your email is not verified yet. Please check your inbox or spam folder.")

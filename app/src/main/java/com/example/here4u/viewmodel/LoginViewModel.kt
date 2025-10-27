@@ -11,6 +11,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import android.content.Context
+import com.example.here4u.data.local.security.SecurePrefs
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.qualifiers.ApplicationContext
+
 
 
 sealed class LoginResult {
@@ -22,8 +27,10 @@ sealed class LoginResult {
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginModel: LoginModel,
-    private val userRemoteRepository: UserRemoteRepository
+    private val userRemoteRepository: UserRemoteRepository,
+    @ApplicationContext private val context: Context // ✅ injected safely
 ) : ViewModel() {
+
 
     private val _loginResult = MutableLiveData<LoginResult>(LoginResult.Idle)
     val loginResult: LiveData<LoginResult> = _loginResult
@@ -32,14 +39,16 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             loginModel.login(email, password) { success, errorMsg ->
                 if (success) {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    user?.let {
+                        SecurePrefs.save(context, "uid", it.uid)
+                    }
 
                     viewModelScope.launch {
                         try {
                             userRemoteRepository.updatelogindate()
                             _loginResult.postValue(LoginResult.Success)
                         } catch (e: Exception) {
-
-
                             e.printStackTrace()
                             _loginResult.postValue(LoginResult.Success)
                         }
