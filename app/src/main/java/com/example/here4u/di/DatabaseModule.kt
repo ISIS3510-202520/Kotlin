@@ -2,6 +2,7 @@ package com.example.here4u.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.here4u.data.local.cache.RecapCache
 import com.example.here4u.data.local.dao.EmergencyContactDao
 import com.example.here4u.data.local.dao.EmotionDao
 import com.example.here4u.data.local.dao.JournalDao
@@ -89,5 +90,9 @@ object DatabaseModule {
     @Provides
     fun provideEmergencyContactsLocalRepository(dao: EmergencyContactDao): EmergencyContactsLocalRepository =
         EmergencyContactsLocalRepository(dao)
+
+    @Provides
+    @Singleton
+    fun provideRecapCache(): RecapCache = RecapCache()
 
 }
