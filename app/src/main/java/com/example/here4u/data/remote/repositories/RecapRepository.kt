@@ -10,13 +10,25 @@ import com.example.here4u.domain.model.Journal
 import com.google.gson.Gson
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import com.example.here4u.data.local.cache.RecapCache
 
 class RecapRepository @Inject constructor(
     private val openAiApi: OpenAIApi,
-    private val summaryRequestRepo: SummaryRequestRemoteRepository
+    private val summaryRequestRepo: SummaryRequestRemoteRepository,
+    private val recapCache: RecapCache
 ) {
     suspend fun generateRecapWithAI(userId: String, journals: List<Journal>): Recap {
 
+        // 1️⃣ Generar clave única basada en los journals
+        val cacheKey = journals.joinToString { it.date.toString() + it.content + it.emotion.name }
+            .hashCode().toString()
+
+        // 2️⃣ Revisar si ya existe en caché
+        recapCache.get(cacheKey)?.let { cachedRecap ->
+            return cachedRecap.also {
+                println("✅ Recap loaded from cache (key=$cacheKey)")
+            }
+        }
 
         val mostCommonEmotion = journals
             .groupingBy { it.emotion.name }
@@ -69,8 +81,11 @@ class RecapRepository @Inject constructor(
         )
 
 
+        // 4️⃣ Guardar recap tanto remoto como en caché
         saveSummaryRequest(userId, recap.summary)
+        recapCache.put(cacheKey, recap)
 
+        println("💾 Recap cached with key=$cacheKey")
         return recap
     }
 

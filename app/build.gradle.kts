@@ -145,4 +145,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.sun.mail:android-mail:1.6.7")
     implementation("com.sun.mail:android-activation:1.6.7")
+
+    // SECURITY
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }
