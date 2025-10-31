@@ -18,6 +18,8 @@ import com.example.here4u.data.local.repositories.RecapLocalRepository
 import com.sun.activation.registries.LogSupport.log
 import java.io.File
 import kotlin.math.log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 // Threads todo
 
@@ -56,23 +58,25 @@ class TrendsViewModel @Inject constructor(
             try {
                 journalRepository.getLast7Days(userId).collectLatest { journals: List<Journal> ->
                     Log.d("TrendsVM", "Flow emitted ${journals.size} journals")
+
                     if (journals.isNotEmpty()) {
                         try {
-                            val recapData = recapRepository.generateRecapWithAI(userId,journals)
-                            Log.d(
-                                "TrendsVM",
-                                "Recap received: highlights=${recapData.highlights.size}, summary length=${recapData.summary.length}"
-                            )
-                            _recap.postValue(recapData)
-
-                            val verdad=recapLocalRepository.shouldSaveSummary()
-                            log("$verdad")
-                            if (verdad){
-                                log("entró")
-                                recapLocalRepository.saveSummary(recapData.summary)
-                                recapLocalRepository.updateLastSaveTime()
-
+                            // 🔹 Move heavy network + AI call to background thread pool
+                            val recapData = withContext(Dispatchers.IO) {
+                                recapRepository.generateRecapWithAI(userId, journals)
                             }
+
+                            // 🔹 Back to Main thread — update LiveData/UI
+                            _recap.value = recapData
+
+                            val shouldSave = recapLocalRepository.shouldSaveSummary()
+                            if (shouldSave) {
+                                withContext(Dispatchers.IO) {
+                                    recapLocalRepository.saveSummary(recapData.summary)
+                                    recapLocalRepository.updateLastSaveTime()
+                                }
+                            }
+
                         } catch (e: Exception) {
                             Log.e("TrendsVM", "Error generating recap with AI", e)
                             _recap.postValue(
@@ -96,6 +100,7 @@ class TrendsViewModel @Inject constructor(
             }
         }
     }
+
 
     fun getDocument(){
         val file = recapLocalRepository.getLastSavedPdf()
