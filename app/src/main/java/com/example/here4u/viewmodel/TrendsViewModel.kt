@@ -19,6 +19,8 @@ import com.sun.activation.registries.LogSupport.log
 import java.io.File
 import kotlin.math.log
 
+// Threads todo
+
 @HiltViewModel
 class TrendsViewModel @Inject constructor(
     private val journalRepository: JournalRepository,
