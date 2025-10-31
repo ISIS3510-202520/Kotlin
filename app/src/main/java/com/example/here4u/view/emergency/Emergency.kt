@@ -17,7 +17,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.here4u.databinding.ActivityEmergencyBinding
 import com.example.here4u.viewmodel.EmergencyContactsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,51 +33,40 @@ class Emergency : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) @androidx.annotation.RequiresPermission(
-            allOf = [android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION]
-        ) { granted ->
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
+                if (isLocationEnabled()) {
 
-                if (isLocationEnabled()){
-                    val ans = viewModel.createEmergency()
-                    if (ans){
-                        Toast.makeText(this,"Email Sent!",LENGTH_SHORT).show()
+                    lifecycleScope.launch {
+                        val ans = viewModel.createEmergency()
+                        if (ans) {
+                            Toast.makeText(this@Emergency, "Email Sent!", LENGTH_SHORT).show()
+                        }
+                        pendingEmergency = false
                     }
 
-                    pendingEmergency = false}
-
+                }
+            } else {
+                Toast.makeText(this, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show()
             }
-            else {Toast.makeText(this, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show()
-            }}
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEmergencyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         adapter = ContactsAdapter()
-
 
         binding.rvContacts.layoutManager = GridLayoutManager(this, 2)
         binding.rvContacts.adapter = adapter
-
 
         binding.btnAddContact.setOnClickListener {
             startActivity(Intent(this, CreateContact::class.java))
         }
 
-
         binding.btnCall.setOnClickListener {
             checkPermission()
-
-
-
-        }
-
-
-        binding.btnBack.setOnClickListener {
-            finish()
         }
 
 
@@ -88,11 +76,13 @@ class Emergency : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        lifecycleScope.launch {
+            viewModel.loadContacts()
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.contacts.collect { list ->
-                    android.util.Log.d("EmergencyActivity", "Se recibieron ${list.size} contactos.")
                     adapter.updateData(list)
                 }
             }
@@ -107,13 +97,14 @@ class Emergency : AppCompatActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
 
-                if (isLocationEnabled()){
-                val res = viewModel.createEmergency()
-                    if (res){
-                        Toast.makeText(this,"Email Sent!",LENGTH_SHORT).show()
+                if (isLocationEnabled()) {
+                    lifecycleScope.launch {
+                        val res = viewModel.createEmergency()
+                        if (res) {
+                            Toast.makeText(this@Emergency, "Email Sent!", LENGTH_SHORT).show()
+                        }
                     }
-                }
-                else {
+                } else {
                     showGpsDialog()
                 }
             }
@@ -138,7 +129,6 @@ class Emergency : AppCompatActivity() {
         }
     }
 
-
     private fun isLocationEnabled(): Boolean {
         val lm = getSystemService(LOCATION_SERVICE) as android.location.LocationManager
         return androidx.core.location.LocationManagerCompat.isLocationEnabled(lm)
@@ -147,6 +137,7 @@ class Emergency : AppCompatActivity() {
     private fun openLocationSettings() {
         startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
     }
+
     private fun showGpsDialog() {
         AlertDialog.Builder(this)
             .setTitle("Ubicación desactivada")

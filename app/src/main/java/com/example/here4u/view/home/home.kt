@@ -28,6 +28,7 @@ import com.example.here4u.databinding.ActivityHomeBinding
 import com.example.here4u.view.recap.TrendsFragment
 import com.google.android.material.button.MaterialButton
 import com.example.here4u.view.emergency.Emergency
+import com.example.here4u.view.profile.ProfileActivity
 import com.example.here4u.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -89,6 +90,10 @@ class home : AppCompatActivity() {
                     }
                 }
             }
+        }
+        binding.userboton.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+
         }
     }
 

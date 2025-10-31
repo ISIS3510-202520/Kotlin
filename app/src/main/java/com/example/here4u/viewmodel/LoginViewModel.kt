@@ -11,7 +11,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-
+import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 sealed class LoginResult {
     object Idle : LoginResult()
@@ -22,24 +24,36 @@ sealed class LoginResult {
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginModel: LoginModel,
-    private val userRemoteRepository: UserRemoteRepository
+    private val userRemoteRepository: UserRemoteRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _loginResult = MutableLiveData<LoginResult>(LoginResult.Idle)
     val loginResult: LiveData<LoginResult> = _loginResult
 
+    private val prefs = context.getSharedPreferences("user_cache", Context.MODE_PRIVATE)
+
+    init {
+        val savedUid = prefs.getString("uid", null)
+        if (!savedUid.isNullOrEmpty()) {
+            _loginResult.value = LoginResult.Success
+        }
+    }
+
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
             loginModel.login(email, password) { success, errorMsg ->
                 if (success) {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    user?.let {
+                        prefs.edit().putString("uid", it.uid).apply()
+                    }
 
                     viewModelScope.launch {
                         try {
                             userRemoteRepository.updatelogindate()
                             _loginResult.postValue(LoginResult.Success)
                         } catch (e: Exception) {
-
-
                             e.printStackTrace()
                             _loginResult.postValue(LoginResult.Success)
                         }
@@ -51,5 +65,11 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun logoutUser() {
+        FirebaseAuth.getInstance().signOut()
+        prefs.edit().remove("uid").apply()
+        _loginResult.value = LoginResult.Idle
     }
 }

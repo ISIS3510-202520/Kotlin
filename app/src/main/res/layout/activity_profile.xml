@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".view.login.MainActivity"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:backgroundTint="@android:color/white"
+        >
+
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="Profile"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black" />
+
+        <ImageView
+            android:id="@+id/ivCircle"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/circle" />
+
+        <!-- Espaciado -->
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="24dp" />
+
+        <!-- Botón Sign Up -->
+        <Button
+            android:id="@+id/Logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/buttonPink"
+            android:drawableStart="@drawable/ic_sign"
+            android:drawablePadding="8dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Log Out"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:elevation="2dp" />
+
+    </LinearLayout>
+</ScrollView>
