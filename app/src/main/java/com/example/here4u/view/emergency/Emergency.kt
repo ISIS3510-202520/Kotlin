@@ -30,8 +30,10 @@ import androidx.lifecycle.LifecycleOwner
 import com.example.here4u.data.mappers.toRemote
 import android.net.ConnectivityManager
 import android.content.Context
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+
 
 @AndroidEntryPoint
 class Emergency : AppCompatActivity() {
@@ -111,6 +113,7 @@ class Emergency : AppCompatActivity() {
             }
 
         }
+
     }
 
     @SuppressLint("SuspiciousIndentation")
