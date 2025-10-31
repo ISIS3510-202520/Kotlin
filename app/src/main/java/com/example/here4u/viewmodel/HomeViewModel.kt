@@ -14,6 +14,8 @@ import kotlinx.coroutines.launch
 import java.text.DateFormat.getTimeInstance
 import java.util.Calendar
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 @HiltViewModel
@@ -52,11 +54,17 @@ class HomeViewModel @Inject constructor(
 }
 
     fun refreshUserStreak() = viewModelScope.launch {
-        val streakPair = userRepository.getUserStreak()
+        // Run the heavy I/O work on a background thread
+        val streakPair = withContext(Dispatchers.IO) {
+            userRepository.getUserStreak()
+        }
+
+        // Back to Main thread — safely update LiveData / StateFlow
         streakPair?.let {
             _streak.value = it.first
         }
     }
+
 
     private fun startAutoUpdate() = viewModelScope.launch {
         while (isActive) {
