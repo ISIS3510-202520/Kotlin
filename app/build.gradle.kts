@@ -39,7 +39,23 @@ val gmailUser: String = env.getProperty("GMAIL_USERNAME") ?: ""
 val gmailAppPassword: String = env.getProperty("GMAIL_APP_PASSWORD") ?: ""
 
 android {
-    namespace = "com.example.here4u"
+
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/license.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/notice.txt",
+                "META-INF/ASL2.0",
+                "META-INF/versions/9/OSGI-INF/MANIFEST.MF" // 👈 ESTA es la clave
+            )
+        }}
+
+        namespace = "com.example.here4u"
     compileSdk = 36
 
     defaultConfig {
@@ -107,6 +123,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.room.common.jvm)
+    implementation(libs.identity.jvm)
     debugImplementation(libs.androidx.compose.ui.tooling)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

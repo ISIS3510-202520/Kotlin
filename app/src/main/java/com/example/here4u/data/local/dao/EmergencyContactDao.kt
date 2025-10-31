@@ -1,5 +1,6 @@
 package com.example.here4u.data.local.dao
 
+import android.R
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,8 +12,6 @@ interface EmergencyContactDao {
     @Query("SELECT * FROM EmergencyContacts_table")
     suspend fun getAllEmergencyContacts(): List<EmergencyContactEntity>
 
-    @Query("SELECT * FROM EmergencyContacts_table WHERE documentId = :documentId")
-    suspend fun getEmergencyContactByDocumentId(documentId: String): EmergencyContactEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEmergencyContact(emergencyContact: EmergencyContactEntity)
@@ -22,5 +21,11 @@ interface EmergencyContactDao {
 
     @Query("DELETE FROM EmergencyContacts_table")
     suspend fun clearAll()
+
+    @Query("SELECT * FROM EmergencyContacts_table WHERE synced = 0")
+    suspend fun getUnsyncedContacts(): List<EmergencyContactEntity>
+
+    @Query("UPDATE EmergencyContacts_table SET synced = :state WHERE localId =:id")
+    suspend fun updateSync(id: Long, state: Boolean)
 
 }
