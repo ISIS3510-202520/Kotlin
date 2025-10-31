@@ -37,7 +37,7 @@ class EmotionsViewModel @Inject constructor(
             )
 
 
-    // 🔄 Sincroniza los datos remotos hacia la base de datos local
+
     fun syncEmotionsToLocal() {
         viewModelScope.launch {
             val remoteEmotions = emotions.value
@@ -50,7 +50,7 @@ class EmotionsViewModel @Inject constructor(
 
                 val localList = remoteList.map {
                     EmotionEntity(
-                        id = 0, // se autogenera en Room
+                        id = 0,
                         name = it.name,
                         color = it.colorHex,
                         description = it.description
@@ -60,9 +60,9 @@ class EmotionsViewModel @Inject constructor(
                 localRepository.clearAll()
                 localRepository.insertAll(localList)
 
-                android.util.Log.d("LOCAL_DB", "✅ ${localList.size} emociones guardadas localmente.")
+                android.util.Log.d("LOCAL_DB", " ${localList.size} emotions loaded.")
             } catch (e: Exception) {
-                android.util.Log.e("LOCAL_DB", "❌ Error sincronizando emociones: ${e.message}")
+                android.util.Log.e("LOCAL_DB", " Error loading emotions: ${e.message}")
             }
         }
     }

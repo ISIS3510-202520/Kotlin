@@ -69,9 +69,7 @@ class Emergency : AppCompatActivity() {
             checkPermission()
         }
 
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
+
     }
 
     @SuppressLint("RepeatOnLifecycleWrongUsage")

@@ -33,7 +33,7 @@ class ProfileActivity : AppCompatActivity() {
             if (success) {
 
                 startActivity(Intent(this, MainActivity::class.java))
-                Toast.makeText(this, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Closed correctly", Toast.LENGTH_SHORT).show()
                 finish()
 
             } else {
