@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.here4u.R
 import com.example.here4u.data.local.entity.EmergencyContactEntity
+import com.example.here4u.utils.NetworkUtils
 import com.example.here4u.viewmodel.EmergencyContactsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

@@ -5,7 +5,6 @@ import android.content.Context
 
 object EmotionDatabaseProvider {
 
-    // Instancia única de la base de datos
     @Volatile
     private var INSTANCE: EmotionDatabase? = null
 

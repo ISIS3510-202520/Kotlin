@@ -6,7 +6,7 @@ import com.example.here4u.data.local.dao.EmergencyContactDao
 import com.example.here4u.data.local.entity.EmergencyContactEntity
 @Database(
     entities = [EmergencyContactEntity::class],
-    version = 1, exportSchema = false)
+    version = 4)
 abstract class EmergencyContactDatabase:RoomDatabase() {
     abstract fun emergencyContactDao(): EmergencyContactDao
 }

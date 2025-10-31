@@ -5,12 +5,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "EmergencyContacts_table")
 data class EmergencyContactEntity(
-    @PrimaryKey(autoGenerate = true)
-    val localId: Long = 0,
-    val documentId: String? = null,
-    val userId: String = "",
+    @PrimaryKey()
+    val localId: String= "",
     val name: String = "",
     val phone: String = "",
     val email: String = "",
-    val relation: String = ""
+    val relation: String = "",
+    var synced: Boolean = false
 )

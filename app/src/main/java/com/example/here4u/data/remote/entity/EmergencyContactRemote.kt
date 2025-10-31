@@ -8,6 +8,6 @@ data class EmergencyContactRemote(
     val name: String = "",
     val phone: String = "",
     val email: String = "",
-    val relation: String = ""
+    val relation: String = "",
 )
 

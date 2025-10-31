@@ -38,6 +38,7 @@ class HomeViewModel @Inject constructor(
 
 
     fun refreshMoodText(){
+
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
 

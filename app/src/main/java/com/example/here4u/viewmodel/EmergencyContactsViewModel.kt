@@ -3,10 +3,13 @@ package com.example.here4u.viewmodel
 import android.util.Log
 import android.Manifest
 import androidx.annotation.RequiresPermission
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.here4u.BuildConfig
 import com.example.here4u.data.local.entity.EmergencyContactEntity
+import com.example.here4u.data.local.repositories.EmergencyContactsLocalRepository
 import com.example.here4u.data.remote.entity.EmergencyContactRemote
 import com.example.here4u.data.remote.repositories.EmergencyContactRemoteRepository
 import com.example.here4u.data.remote.repositories.EmergencyRequestRemoteRepository
@@ -14,6 +17,7 @@ import com.example.here4u.data.remote.repositories.UserRemoteRepository
 import com.example.here4u.domain.businesslogic.LocationModelImpl
 import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,11 +26,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class EmergencyContactsViewModel @Inject constructor(
     private val repository: EmergencyContactRemoteRepository,
     private val userRepository: UserRemoteRepository,
     private val emergencyRepository: EmergencyRequestRemoteRepository,
+    private val EmergencylocalRepository: EmergencyContactsLocalRepository,
     private val locationModelImpl: LocationModelImpl
 ) : ViewModel() {
 
@@ -36,6 +42,11 @@ class EmergencyContactsViewModel @Inject constructor(
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
+
+    private val _contacts = MutableLiveData<List<EmergencyContactEntity>>()
+    val localcontacts: LiveData<List<EmergencyContactEntity>> get() = _contacts
+
+
 
     val contacts: StateFlow<List<EmergencyContactRemote>> =
         if (userId != null) {
@@ -105,7 +116,8 @@ class EmergencyContactsViewModel @Inject constructor(
 
     suspend fun addEmergencyContact(contact: EmergencyContactEntity): Boolean {
         return try {
-            repository.addEmergencyContact(contact)
+                val success=repository.addEmergencyContact(contact)
+
             true
         } catch (e: Exception) {
             _error.value = "Failed to add contact: ${e.message}"
@@ -113,4 +125,21 @@ class EmergencyContactsViewModel @Inject constructor(
             false
         }
     }
+
+   fun loadLocalContacts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val contacts = EmergencylocalRepository.getAll()
+            _contacts.postValue(contacts)
+        }
+    }
+
+    suspend fun syncPendingContacts() {
+
+        EmergencylocalRepository.syncPendingContacts(repository)
+
+
+
+    }
+
+
 }

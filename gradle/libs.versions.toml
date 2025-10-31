@@ -41,6 +41,7 @@ crashlytics="3.0.2"
 playServicesLocation = "21.3.0"
 lifecycleViewmodelKtx = "2.9.4"
 roomCommonJvm = "2.8.3"
+identityJvm = "202411.1"
 
 
 [libraries]
@@ -104,6 +105,7 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
+identity-jvm = { group = "com.android.identity", name = "identity-jvm", version.ref = "identityJvm" }
 
 [plugins]
 android-application = { id = "com.android.application",           version.ref = "agp" }
