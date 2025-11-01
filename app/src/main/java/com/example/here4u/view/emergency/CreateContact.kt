@@ -13,6 +13,8 @@ import com.example.here4u.utils.NetworkUtils
 import com.example.here4u.viewmodel.EmergencyContactsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import com.google.firebase.analytics.FirebaseAnalytics
+
 
 @AndroidEntryPoint
 class CreateContact : AppCompatActivity() {
@@ -64,6 +66,15 @@ class CreateContact : AppCompatActivity() {
             val success = emergencyContactsViewModel.addEmergencyContact(contactEntity)
             if (success) {
                 Toast.makeText(this@CreateContact, "Contact saved", Toast.LENGTH_SHORT).show()
+
+                // Log analytics event
+                val firebaseAnalytics = FirebaseAnalytics.getInstance(this@CreateContact)
+                val bundle = Bundle().apply {
+                    putString("feature_name", "emergency_contacts")
+                    putString("action", "contact_added")
+                }
+                firebaseAnalytics.logEvent("feature_interaction", bundle)
+
                 clearFields()
             } else {
                 Toast.makeText(this@CreateContact, "Error saving contact", Toast.LENGTH_SHORT).show()

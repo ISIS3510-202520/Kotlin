@@ -30,9 +30,14 @@ import androidx.lifecycle.LifecycleOwner
 import com.example.here4u.data.mappers.toRemote
 import android.net.ConnectivityManager
 import android.content.Context
+import kotlinx.coroutines.delay
+
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+
+import com.google.firebase.analytics.FirebaseAnalytics
+
 
 
 @AndroidEntryPoint
@@ -41,6 +46,8 @@ class Emergency : AppCompatActivity() {
     private lateinit var binding: ActivityEmergencyBinding
     private val viewModel: EmergencyContactsViewModel by viewModels()
     private lateinit var adapter: ContactsAdapter
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
 
     private var pendingEmergency = false
 
@@ -68,6 +75,18 @@ class Emergency : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEmergencyBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+
+        lifecycleScope.launch {
+            delay(300) // small delay before logging
+            val bundle = Bundle().apply {
+                putString("feature_name", "emergency_contacts")
+                putString("action", "opened")
+            }
+            firebaseAnalytics.logEvent("feature_interaction", bundle)
+        }
+
 
         adapter = ContactsAdapter()
 
@@ -268,6 +287,14 @@ class Emergency : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        lifecycleScope.launch {
+            delay(300)
+            val bundle = Bundle().apply {
+                putString("feature_name", "emergency_contacts")
+                putString("action", "opened")
+            }
+            firebaseAnalytics.logEvent("feature_interaction", bundle)
+        }
         val request = NetworkRequest.Builder().build()
         connectivityManager.registerNetworkCallback(request, networkCallback)
     }
