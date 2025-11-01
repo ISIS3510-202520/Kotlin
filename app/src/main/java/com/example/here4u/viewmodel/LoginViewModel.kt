@@ -12,11 +12,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import android.content.Context
-import com.example.here4u.data.local.security.SecurePrefs
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.qualifiers.ApplicationContext
-
-
 
 sealed class LoginResult {
     object Idle : LoginResult()
@@ -28,12 +25,20 @@ sealed class LoginResult {
 class LoginViewModel @Inject constructor(
     private val loginModel: LoginModel,
     private val userRemoteRepository: UserRemoteRepository,
-    @ApplicationContext private val context: Context // ✅ injected safely
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
-
 
     private val _loginResult = MutableLiveData<LoginResult>(LoginResult.Idle)
     val loginResult: LiveData<LoginResult> = _loginResult
+
+    private val prefs = context.getSharedPreferences("user_cache", Context.MODE_PRIVATE)
+
+    init {
+        val savedUid = prefs.getString("uid", null)
+        if (!savedUid.isNullOrEmpty()) {
+            _loginResult.value = LoginResult.Success
+        }
+    }
 
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
@@ -41,7 +46,7 @@ class LoginViewModel @Inject constructor(
                 if (success) {
                     val user = FirebaseAuth.getInstance().currentUser
                     user?.let {
-                        SecurePrefs.save(context, "uid", it.uid)
+                        prefs.edit().putString("uid", it.uid).apply()
                     }
 
                     viewModelScope.launch {
@@ -60,5 +65,11 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun logoutUser() {
+        FirebaseAuth.getInstance().signOut()
+        prefs.edit().remove("uid").apply()
+        _loginResult.value = LoginResult.Idle
     }
 }
