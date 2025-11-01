@@ -8,14 +8,12 @@ plugins {
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.crashlytics)
     alias(libs.plugins.googleServices)
-
 }
 
 hilt {
     enableAggregatingTask = false
 }
 
-// Cargar el archivo .env
 val envFile = rootProject.file(".env")
 val env = Properties()
 if (envFile.exists()) {
@@ -25,7 +23,6 @@ if (envFile.exists()) {
     println("No se encontró el archivo .env en ${envFile.absolutePath}")
 }
 
-// local.properties (para claves locales como OPENAI_API_KEY)
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
     if (file.exists()) {
@@ -33,29 +30,12 @@ val localProperties = Properties().apply {
     }
 }
 
-// Lee llaves/usuarios
 val openAiKey: String = localProperties.getProperty("OPENAI_API_KEY") ?: ""
 val gmailUser: String = env.getProperty("GMAIL_USERNAME") ?: ""
 val gmailAppPassword: String = env.getProperty("GMAIL_APP_PASSWORD") ?: ""
 
 android {
-
-    packaging {
-        resources {
-            excludes += setOf(
-                "META-INF/DEPENDENCIES",
-                "META-INF/LICENSE",
-                "META-INF/LICENSE.txt",
-                "META-INF/license.txt",
-                "META-INF/NOTICE",
-                "META-INF/NOTICE.txt",
-                "META-INF/notice.txt",
-                "META-INF/ASL2.0",
-                "META-INF/versions/9/OSGI-INF/MANIFEST.MF" // 👈 ESTA es la clave
-            )
-        }}
-
-        namespace = "com.example.here4u"
+    namespace = "com.example.here4u"
     compileSdk = 36
 
     defaultConfig {
@@ -66,18 +46,22 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // TODOS los buildConfigField deben estar dentro de defaultConfig o buildTypes
         buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
         buildConfigField("String", "EMAIL_USERNAME", "\"$gmailUser\"")
         buildConfigField("String", "EMAIL_APP_PASSWORD", "\"$gmailAppPassword\"")
     }
 
-    packaging {
-        resources {
-            excludes += "META-INF/atomicfu.kotlin_module"
-            excludes += "META-INF/LICENSE.md"
-            excludes += "META-INF/LICENSE-notice.md"
-            excludes += "/META-INF/{AL2.0,LGPL2.1,NOTICE.md,LICENSE.md,LICENSE.txt,NOTICE.txt,NOTICE,LICENSE}"
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        debug {
+            isMinifyEnabled = false
+            isDebuggable = true
         }
     }
 
@@ -96,18 +80,27 @@ android {
         buildConfig = true
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/license.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/notice.txt",
+                "META-INF/ASL2.0",
+                "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
+                "META-INF/atomicfu.kotlin_module",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md",
+                "/META-INF/{AL2.0,LGPL2.1,NOTICE.md,LICENSE.md,LICENSE.txt,NOTICE.txt,NOTICE,LICENSE}"
             )
         }
     }
 }
 
-// Dependencias
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -121,9 +114,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.room.common.jvm)
-    implementation(libs.identity.jvm)
     debugImplementation(libs.androidx.compose.ui.tooling)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -149,20 +139,15 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.messaging)
 
-
-
-    // OpenAI API / Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
-    // Coroutines + Play Services
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.sun.mail:android-mail:1.6.7")
     implementation("com.sun.mail:android-activation:1.6.7")
 
-    // SECURITY
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }

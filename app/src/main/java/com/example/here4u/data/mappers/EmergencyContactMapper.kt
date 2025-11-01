@@ -1,6 +1,6 @@
 package com.example.here4u.data.mappers
 
-import com.android.identity.util.UUID
+import java.util.UUID
 import com.example.here4u.data.local.entity.EmergencyContactEntity
 import com.example.here4u.data.remote.entity.EmergencyContactRemote
 import kotlin.String
