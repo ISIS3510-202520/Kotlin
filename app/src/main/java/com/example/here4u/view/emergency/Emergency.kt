@@ -31,6 +31,10 @@ import com.example.here4u.data.mappers.toRemote
 import android.net.ConnectivityManager
 import android.content.Context
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+
 @AndroidEntryPoint
 class Emergency : AppCompatActivity() {
 
@@ -101,16 +105,13 @@ class Emergency : AppCompatActivity() {
     @SuppressLint("RepeatOnLifecycleWrongUsage")
     override fun onResume() {
         super.onResume()
-
         lifecycleScope.launch {
-            if (NetworkUtils.isNetworkAvailable(this@Emergency)) {
-                viewModel.syncPendingContacts()
-                viewModel.loadContacts()
-                viewModel.loadLocalContacts()
-
-            } else {
+            withContext(Dispatchers.IO) {
+                if (NetworkUtils.isNetworkAvailable(this@Emergency)) {
+                    viewModel.syncPendingContacts() }
                 viewModel.loadLocalContacts()
             }
+
         }
 
     }
@@ -241,21 +242,27 @@ class Emergency : AppCompatActivity() {
                 binding.btnAddContact.isEnabled = true
                 binding.btnAddContact.alpha = 1f
             }
-            lifecycleScope.launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 viewModel.syncPendingContacts()
-                viewModel.loadContacts()
                 viewModel.loadLocalContacts()
+
+
             }
 
         }
 
         override fun onLost(network: Network) {
-            runOnUiThread {
+            lifecycleScope.launch(Dispatchers.Main) {
                 binding.btnAddContact.alpha = 0.5f
+                Toast.makeText(
+                    this@Emergency,
+                    "You lost connection",
+                    Toast.LENGTH_SHORT
+                ).show()
 
-            }
-            lifecycleScope.launch {
-                viewModel.loadLocalContacts()
+                withContext(Dispatchers.IO) {
+                    viewModel.loadLocalContacts()
+                }
             }
         }}
 

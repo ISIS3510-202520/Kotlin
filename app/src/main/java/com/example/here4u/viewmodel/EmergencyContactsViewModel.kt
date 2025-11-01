@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -80,7 +81,7 @@ class EmergencyContactsViewModel @Inject constructor(
     }
 
     fun loadContacts() {
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             if (userId != null) {
                 repository.getAll()
                     .collect { list ->
@@ -133,7 +134,7 @@ class EmergencyContactsViewModel @Inject constructor(
         }
     }
 
-    suspend fun syncPendingContacts() {
+    suspend fun syncPendingContacts()= withContext(Dispatchers.IO) {
 
         EmergencylocalRepository.syncPendingContacts(repository)
 
