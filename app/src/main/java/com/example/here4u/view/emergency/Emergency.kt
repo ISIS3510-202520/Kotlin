@@ -100,6 +100,7 @@ class Emergency : AppCompatActivity() {
 
         viewModel.loadLocalContacts()
         observeContacts()
+        observeEmergencies()
     }
 
     @SuppressLint("RepeatOnLifecycleWrongUsage")
@@ -107,14 +108,21 @@ class Emergency : AppCompatActivity() {
         super.onResume()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
+
                 if (NetworkUtils.isNetworkAvailable(this@Emergency)) {
-                    viewModel.syncPendingContacts() }
+                    viewModel.syncPendingContacts()
+                    viewModel.loadLastEmergencyDate()
+                }else{
+                    viewModel.loadCachedEmergencyDate()
+                }
                 viewModel.loadLocalContacts()
             }
 
         }
-
     }
+
+
+
 
     @SuppressLint("SuspiciousIndentation")
     private fun checkPermission() {
@@ -232,6 +240,18 @@ class Emergency : AppCompatActivity() {
             }
             }
 
+    private fun observeEmergencies(){
+        viewModel.lastEmergencyDate.observe(this) { date ->
+            if (date != null && date != "None") {
+                binding.txtLastEmergency.text = "Last emergency: $date"
+            } else {
+                binding.txtLastEmergency.text = "No emergency records yet"
+            }
+        }
+
+    }
+
+
     private val connectivityManager by lazy {
         getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
@@ -245,6 +265,7 @@ class Emergency : AppCompatActivity() {
             lifecycleScope.launch(Dispatchers.IO) {
                 viewModel.syncPendingContacts()
                 viewModel.loadLocalContacts()
+                viewModel.loadLastEmergencyDate()
 
 
             }
