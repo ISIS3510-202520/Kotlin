@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.crashlytics)
     alias(libs.plugins.googleServices)
-
 }
 
 hilt {
@@ -105,8 +104,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.room.common.jvm)
     debugImplementation(libs.androidx.compose.ui.tooling)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -126,13 +123,9 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
-    implementation(libs.firebase.messaging)
-
-
 
     // OpenAI API / Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -145,7 +138,4 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.sun.mail:android-mail:1.6.7")
     implementation("com.sun.mail:android-activation:1.6.7")
-
-    // SECURITY
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }

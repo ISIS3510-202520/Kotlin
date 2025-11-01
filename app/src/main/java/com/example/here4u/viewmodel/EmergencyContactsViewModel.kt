@@ -1,8 +1,10 @@
 package com.example.here4u.viewmodel
 
 import android.util.Log
+
 import android.Manifest
 import androidx.annotation.RequiresPermission
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.here4u.BuildConfig
@@ -26,8 +28,9 @@ import javax.inject.Inject
 class EmergencyContactsViewModel @Inject constructor(
     private val repository: EmergencyContactRemoteRepository,
     private val userRepository: UserRemoteRepository,
-    private val emergencyRepository: EmergencyRequestRemoteRepository,
+    private val  emergencyRepository: EmergencyRequestRemoteRepository,
     private val locationModelImpl: LocationModelImpl
+
 ) : ViewModel() {
 
     private val userId: String? = userRepository.getUserId()
@@ -36,7 +39,6 @@ class EmergencyContactsViewModel @Inject constructor(
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
-
     val contacts: StateFlow<List<EmergencyContactRemote>> =
         if (userId != null) {
             repository.getAll()
@@ -54,8 +56,9 @@ class EmergencyContactsViewModel @Inject constructor(
                 )
         }
 
+
     fun sendMail(locationMessage: GeoPoint?) {
-        val location = "${locationMessage?.latitude},${locationMessage?.longitude}"
+        val location:String = locationMessage?.latitude.toString() + "," + locationMessage?.longitude.toString()
         viewModelScope.launch {
             try {
                 checkEnvVars()
@@ -67,40 +70,23 @@ class EmergencyContactsViewModel @Inject constructor(
             }
         }
     }
-
-    fun loadContacts() {
-        viewModelScope.launch {
-            if (userId != null) {
-                repository.getAll()
-                    .collect { list ->
-                        Log.d("EmergencyVM", "Contactos cargados: ${list.size}")
-                    }
-            } else {
-                Log.e("EmergencyVM", "No hay usuario logueado, no se pueden cargar contactos")
-            }
-        }
-    }
-
     fun checkEnvVars() {
         Log.d("ENV_CHECK", "EMAIL_USERNAME=${BuildConfig.EMAIL_USERNAME}")
         Log.d("ENV_CHECK", "EMAIL_APP_PASSWORD length=${BuildConfig.EMAIL_APP_PASSWORD.length}")
     }
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
-    suspend fun createEmergency(): Boolean {
-        return try {
+    fun createEmergency(): Boolean{
+        var answer = false
+        viewModelScope.launch {
             val res = emergencyRepository.insert(true)
-            res.onSuccess { id ->
-                _createdId.value = id
-                sendMail(id)
-            }.onFailure { e ->
-                _error.value = e.message ?: "Error desconocido"
-            }
-            res.isSuccess
-        } catch (e: Exception) {
-            _error.value = e.message ?: "Error desconocido"
-            false
-        }
+            res.onSuccess { id -> _createdId.value= id
+            sendMail(id)
+            answer=true}
+                .onFailure { e ->
+                    _error.value = e.message ?: "Error desconocido" }}
+        return answer
+
     }
 
     suspend fun addEmergencyContact(contact: EmergencyContactEntity): Boolean {
@@ -113,4 +99,5 @@ class EmergencyContactsViewModel @Inject constructor(
             false
         }
     }
+
 }

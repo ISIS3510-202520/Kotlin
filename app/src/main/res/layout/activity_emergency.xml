@@ -66,5 +66,15 @@
             android:gravity="center"
             android:layout_marginBottom="24dp"/>
 
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:backgroundTint="#90CAF9"
+            android:textColor="#000000"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"/>
+
     </LinearLayout>
 </ScrollView>

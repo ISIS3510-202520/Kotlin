@@ -47,7 +47,6 @@ class IdentifyingEmotions : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.emotions.collect { list ->
                     adapter.updateData(list)
-                    viewModel.syncEmotionsToLocal()
                 }
             }
         }

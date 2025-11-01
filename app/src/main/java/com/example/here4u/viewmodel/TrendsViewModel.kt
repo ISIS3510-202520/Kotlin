@@ -14,25 +14,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.here4u.data.local.repositories.RecapLocalRepository
-import com.sun.activation.registries.LogSupport.log
-import java.io.File
-import kotlin.math.log
 
 @HiltViewModel
 class TrendsViewModel @Inject constructor(
     private val journalRepository: JournalRepository,
     private val recapRepository: RecapRepository,
-    private val userRemoteRepository: UserRemoteRepository,
-    private val recapLocalRepository: RecapLocalRepository
+    private val userRemoteRepository: UserRemoteRepository
 ) : ViewModel() {
 
 
 
     private val _recap = MutableLiveData<Recap>()
     val recap: LiveData<Recap> get() = _recap
-    private val _lastPdf = MutableLiveData<File?>()
-    val lastPdf: LiveData<File?> = _lastPdf
 
     fun loadWeeklyRecap() {
         viewModelScope.launch {
@@ -62,15 +55,6 @@ class TrendsViewModel @Inject constructor(
                                 "Recap received: highlights=${recapData.highlights.size}, summary length=${recapData.summary.length}"
                             )
                             _recap.postValue(recapData)
-
-                            val verdad=recapLocalRepository.shouldSaveSummary()
-                            log("$verdad")
-                            if (verdad){
-                                log("entró")
-                                recapLocalRepository.saveSummary(recapData.summary)
-                                recapLocalRepository.updateLastSaveTime()
-
-                            }
                         } catch (e: Exception) {
                             Log.e("TrendsVM", "Error generating recap with AI", e)
                             _recap.postValue(
@@ -93,11 +77,5 @@ class TrendsViewModel @Inject constructor(
                 Log.e("TrendsVM", "Error collecting Flow", e)
             }
         }
-    }
-
-    fun getDocument(){
-        val file = recapLocalRepository.getLastSavedPdf()
-        _lastPdf.postValue(file)
-
     }
 }

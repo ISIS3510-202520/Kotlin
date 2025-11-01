@@ -39,8 +39,6 @@ firebaseBom = "34.3.0"
 services = "4.4.3"
 crashlytics="3.0.2"
 playServicesLocation = "21.3.0"
-lifecycleViewmodelKtx = "2.9.4"
-roomCommonJvm = "2.8.3"
 
 
 [libraries]
@@ -93,17 +91,11 @@ javapoet                 = { module = "com.squareup:javapoet", version.ref = "ja
 
 
 #Firebase BOM
-
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics= { module = "com.google.firebase:firebase-analytics"}
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
-firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
-
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
-androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
 
 [plugins]
 android-application = { id = "com.android.application",           version.ref = "agp" }
@@ -111,7 +103,6 @@ kotlin-android      = { id = "org.jetbrains.kotlin.android",      version.ref = 
 kotlin-compose      = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp                 = { id = "com.google.devtools.ksp",           version.ref = "ksp" }
 hiltAndroid         = { id = "com.google.dagger.hilt.android",    version.ref = "hilt" }
-
 # service
 googleServices= {id="com.google.gms.google-services",version.ref="services"}
 crashlytics = {id= "com.google.firebase.crashlytics", version.ref="crashlytics"}

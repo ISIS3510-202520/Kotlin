@@ -12,7 +12,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 
-val C_PEACH = "#FFDBD2"
-val C_TEAL  = "#8CC0CF"
-val C_SKY   = "#86D9F0"
-val C_SLATE = "#7C8FBB"
+val C_PEACH = "#FFDBD2".toColorInt()
+val C_TEAL  = "#8CC0CF".toColorInt()
+val C_SKY   = "#86D9F0".toColorInt()
+val C_SLATE = "#7C8FBB".toColorInt()

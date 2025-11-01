@@ -1,7 +1,6 @@
 package com.example.here4u.view.emotions
 
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.graphics.toColorInt
@@ -37,16 +36,7 @@ class EmotionsAdapter ( private val onEmotionSelected: (EmotionRemote) -> Unit):
     class ViewHolder(val binding: ItemEmotionBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(emotionEntity: EmotionRemote){
             binding.btnEmotion.text = emotionEntity.name
-            val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-
-
-            val size = (screenWidth * 0.4).toInt()
-
-
-            val params = binding.btnEmotion.layoutParams
-            params.width = size
-            params.height = size
-            binding.btnEmotion.layoutParams = params
+            binding.btnEmotion.backgroundTintList= ColorStateList.valueOf(emotionEntity.colorHex.toColorInt())
         }
     }
 
