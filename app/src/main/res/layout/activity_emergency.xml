@@ -23,7 +23,6 @@
             android:textColor="#000000"
             android:layout_marginBottom="24dp" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvContacts"
             android:layout_width="match_parent"
@@ -33,17 +32,27 @@
             android:scrollbars="vertical"
             android:nestedScrollingEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="16dp" />
 
-        <!-- RecyclerView agregado -->
+        <!-- 🔹 Nueva sección: Última emergencia -->
+        <TextView
+            android:id="@+id/txtLastEmergency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last emergency: none"
+            android:textColor="#444444"
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp"
+            android:textAlignment="center" />
 
+        <!-- Botón principal -->
         <Button
             android:id="@+id/btnCall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:backgroundTint="@color/buttonPink"
-            android:text=" Notify All "
+            android:text="Notify All"
             android:textColor="#000000" />
 
         <Button
@@ -55,8 +64,6 @@
             android:text="Add Contact"
             android:textColor="#000000" />
 
-
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +71,7 @@
             android:textSize="18sp"
             android:textAlignment="center"
             android:gravity="center"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp" />
 
         <Button
             android:id="@+id/btnBack"
@@ -74,7 +81,7 @@
             android:backgroundTint="#90CAF9"
             android:textColor="#000000"
             android:paddingStart="24dp"
-            android:paddingEnd="24dp"/>
+            android:paddingEnd="24dp" />
 
     </LinearLayout>
 </ScrollView>
