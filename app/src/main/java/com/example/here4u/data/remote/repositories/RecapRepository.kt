@@ -19,11 +19,10 @@ class RecapRepository @Inject constructor(
 ) {
     suspend fun generateRecapWithAI(userId: String, journals: List<Journal>): Recap {
 
-        // 1️⃣ Generar clave única basada en los journals
+
         val cacheKey = journals.joinToString { it.date.toString() + it.content + it.emotion.name }
             .hashCode().toString()
 
-        // 2️⃣ Revisar si ya existe en caché
         recapCache.get(cacheKey)?.let { cachedRecap ->
             return cachedRecap.also {
                 println("✅ Recap loaded from cache (key=$cacheKey)")
@@ -81,7 +80,7 @@ class RecapRepository @Inject constructor(
         )
 
 
-        // 4️⃣ Guardar recap tanto remoto como en caché
+
         saveSummaryRequest(userId, recap.summary)
         recapCache.put(cacheKey, recap)
 

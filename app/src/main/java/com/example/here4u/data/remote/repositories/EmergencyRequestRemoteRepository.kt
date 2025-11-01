@@ -10,6 +10,7 @@ import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
@@ -58,4 +59,24 @@ class EmergencyRequestRemoteRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
+    suspend fun getLastEmergencyDate(): Date? {
+        return try {
+            val userId = auth.currentUser?.uid
+            val snapshot = db.collection("emergencyRequests")
+                .whereEqualTo("userId", userId)
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .await()
+
+            snapshot.documents.firstOrNull()
+                ?.getTimestamp("timestamp")
+                ?.toDate()
+        } catch (e: Exception) {
+            Log.e("EmergencyRepo", "Error getting last emergency date: ${e.message}")
+            null
+        }
+    }
+
 }

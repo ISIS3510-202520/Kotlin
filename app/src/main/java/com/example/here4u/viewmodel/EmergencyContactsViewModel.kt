@@ -10,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.here4u.BuildConfig
 import com.example.here4u.data.local.entity.EmergencyContactEntity
 import com.example.here4u.data.local.repositories.EmergencyContactsLocalRepository
+import com.example.here4u.data.local.repositories.EmergencyRequestLocalRepository
+
 import com.example.here4u.data.remote.entity.EmergencyContactRemote
 import com.example.here4u.data.remote.repositories.EmergencyContactRemoteRepository
 import com.example.here4u.data.remote.repositories.EmergencyRequestRemoteRepository
@@ -25,6 +27,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 
@@ -34,8 +38,10 @@ class EmergencyContactsViewModel @Inject constructor(
     private val userRepository: UserRemoteRepository,
     private val emergencyRepository: EmergencyRequestRemoteRepository,
     private val EmergencylocalRepository: EmergencyContactsLocalRepository,
-    private val locationModelImpl: LocationModelImpl
-) : ViewModel() {
+    private val locationModelImpl: LocationModelImpl,
+    private val preferencesRepository: EmergencyRequestLocalRepository,
+
+    ) : ViewModel() {
 
     private val userId: String? = userRepository.getUserId()
     private val _createdId = MutableStateFlow<GeoPoint?>(null)
@@ -47,7 +53,8 @@ class EmergencyContactsViewModel @Inject constructor(
     private val _contacts = MutableLiveData<List<EmergencyContactEntity>>()
     val localcontacts: LiveData<List<EmergencyContactEntity>> get() = _contacts
 
-
+    private val _lastEmergencyDate = MutableLiveData<String?>()
+    val lastEmergencyDate: LiveData<String?> get() = _lastEmergencyDate
 
     val contacts: StateFlow<List<EmergencyContactRemote>> =
         if (userId != null) {
@@ -108,12 +115,61 @@ class EmergencyContactsViewModel @Inject constructor(
             }.onFailure { e ->
                 _error.value = e.message ?: "Error desconocido"
             }
+
+
+            val now = java.text.SimpleDateFormat(
+                "dd MMM yyyy, HH:mm",
+                java.util.Locale.getDefault()
+            ).format(java.util.Date())
+
+
+            preferencesRepository.saveLastEmergencyDate(now)
+            _lastEmergencyDate.postValue(now)
+
             res.isSuccess
+
         } catch (e: Exception) {
             _error.value = e.message ?: "Error desconocido"
             false
         }
     }
+
+    fun loadLastEmergencyDate(){viewModelScope.launch(Dispatchers.IO) {
+        val remoteDate = emergencyRepository.getLastEmergencyDate()
+
+        if (remoteDate != null) {
+            val formatted = formatDate(remoteDate)
+            preferencesRepository.saveLastEmergencyDate(formatted)
+            _lastEmergencyDate.postValue(formatted)
+        } else {
+            loadCachedEmergencyDate()
+        }
+    } }
+
+
+    fun loadCachedEmergencyDate() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val cached = preferencesRepository.getLastEmergencyDate()
+            if (cached != null) {
+
+                _lastEmergencyDate.postValue(cached)
+            } else {
+                _lastEmergencyDate.postValue(null)
+            }
+        }
+    }
+
+
+
+
+   fun formatDate(timestamp: Date): String {
+
+            val sdf = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault())
+            sdf.timeZone = TimeZone.getTimeZone("America/Bogota")
+            return sdf.format(timestamp)
+        }
+
+
 
     suspend fun addEmergencyContact(contact: EmergencyContactEntity): Boolean {
         return try {
