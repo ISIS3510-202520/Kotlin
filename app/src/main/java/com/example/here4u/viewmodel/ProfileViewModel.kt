@@ -9,12 +9,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import android.content.Context
+import com.example.here4u.data.local.cache.JournalMemoryCache
+import com.example.here4u.data.local.repositories.JournalLocalRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val userRemoteRepository: UserRemoteRepository,
+    private val journalcache: JournalLocalRepository,
+
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -26,6 +30,7 @@ class ProfileViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             try {
+                journalcache.clearUserCache()
                 FirebaseAuth.getInstance().signOut()
                 prefs.edit().remove("uid").apply()
                 userRemoteRepository.logout()

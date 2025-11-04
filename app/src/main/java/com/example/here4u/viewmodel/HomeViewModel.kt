@@ -1,8 +1,12 @@
 package com.example.here4u.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.here4u.data.local.entity.JournalEntity
+import com.example.here4u.data.local.repositories.JournalLocalRepository
 import com.example.here4u.data.remote.repositories.UserRemoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -19,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRemoteRepository,
+    private val localRepo: JournalLocalRepository,
     @ApplicationContext private val context: Context
 ): ViewModel(){
 
@@ -28,10 +33,18 @@ class HomeViewModel @Inject constructor(
     private val _streak = MutableStateFlow(0)
     val streak: StateFlow<Int> = _streak.asStateFlow()
 
+    private val _lastFive = MutableLiveData<List<JournalEntity>>()
+    val lastFive: LiveData<List<JournalEntity>> get() = _lastFive
+
     init {
         refreshMoodText()
         startAutoUpdate()
         refreshUserStreak()
+        _lastFive.value = localRepo.getCachedJournals()
+        viewModelScope.launch {
+            localRepo.updateCache()
+            _lastFive.postValue(localRepo.getCachedJournals())
+        }
 
     }
 

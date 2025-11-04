@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import android.content.Context
+import com.example.here4u.data.local.repositories.JournalLocalRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -25,6 +26,7 @@ sealed class LoginResult {
 class LoginViewModel @Inject constructor(
     private val loginModel: LoginModel,
     private val userRemoteRepository: UserRemoteRepository,
+    private val localRepository: JournalLocalRepository,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -64,6 +66,9 @@ class LoginViewModel @Inject constructor(
                     )
                 }
             }
+        }
+        viewModelScope.launch {
+            localRepository.updateCache()
         }
     }
 

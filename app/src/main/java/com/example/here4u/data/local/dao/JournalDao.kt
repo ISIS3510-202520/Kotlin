@@ -9,4 +9,21 @@ interface JournalDao {
     @Insert
     suspend fun insertJournal(journal: JournalEntity)
 
+    @Query("SELECT * FROM journal_table  WHERE sync = 0 ")
+    suspend fun getPending(): List<JournalEntity>
+
+    @Update
+    suspend fun updateAll(items: List<JournalEntity>)
+
+    @Query("UPDATE journal_table SET sync = 1 WHERE id = :journalId")
+    suspend fun markAsSyncedById(journalId: Int)
+
+    @Query("""
+    SELECT * FROM journal_table 
+    WHERE userId = :userId 
+    ORDER BY createdAt DESC 
+    LIMIT 5
+""")
+    suspend fun getLastFive(userId: String): List<JournalEntity>
+
 }
