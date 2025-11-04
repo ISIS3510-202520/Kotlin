@@ -41,9 +41,7 @@ object DatabaseModule {
     fun provideJournalDao(database: JournalDatabase): JournalDao =
         database.journalDao()
 
-    @Provides
-    fun provideJournalLocalRepository(dao: JournalDao): JournalLocalRepository =
-        JournalLocalRepository(dao)
+
 
 
     // ---------------------- EMOTION DATABASE ----------------------

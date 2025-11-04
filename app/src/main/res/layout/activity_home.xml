@@ -8,54 +8,59 @@
     android:background="@android:color/white"
     tools:context=".view.home.home">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/homeRoot"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white">
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
 
-        <!-- Texto Bienvenida -->
-        <TextView
-            android:id="@+id/tvWelcome"
-            android:layout_width="wrap_content"
+        <!-- Contenedor horizontal para título y botón de usuario -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:layout_marginTop="24dp"
-            android:text="Welcome you !!"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:paddingHorizontal="16dp">
 
-        <!-- Botón Usuario -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/userboton"
-            android:layout_width="51dp"
-            android:layout_height="51dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/rounded_button_blue"
-            android:drawableStart="@drawable/usuario"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            app:cornerRadius="30dp"
-            app:iconGravity="textStart"
-            app:iconTint="@android:color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <!-- Texto Bienvenida -->
+            <TextView
+                android:id="@+id/tvWelcome"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Welcome you !!"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
+            <!-- Botón Usuario -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/userboton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/rounded_button_blue"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:icon="@drawable/usuario"
+                app:iconGravity="textStart"
+                app:iconTint="@android:color/black"
+                app:cornerRadius="24dp" />
+        </LinearLayout>
+
+        <!-- Streak -->
         <TextView
             android:id="@+id/tvStreak"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="144dp"
-            android:layout_marginTop="8dp"
-            android:text="Streak\n5 Days"
+            android:text="🔥 Streak\n1 Days"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvWelcome" />
+            android:gravity="center"
+            android:layout_marginTop="8dp" />
 
+        <!-- Botones principales -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAchievements"
             android:layout_width="200dp"
@@ -64,10 +69,7 @@
             android:text="Achievements"
             android:textColor="@android:color/black"
             app:cornerRadius="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tvStreak"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRegisterMood"
@@ -75,12 +77,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:background="@drawable/rounded_button_blue"
-            android:text="Register Mood"
+            android:text="How are you feeling this morning?"
             android:textColor="@android:color/black"
-            app:cornerRadius="16dp"
-            app:layout_constraintTop_toBottomOf="@id/btnAchievements"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:cornerRadius="16dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnExercises"
@@ -90,10 +89,7 @@
             android:background="@drawable/rounded_button_blue"
             android:text="Daily exercises"
             android:textColor="@android:color/black"
-            app:cornerRadius="16dp"
-            app:layout_constraintTop_toBottomOf="@id/btnRegisterMood"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:cornerRadius="16dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEmergency"
@@ -101,36 +97,47 @@
             android:layout_height="82dp"
             android:layout_marginTop="28dp"
             android:backgroundTint="@color/buttonPink"
-            android:text=" Emergency "
+            android:text="Emergency"
             android:textColor="#000000"
-            app:cornerRadius="16dp"
-            app:layout_constraintTop_toBottomOf="@id/btnExercises"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:cornerRadius="16dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRecap"
-            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:background="@drawable/rounded_button_blue"
             android:text="Recap"
             android:textColor="@color/buttonText"
-            app:cornerRadius="16dp"
-            app:layout_constraintTop_toBottomOf="@id/btnEmergency"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="32dp" />
+            app:cornerRadius="16dp"/>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragmentContainer"
-            android:layout_width="0dp"
+        <!-- Últimos journals -->
+        <TextView
+            android:id="@+id/tvLastJournalsTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/btnRecap"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:text="Last 5 Journals"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/containerJournals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Fragmento dentro del flujo scroll -->
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:visibility="visible" />
+
+    </LinearLayout>
 </ScrollView>

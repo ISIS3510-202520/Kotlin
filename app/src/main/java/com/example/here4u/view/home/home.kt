@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 
@@ -17,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.activity.viewModels
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -32,6 +34,10 @@ import com.example.here4u.view.profile.ProfileActivity
 import com.example.here4u.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import android.view.LayoutInflater
+import android.widget.LinearLayout
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @AndroidEntryPoint
 class home : AppCompatActivity() {
@@ -95,6 +101,59 @@ class home : AppCompatActivity() {
             startActivity(Intent(this, ProfileActivity::class.java))
 
         }
+        // --- Mostrar últimos 5 journals ---
+        val container = findViewById<LinearLayout>(R.id.containerJournals)
+        val inflater = LayoutInflater.from(this)
+        viewModel.lastFive.observe(this) { journals ->
+                container.removeAllViews()
+
+                if (journals.isEmpty()) {
+                    val emptyText = TextView(this@home).apply {
+                        text = "You haven’t written any journal yet."
+                        textSize = 14f
+                        setTextColor(android.graphics.Color.GRAY)
+                        setPadding(16, 16, 16, 16)
+                    }
+                    container.addView(emptyText)
+                } else {
+                    journals.take(5).forEach { journal ->
+                        val itemView = inflater.inflate(
+                            R.layout.item_journal_preview,
+                            container,
+                            false
+                        )
+
+                        val desc = itemView.findViewById<TextView>(R.id.tvJournalDescription)
+                        val date = itemView.findViewById<TextView>(R.id.tvJournalDate)
+
+                        desc.text = if (journal.description.length > 80)
+                            journal.description.take(80) + "..."
+                        else
+                            journal.description
+
+                        val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                        date.text = sdf.format(journal.createdAt.toDate())
+
+
+                        itemView.setOnClickListener {
+                            AlertDialog.Builder(this@home)
+                                .setTitle("Journal Entry")
+                                .setMessage(journal.description)
+                                .setPositiveButton("Close", null)
+                                .show()
+                        }
+
+                        container.addView(itemView)
+                    }
+                }
+            }
+
+
+
+
+
+
+
     }
 
     override fun onResume() {

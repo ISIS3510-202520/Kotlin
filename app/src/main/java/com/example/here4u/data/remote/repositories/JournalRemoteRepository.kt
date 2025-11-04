@@ -1,5 +1,6 @@
 package com.example.here4u.data.remote.repositories
 
+import com.example.here4u.data.local.repositories.JournalLocalRepository
 import com.example.here4u.data.remote.entity.JournalRemote
 import com.example.here4u.data.remote.entity.JournalRemoteDocuments
 import com.example.here4u.data.remote.service.FirebaseService
@@ -17,11 +18,13 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 @Singleton
 class JournalRemoteRepository @Inject constructor(
     private val service: FirebaseService,
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+
 ) {
     val uid = auth.currentUser?.uid
 
@@ -78,10 +81,13 @@ class JournalRemoteRepository @Inject constructor(
 
 
 
-    suspend fun insertOne(emotionId: String, content: String): Timestamp? =
+    suspend fun insertOne(emotionId: String, content: String,time: Timestamp=Timestamp(Date(0)), ui: String?=null): Timestamp? =
 
         suspendCancellableCoroutine { cont ->
-            val userId = uid
+            var userId = uid
+            if (ui != null){
+                userId=ui
+            }
             val journal = JournalRemoteDocuments(
                 emotionId = emotionId,
                 userId = userId,

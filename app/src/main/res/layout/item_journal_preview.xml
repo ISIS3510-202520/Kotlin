@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@drawable/bg_card_journal"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    android:elevation="3dp">
+
+    <!-- Descripción -->
+    <TextView
+        android:id="@+id/tvJournalDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Today I felt happy because..."
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:lineSpacingExtra="2dp" />
+
+    <!-- Fecha -->
+    <TextView
+        android:id="@+id/tvJournalDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="03 Nov 2025"
+        android:textColor="#757575"
+        android:textSize="12sp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif" />
+</LinearLayout>

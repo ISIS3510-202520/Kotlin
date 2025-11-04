@@ -12,12 +12,21 @@ import androidx.core.graphics.toColorInt
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import androidx.work.WorkManager
 import com.example.here4u.R
 import com.example.here4u.databinding.ActivityJournalingBinding
+import com.example.here4u.utils.NetworkUtils
 import com.example.here4u.viewmodel.JournalingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.here4u.view.home.home
 import com.google.firebase.analytics.FirebaseAnalytics
+import android.content.Context
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.ExistingWorkPolicy
+
+import com.example.here4u.data.worker.SyncJournalWorker
 
 @AndroidEntryPoint
 class Journaling : AppCompatActivity() {
@@ -64,6 +73,7 @@ class Journaling : AppCompatActivity() {
 
 
         binding.btnAdd.setOnClickListener {
+
             val text = binding.etNote.text?.toString() ?: ""
 
             if (text.isBlank()) {
@@ -72,7 +82,8 @@ class Journaling : AppCompatActivity() {
             }
 
             binding.textViewerror.visibility = View.GONE
-            viewModel.saveText(emotionId, text)
+            viewModel.saveText(emotionId, text,this)
+
             val bundle = Bundle().apply {
                 putString("emotion_id", emotionId)
                 putString("emotion_name", name)
