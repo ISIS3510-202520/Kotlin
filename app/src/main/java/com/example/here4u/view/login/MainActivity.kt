@@ -123,31 +123,27 @@ class MainActivity : AppCompatActivity() {
                     signUpButton.isEnabled = true
                     forgotPasswordText.isEnabled = true
 
+
                     if (wasConnected == false) {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Connection restored! You can now log in.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showOnlineToast()
                     }
                 } else {
                     loginButton.isEnabled = false
                     signUpButton.isEnabled = false
                     forgotPasswordText.isEnabled = false
-
                     if (wasConnected != false) {
                         showOfflineToast()
                     }
                 }
 
                 wasConnected = isConnected
-                delay(8000)
+                delay(3000)
             }
         }
     }
 
     @SuppressLint("InflateParams")
-    private fun showOfflineToast() {
+     fun showOfflineToast() {
         val inflater = layoutInflater
         val layout = inflater.inflate(R.layout.custom_toast_photo, null)
 
@@ -156,6 +152,24 @@ class MainActivity : AppCompatActivity() {
 
         textView.text = "You are offline."
         imageView.setImageResource(R.drawable.sad)
+
+        val toast = Toast(this@MainActivity)
+        toast.view = layout
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.duration = Toast.LENGTH_LONG
+        toast.show()
+    }
+
+    @SuppressLint("InflateParams")
+     fun showOnlineToast() {
+        val inflater = layoutInflater
+        val layout = inflater.inflate(R.layout.custom_toast_photo, null)
+
+        val textView = layout.findViewById<TextView>(R.id.tvMessage)
+        val imageView = layout.findViewById<ImageView>(R.id.ivIcon)
+
+        textView.text = "Connection restored!"
+        imageView.setImageResource(R.drawable.happy)
 
         val toast = Toast(this@MainActivity)
         toast.view = layout

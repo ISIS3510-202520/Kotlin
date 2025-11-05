@@ -25,6 +25,7 @@ class ProfileViewModel @Inject constructor(
     private val _logoutResult = MutableLiveData<Boolean>()
     val logoutResult: LiveData<Boolean> = _logoutResult
 
+
     private val prefs = context.getSharedPreferences("user_cache", Context.MODE_PRIVATE)
 
     fun logout() {
