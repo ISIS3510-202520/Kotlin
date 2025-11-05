@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:background="@android:color/white">
 
         <!-- Título -->
         <TextView
@@ -21,7 +22,8 @@
             android:layout_marginTop="32dp"
             android:text="Create Account"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
 
         <!-- Campo Nombre -->
         <EditText
@@ -32,7 +34,8 @@
             android:background="@drawable/rounded_edittext"
             android:hint="Name"
             android:inputType="textPersonName"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:textColor="@color/black"/>
 
         <!-- Campo Email -->
         <EditText
@@ -43,7 +46,8 @@
             android:background="@drawable/rounded_edittext"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:textColor="@color/black"/>
 
         <!-- Campo Password -->
         <EditText
@@ -54,7 +58,8 @@
             android:background="@drawable/rounded_edittext"
             android:hint="Password"
             android:inputType="textPassword"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:textColor="@color/black"/>
 
         <!-- Botón Signup -->
         <Button
@@ -62,8 +67,8 @@
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/buttonColor"
+            android:background="@drawable/rounded_button_pink"
+            android:backgroundTint="@color/buttonPink"
             android:drawableStart="@drawable/ic_sign"
             android:drawablePadding="4dp"
             android:minWidth="0dp"

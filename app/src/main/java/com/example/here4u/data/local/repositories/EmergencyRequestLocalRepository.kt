@@ -23,4 +23,5 @@ class EmergencyRequestLocalRepository @Inject constructor(
     }
 
 
+
 }
