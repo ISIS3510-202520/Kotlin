@@ -35,6 +35,8 @@ class EmergencyContactsLocalRepository @Inject constructor(private val emergency
             }
         }
     }
+    
+    suspend fun clearAll() { emergencyContactDao.clearAll() }
 
 
 }

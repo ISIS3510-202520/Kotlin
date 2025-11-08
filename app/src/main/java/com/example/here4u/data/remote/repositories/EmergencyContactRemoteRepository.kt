@@ -16,6 +16,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 
 @Singleton
 class EmergencyContactRemoteRepository @Inject constructor(
@@ -119,28 +123,40 @@ class EmergencyContactRemoteRepository @Inject constructor(
                 }
 
                 val senderName = userRepository.getName()
-                var successCount = 0
 
-                for (contact in contacts) {
-                    val success = EmailSender.sendEmail(
-                        recipientEmail = contact.email,
-                        recipientName = contact.name,
-                        locationMessage = locationMessage,
-                        senderName = senderName,
-                        username = username,
-                        appPassword = appPassword
-                    )
 
-                    if (success) successCount++
+                val results = coroutineScope {
+                    contacts.map { contact ->
+                        async(Dispatchers.IO) {
+                            try {
+                                EmailSender.sendEmail(
+                                    recipientEmail = contact.email,
+                                    recipientName = contact.name,
+                                    locationMessage = locationMessage,
+                                    senderName = senderName,
+                                    username = username,
+                                    appPassword = appPassword
+                                )
+                            } catch (e: Exception) {
+                                Log.e("EmergencyRepo", "Error con ${contact.email}: ${e.message}")
+                                false
+                            }
+                        }
+                    }.awaitAll()
                 }
+
+
+                val successCount = results.count { it }
 
                 Log.d(
                     "EmergencyRepo",
-                    " $successCount / ${contacts.size} correos enviados correctamente"
+                    "$successCount / ${contacts.size} correos enviados correctamente"
                 )
+
             } catch (e: Exception) {
                 Log.e("EmergencyRepo", "Error enviando correos: ${e.message}", e)
             }
         }
     }
+
 }
