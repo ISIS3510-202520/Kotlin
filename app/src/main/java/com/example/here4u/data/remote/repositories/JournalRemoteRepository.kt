@@ -1,5 +1,6 @@
 package com.example.here4u.data.remote.repositories
 
+import com.example.here4u.data.local.entity.JournalEntity
 import com.example.here4u.data.local.repositories.JournalLocalRepository
 import com.example.here4u.data.remote.entity.JournalRemote
 import com.example.here4u.data.remote.entity.JournalRemoteDocuments
@@ -82,7 +83,6 @@ class JournalRemoteRepository @Inject constructor(
 
 
     suspend fun insertOne(emotionId: String, content: String,time: Timestamp=Timestamp(Date(0)), ui: String?=null): Timestamp? =
-
         suspendCancellableCoroutine { cont ->
             var userId = uid
             if (ui != null){
@@ -95,12 +95,12 @@ class JournalRemoteRepository @Inject constructor(
                 createdAt = null,
                 sharedWithTherapist = false
             )
-
             val ref = service.journals.add(journal)
                 .addOnSuccessListener { cont.resume(journal.createdAt)
-                    }
+                }
                 .addOnFailureListener { throw RuntimeException("Failed submx|mit") }
         }
+
 
 
     suspend fun deleteById(id: String) =
@@ -110,6 +110,29 @@ class JournalRemoteRepository @Inject constructor(
                 .addOnSuccessListener { cont.resume(Unit) }
                 .addOnFailureListener { e -> cont.resumeWithException(e) }
         }
+
+    suspend fun getLast5Journals(userId: String): List<JournalEntity> {
+        val snapshot = service.journals
+            .whereEqualTo("userId", userId)
+            .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .limit(5)
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull { doc ->
+            val remote = doc.toObject(JournalRemoteDocuments::class.java)
+            remote?.let {
+                JournalEntity(
+                    userId = it.userId ?: "",
+                    emotionId = it.emotionId ?: "",
+                    description = it.description,
+                    createdAt = it.createdAt ?: com.google.firebase.Timestamp.now(),
+                    sync = true
+                )
+            }
+        }
+    }
+
 
 
 

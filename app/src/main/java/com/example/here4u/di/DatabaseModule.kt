@@ -1,6 +1,7 @@
 package com.example.here4u.di
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.example.here4u.data.local.cache.RecapCache
 import com.example.here4u.data.local.dao.EmergencyContactDao
@@ -28,6 +29,7 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideJournalDatabase(@ApplicationContext appContext: Context): JournalDatabase {
+        Log.d("DB_PROVIDER", "🧱 Creando instancia de RoomDatabase")
         return Room.databaseBuilder(
             appContext,
             JournalDatabase::class.java,

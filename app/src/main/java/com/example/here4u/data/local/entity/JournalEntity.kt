@@ -2,6 +2,7 @@ package com.example.here4u.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.firebase.Timestamp
 
 @Entity(tableName = "journal_table")
 data class JournalEntity(
@@ -9,6 +10,6 @@ data class JournalEntity(
     val userId: String?,
     val emotionId: String,
     val description: String,
-    val createdAt: com.google.firebase.Timestamp,
+    val createdAt: Timestamp,
     val sync: Boolean =false
 )

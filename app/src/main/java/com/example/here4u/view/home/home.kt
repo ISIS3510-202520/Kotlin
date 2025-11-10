@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -36,6 +37,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import com.example.here4u.utils.FileUtils.openPdf
+import com.example.here4u.utils.NetworkUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -63,13 +70,36 @@ class home : AppCompatActivity() {
         }
 
         binding.btnRecap.setOnClickListener {
+            if (!NetworkUtils.isNetworkAvailable(this)){
+                Log.d("TrendsFragment", "No hay Internet — verificando PDF local...")
+                viewModel.getDocument()
+                viewModel.lastPdf.observe(this){ lastPdf ->
+                    if (lastPdf != null) {
+                        AlertDialog.Builder(this)
+                            .setTitle("No internet Conection")
+                            .setMessage(" Would you like to see your last saved  weekly recap?")
+                            .setPositiveButton("Yes") { _, _ ->
+                                openPdf(this, lastPdf)
+                            }
+                            .setNegativeButton("No", null)
+                            .show()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "There are no recaps saved locally.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+            else{
             binding.fragmentContainer.visibility = View.VISIBLE
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, TrendsFragment())
                 .addToBackStack(null)
-                .commit()
+                .commit()}
         }
-        val  btnEmergency = findViewById<Button>(R.id.btnEmergency)
+        val  btnEmergency = binding.btnEmergency
         btnEmergency.setOnClickListener {
 
             val intent = Intent(this, Emergency::class.java)
@@ -81,7 +111,7 @@ class home : AppCompatActivity() {
             startActivity(Intent(this, Emergency::class.java))
         }
 
-        // --- Collect both mood text and streak from ViewModel ---
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -101,12 +131,11 @@ class home : AppCompatActivity() {
             startActivity(Intent(this, ProfileActivity::class.java))
 
         }
-        // --- Mostrar últimos 5 journals ---
-        val container = findViewById<LinearLayout>(R.id.containerJournals)
+
+        val container = binding.containerJournals
         val inflater = LayoutInflater.from(this)
         viewModel.lastFive.observe(this) { journals ->
                 container.removeAllViews()
-
                 if (journals.isEmpty()) {
                     val emptyText = TextView(this@home).apply {
                         text = "You haven’t written any journal yet."
@@ -150,15 +179,15 @@ class home : AppCompatActivity() {
 
 
 
-
-
-
-
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.refreshMoodText()
         viewModel.refreshUserStreak()
+        viewModel.refreshMoodText()
+        viewModel.updatelastfive()
+
+
+
     }
 }

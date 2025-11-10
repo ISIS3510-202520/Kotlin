@@ -35,8 +35,7 @@ class TrendsViewModel @Inject constructor(
 
     private val _recap = MutableLiveData<Recap>()
     val recap: LiveData<Recap> get() = _recap
-    private val _lastPdf = MutableLiveData<File?>()
-    val lastPdf: LiveData<File?> = _lastPdf
+
 
     fun loadWeeklyRecap() {
         viewModelScope.launch {
@@ -102,9 +101,5 @@ class TrendsViewModel @Inject constructor(
     }
 
 
-    fun getDocument(){
-        val file = recapLocalRepository.getLastSavedPdf()
-        _lastPdf.postValue(file)
 
-    }
 }

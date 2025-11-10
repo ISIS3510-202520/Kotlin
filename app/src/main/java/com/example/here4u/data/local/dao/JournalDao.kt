@@ -1,4 +1,5 @@
 package com.example.here4u.data.local.dao
+import android.util.Log
 import androidx.room.*
 import com.example.here4u.data.local.entity.JournalEntity
 
