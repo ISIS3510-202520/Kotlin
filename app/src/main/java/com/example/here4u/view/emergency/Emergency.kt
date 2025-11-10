@@ -79,7 +79,7 @@ class Emergency : AppCompatActivity() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         lifecycleScope.launch {
-            delay(300) // small delay before logging
+            delay(300)
             val bundle = Bundle().apply {
                 putString("feature_name", "emergency_contacts")
                 putString("action", "opened")
@@ -116,8 +116,8 @@ class Emergency : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             finish()
         }
-
-        viewModel.loadLocalContacts()
+        lifecycleScope.launch(Dispatchers.IO){
+            viewModel.loadLocalContacts()}
         observeContacts()
         observeEmergencies()
     }
@@ -127,7 +127,6 @@ class Emergency : AppCompatActivity() {
         super.onResume()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-
                 if (NetworkUtils.isNetworkAvailable(this@Emergency)) {
                     viewModel.syncPendingContacts()
                     viewModel.loadLastEmergencyDate()
@@ -253,11 +252,11 @@ class Emergency : AppCompatActivity() {
     }
     private fun observeContacts() {
 
-            viewModel.localcontacts.observe(this) { contacts ->
-                val remotes = contacts.map { it.toRemote() }
-                adapter.updateData(remotes)
-            }
-            }
+        viewModel.localcontacts.observe(this) { contacts ->
+            val remotes = contacts.map { it.toRemote() }
+            adapter.updateData(remotes)
+        }
+    }
 
     private fun observeEmergencies(){
         viewModel.lastEmergencyDate.observe(this) { date ->
@@ -278,17 +277,17 @@ class Emergency : AppCompatActivity() {
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
-            runOnUiThread {
+            lifecycleScope.launch(){
                 binding.btnAddContact.isEnabled = true
                 binding.btnAddContact.alpha = 1f
-            }
-            lifecycleScope.launch(Dispatchers.IO) {
-                viewModel.syncPendingContacts()
-                viewModel.loadLocalContacts()
-                viewModel.loadLastEmergencyDate()
+
+                with(Dispatchers.IO) {
+                    viewModel.syncPendingContacts()
+                    viewModel.loadLocalContacts()
+                    viewModel.loadLastEmergencyDate()
 
 
-            }
+                }}
 
         }
 
@@ -301,9 +300,9 @@ class Emergency : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                withContext(Dispatchers.IO) {
-                    viewModel.loadLocalContacts()
-                }
+                //withContext(Dispatchers.IO) {
+                //   viewModel.loadLocalContacts()
+                //}
             }
         }}
 

@@ -26,7 +26,7 @@ class JournalRemoteRepository @Inject constructor(
     private val service: FirebaseService,
     private val auth: FirebaseAuth,
 
-) {
+    ) {
     val uid = auth.currentUser?.uid
 
 
@@ -140,6 +140,8 @@ class JournalRemoteRepository @Inject constructor(
         suspendCancellableCoroutine { cont ->
             service.journals
                 .whereEqualTo("userId", userId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(7)
                 .get()
                 .addOnSuccessListener { snapshot ->
                     val list = snapshot.documents.mapNotNull { it.toJournal() }

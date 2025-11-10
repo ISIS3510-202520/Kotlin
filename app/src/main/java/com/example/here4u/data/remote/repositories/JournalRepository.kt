@@ -23,13 +23,22 @@ class JournalRepository @Inject constructor(
         val journals = journalRemotes.map { journalRemote ->
             val emotionId = journalRemote.emotionId
 
-            // Lazy-load emotion from Firestore if not cached
-            val emotion = emotionCache.getOrPut(emotionId) {
-                service.emotions.document(emotionId)
-                    .get()
-                    .await()
-                    .toObject(EmotionRemote::class.java)
-                    ?: EmotionRemote()
+            val emotion = if (!emotionId.isNullOrBlank()) {
+                emotionCache.getOrPut(emotionId) {
+                    try {
+                        service.emotions.document(emotionId)
+                            .get()
+                            .await()
+                            .toObject(EmotionRemote::class.java)
+                            ?: EmotionRemote()
+                    } catch (e: Exception) {
+
+                        EmotionRemote()
+                    }
+                }
+            } else {
+
+                EmotionRemote()
             }
 
             JournalMapper.toDomain(journalRemote, emotion)
