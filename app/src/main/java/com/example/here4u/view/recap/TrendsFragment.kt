@@ -35,30 +35,7 @@ class TrendsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (!NetworkUtils.isNetworkAvailable(requireContext())){
-            Log.d("TrendsFragment", "No hay Internet — verificando PDF local...")
-            viewModel.getDocument()
-            viewModel.lastPdf.observe(viewLifecycleOwner){ lastPdf ->
-                if (lastPdf != null) {
-                    AlertDialog.Builder(requireContext())
-                        .setTitle("No internet Conection")
-                        .setMessage(" Would you like to see your last saved  weekly recap?")
-                        .setPositiveButton("Yes") { _, _ ->
-                            openPdf(requireContext(), lastPdf)
-                        }
-                        .setNegativeButton("No", null)
-                        .show()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "There are no recaps saved locally.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-        else{viewModel.loadWeeklyRecap()}
+        viewModel.loadWeeklyRecap()
 
         viewModel.recap.observe(viewLifecycleOwner, Observer { recap ->
             binding.highlightsText.text = if (recap.highlights.isNotEmpty()) {
@@ -66,7 +43,6 @@ class TrendsFragment : Fragment() {
             } else {
                 "No highlights available."
             }
-
             binding.summaryText.text = if (recap.summary.isNotBlank()) {
                 recap.summary
             } else {

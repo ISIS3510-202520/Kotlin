@@ -8,8 +8,7 @@ interface JournalDao {
     @Query("SELECT * FROM journal_table WHERE userId = :userId")
     suspend fun getJournalsByUserId(userId: String?): List<JournalEntity>
     @Insert
-    suspend fun insertJournal(journal: JournalEntity){
-        Log.d("THREAD_CHECK", "Insert on thread=${Thread.currentThread().name}")}
+    suspend fun insertJournal(journal: JournalEntity)
 
     @Query("SELECT * FROM journal_table  WHERE sync = 0 ")
     suspend fun getPending(): List<JournalEntity>

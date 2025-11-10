@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -36,6 +37,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import com.example.here4u.utils.FileUtils.openPdf
+import com.example.here4u.utils.NetworkUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -67,11 +70,34 @@ class home : AppCompatActivity() {
         }
 
         binding.btnRecap.setOnClickListener {
+            if (!NetworkUtils.isNetworkAvailable(this)){
+                Log.d("TrendsFragment", "No hay Internet — verificando PDF local...")
+                viewModel.getDocument()
+                viewModel.lastPdf.observe(this){ lastPdf ->
+                    if (lastPdf != null) {
+                        AlertDialog.Builder(this)
+                            .setTitle("No internet Conection")
+                            .setMessage(" Would you like to see your last saved  weekly recap?")
+                            .setPositiveButton("Yes") { _, _ ->
+                                openPdf(this, lastPdf)
+                            }
+                            .setNegativeButton("No", null)
+                            .show()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "There are no recaps saved locally.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+            else{
             binding.fragmentContainer.visibility = View.VISIBLE
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, TrendsFragment())
                 .addToBackStack(null)
-                .commit()
+                .commit()}
         }
         val  btnEmergency = binding.btnEmergency
         btnEmergency.setOnClickListener {

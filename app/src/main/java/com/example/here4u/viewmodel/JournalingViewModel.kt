@@ -55,7 +55,6 @@ class JournalingViewModel @Inject constructor(
 
 
             } catch (e: Exception) {
-
                 Log.e("LOCAL_DB", "❌ Error en la operación remota, guardando localmente.", e)
 
             }
@@ -64,7 +63,7 @@ class JournalingViewModel @Inject constructor(
 
     fun saveLocallyAndScheduleSync(emotionId: String, content: String) {
 
-        applicationScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO){
             val userId = prefs.getString("uid",null)
 
             val journal = JournalEntity(
@@ -78,24 +77,21 @@ class JournalingViewModel @Inject constructor(
             localRepository.insertJournal(journal)
             Log.d("LOCAL_DB", "Guardado local completado: $journal")
 
+            val workRequest = OneTimeWorkRequestBuilder<SyncJournalWorker>()
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build()
+                )
+                .build()
 
-
-        }
-        val workRequest = OneTimeWorkRequestBuilder<SyncJournalWorker>()
-            .setConstraints(
-                Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
+            WorkManager.getInstance(applicationContext).enqueueUniqueWork(
+                SyncJournalWorker.UNIQUE_NAME,
+                ExistingWorkPolicy.KEEP,
+                workRequest
             )
-            .build()
-
-        WorkManager.getInstance(applicationContext).enqueueUniqueWork(
-            SyncJournalWorker.UNIQUE_NAME,
-            ExistingWorkPolicy.KEEP,
-            workRequest
-        )
-        Log.d("LOCAL_DB", "WorkManager programado para sincronizar más tarde.")}
-    }
+            Log.d("LOCAL_DB", "WorkManager programado para sincronizar más tarde.")}
+    }}
 
 
 

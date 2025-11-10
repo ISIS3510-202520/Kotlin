@@ -36,7 +36,6 @@ object DatabaseModule {
             "journal_database"
         )
             .fallbackToDestructiveMigration()
-            .allowMainThreadQueries()
             .build()
     }
 

@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.here4u.data.local.entity.JournalEntity
 import com.example.here4u.data.local.repositories.JournalLocalRepository
+import com.example.here4u.data.local.repositories.RecapLocalRepository
+import com.example.here4u.data.remote.repositories.RecapRepository
 import com.example.here4u.data.remote.repositories.UserRemoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.text.DateFormat.getTimeInstance
 import java.util.Calendar
 import javax.inject.Inject
@@ -26,6 +29,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRemoteRepository,
     private val localRepo: JournalLocalRepository,
+    private val recapLocalRepository: RecapLocalRepository,
     @ApplicationContext private val context: Context
 ): ViewModel(){
 
@@ -37,6 +41,9 @@ class HomeViewModel @Inject constructor(
 
     private val _lastFive = MutableLiveData<List<JournalEntity>>()
     val lastFive: LiveData<List<JournalEntity>> get() = _lastFive
+
+    private val _lastPdf = MutableLiveData<File?>()
+    val lastPdf: LiveData<File?> = _lastPdf
 
 
 
@@ -108,6 +115,12 @@ class HomeViewModel @Inject constructor(
             set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
         }
         return (next.timeInMillis - now.timeInMillis).coerceAtLeast(1_000L)
+    }
+
+    fun getDocument(){
+        val file = recapLocalRepository.getLastSavedPdf()
+        _lastPdf.postValue(file)
+
     }
 
 
