@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import android.content.Context
 import com.example.here4u.data.local.cache.JournalMemoryCache
+import com.example.here4u.data.local.repositories.EmergencyContactsLocalRepository
 import com.example.here4u.data.local.repositories.JournalLocalRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,6 +19,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 class ProfileViewModel @Inject constructor(
     private val userRemoteRepository: UserRemoteRepository,
     private val journalcache: JournalLocalRepository,
+    private val  emergencyContactsLocalRepository: EmergencyContactsLocalRepository,
 
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -31,6 +33,7 @@ class ProfileViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             try {
+                emergencyContactsLocalRepository.clearAll()
                 journalcache.clearUserCache()
                 FirebaseAuth.getInstance().signOut()
                 prefs.edit().remove("uid").apply()
