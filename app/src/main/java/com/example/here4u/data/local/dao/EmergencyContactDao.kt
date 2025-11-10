@@ -28,4 +28,7 @@ interface EmergencyContactDao {
     @Query("UPDATE EmergencyContacts_table SET synced = :state WHERE localId =:id")
     suspend fun updateSync(id: Long, state: Boolean)
 
+    @Query("DELETE FROM EmergencyContacts_table")
+    suspend fun eraseAll()
+
 }

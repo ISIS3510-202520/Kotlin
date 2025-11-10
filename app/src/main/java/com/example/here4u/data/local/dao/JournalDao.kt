@@ -27,4 +27,8 @@ interface JournalDao {
 """)
     suspend fun getLastFive(userId: String): List<JournalEntity>
 
+    @Query("DELETE FROM journal_table")
+    suspend fun eraseAll()
+
+
 }

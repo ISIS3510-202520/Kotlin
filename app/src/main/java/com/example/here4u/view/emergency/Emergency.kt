@@ -261,7 +261,8 @@ class Emergency : AppCompatActivity() {
 
     private fun observeEmergencies(){
         viewModel.lastEmergencyDate.observe(this) { date ->
-            if (date != null && date != "None") {
+            binding.txtLastEmergency.text="Fetching emergency records ..."
+            if (!date.isNullOrEmpty()) {
                 binding.txtLastEmergency.text = "Last emergency: $date"
             } else {
                 binding.txtLastEmergency.text = "No emergency records yet"

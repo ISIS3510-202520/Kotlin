@@ -65,7 +65,7 @@ class TrendsViewModel @Inject constructor(
                                 recapRepository.generateRecapWithAI(userId, journals)
                             }
 
-                            // 🔹 Back to Main thread — update LiveData/UI
+
                             _recap.value = recapData
 
                             val shouldSave = recapLocalRepository.shouldSaveSummary()
