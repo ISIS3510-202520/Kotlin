@@ -10,7 +10,6 @@ import com.example.here4u.data.remote.repositories.EmotionRemoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,53 +23,56 @@ class EmotionsViewModel @Inject constructor(
     val emotions: StateFlow<List<EmotionRemote>> = _emotions
 
     /**
-     * Loads emotions with fallback logic:
-     * Cache → Local (Room) → Remote (Firebase)
+     * Loads emotions with continuous updates:
+     * Cache → Local (Room) → Remote (Firestore Flow)
      */
     fun loadEmotions() {
         viewModelScope.launch {
             try {
-                // 1️⃣ Try cache first
+                // 1️⃣ Try cache first (instant display)
                 EmotionCache.get()?.let {
                     _emotions.value = it
                     android.util.Log.d("EMOTIONS", "Loaded from cache (${it.size})")
-                    return@launch
                 }
 
-                // 2️⃣ Try local database
-                val localList = localRepository.getAll()
-                if (localList.isNotEmpty()) {
-                    val mapped = localList.map {
-                        EmotionRemote(
-                            name = it.name,
-                            colorHex = it.color,
-                            description = it.description
-                        )
+                // 2️⃣ Try local database if cache empty or outdated
+                if (_emotions.value.isEmpty()) {
+                    val localList = localRepository.getAll()
+                    if (localList.isNotEmpty()) {
+                        val mapped = localList.map {
+                            EmotionRemote(
+                                name = it.name,
+                                colorHex = it.color,
+                                description = it.description
+                            )
+                        }
+                        EmotionCache.save(mapped)
+                        _emotions.value = mapped
+                        android.util.Log.d("EMOTIONS", "Loaded from local DB (${mapped.size})")
                     }
-                    EmotionCache.save(mapped)
-                    _emotions.value = mapped
-                    android.util.Log.d("EMOTIONS", "Loaded from local DB (${mapped.size})")
-                    return@launch
                 }
 
-                // 3️⃣ Fallback to remote
-                val remoteList = remoteRepository.getAll().first()
-                EmotionCache.save(remoteList)
-                _emotions.value = remoteList
+                // 3️⃣ Always start collecting remote flow (continuous sync)
+                remoteRepository.getAll().collect { remoteList ->
+                    if (remoteList.isNotEmpty()) {
+                        EmotionCache.save(remoteList)
+                        _emotions.value = remoteList
 
-                // Optionally sync remote → local for next time
-                val localEntities = remoteList.map {
-                    EmotionEntity(
-                        id = 0,
-                        name = it.name,
-                        color = it.colorHex,
-                        description = it.description
-                    )
+                        // Keep local DB in sync for offline mode
+                        val localEntities = remoteList.map {
+                            EmotionEntity(
+                                id = 0,
+                                name = it.name,
+                                color = it.colorHex,
+                                description = it.description
+                            )
+                        }
+                        localRepository.clearAll()
+                        localRepository.insertAll(localEntities)
+
+                        android.util.Log.d("EMOTIONS", "🔥 Synced from remote (${remoteList.size})")
+                    }
                 }
-                localRepository.clearAll()
-                localRepository.insertAll(localEntities)
-
-                android.util.Log.d("EMOTIONS", "Loaded from remote (${remoteList.size})")
             } catch (e: Exception) {
                 android.util.Log.e("EMOTIONS", "❌ Error loading emotions: ${e.message}")
             }
