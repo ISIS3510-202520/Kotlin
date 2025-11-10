@@ -13,7 +13,6 @@ class EmergencyRequestLocalRepository @Inject constructor(
     private val LAST_EMERGENCY_DATE = "last_emergency_date"
 
 
-
     fun saveLastEmergencyDate(date: String) {
         prefs.edit().putString(LAST_EMERGENCY_DATE, date).apply()
     }
@@ -22,6 +21,9 @@ class EmergencyRequestLocalRepository @Inject constructor(
         return prefs.getString(LAST_EMERGENCY_DATE, null)
     }
 
+    fun eliminateLastEmergency(){
+        prefs.edit().putString(LAST_EMERGENCY_DATE,null).apply()
+    }
 
 
 }

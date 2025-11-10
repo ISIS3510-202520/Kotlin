@@ -21,6 +21,10 @@ class EmergencyContactsLocalRepository @Inject constructor(private val emergency
         return emergencyContactDao.getAllEmergencyContacts()
     }
 
+    suspend fun eraseLocalDB(){
+        emergencyContactDao.eraseAll()
+    }
+
     suspend fun syncPendingContacts(remoteRepository: EmergencyContactRemoteRepository) {
         val unsyncedContacts =remoteRepository.getContactsForCurrentUser()
 

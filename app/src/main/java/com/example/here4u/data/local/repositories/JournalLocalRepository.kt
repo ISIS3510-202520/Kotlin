@@ -64,8 +64,11 @@ class JournalLocalRepository @Inject constructor(
         return memoryCache.getAll()
     }
     fun clearUserCache() {
-        val userId = auth.currentUser?.uid ?: return
-        memoryCache.clearUser(userId)
+        memoryCache.clearUser()
+    }
+
+    suspend fun eraseLocalDB(){
+        journalDao.eraseAll()
     }
 
 

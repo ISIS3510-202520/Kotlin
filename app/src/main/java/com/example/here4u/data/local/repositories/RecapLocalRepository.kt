@@ -9,6 +9,8 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.Log
+import com.example.here4u.data.local.preferences.UserPreferences
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
@@ -20,26 +22,28 @@ import javax.inject.Singleton
 
 @Singleton
 class RecapLocalRepository @Inject constructor(
+    private val auth: FirebaseAuth,
     @ApplicationContext private val context: Context
-){private val prefs = context.getSharedPreferences("RecapPrefs",Context.MODE_PRIVATE)
-    private val LAST_SAVE_KEY="last_save_time"
-
+){
+    private val userPrefs = UserPreferences(context)
     fun shouldSaveSummary(): Boolean {
-        val lastSaved = prefs.getLong(LAST_SAVE_KEY, 0L)
+        val lastSaved = userPrefs.getLastSaveTime()
         val oneWeekMillis = 7 * 24 * 60 * 60 * 1000L
         val now = System.currentTimeMillis()
         return (now - lastSaved) > oneWeekMillis
     }
 
     fun updateLastSaveTime() {
-        prefs.edit().putLong(LAST_SAVE_KEY, System.currentTimeMillis()).apply()
+        userPrefs.saveLastSaveTime(System.currentTimeMillis())
+
     }
 
     fun saveSummary(summary: String) {
         try {
             val formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd")
             val date = LocalDate.now().format(formatter)
-            val fileName = "weekly_summary_$date.pdf"
+            val uid= auth.uid
+            val fileName = "weekly_summary_$date-$uid.pdf"
             val file = File(context.getExternalFilesDir(null), fileName)
 
             val pdfDocument = PdfDocument()
@@ -98,9 +102,10 @@ class RecapLocalRepository @Inject constructor(
         }
     }
     fun getLastSavedPdf(): File? {
+        val uid= auth.uid
         val dir = context.getExternalFilesDir(null) ?: return null
-        val pdfFiles = dir.listFiles { _, name -> name.endsWith(".pdf") } ?: return null
-        return pdfFiles.maxByOrNull { it.lastModified() }
+        val pdfFiles = dir.listFiles { _, name -> name.endsWith("$uid.pdf") } ?: return null
+        return pdfFiles.maxByOrNull { it.lastModified()}
     }
 
 

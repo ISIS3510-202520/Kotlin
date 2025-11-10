@@ -35,7 +35,7 @@ class JournalMemoryCache @Inject constructor(
 
     }
 
-    fun clearUser(userId: String) {
+    fun clearUser() {
         userCaches.evictAll()
         _cacheFlow.value = emptyList()
     }
