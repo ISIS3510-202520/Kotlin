@@ -34,4 +34,7 @@ object JournalMapper {
             emotion = emotionModel
         )
     }
+
 }
+
+

@@ -22,55 +22,81 @@ import androidx.work.ExistingWorkPolicy
 
 import com.example.here4u.data.worker.SyncJournalWorker
 import com.google.type.Date
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
-
 @HiltViewModel
 class JournalingViewModel @Inject constructor(
-    private val repository: JournalRemoteRepository,
-    private val repositoryuser: UserRemoteRepository,
-    private val localRepository: JournalLocalRepository
+    private val remoteRepository: JournalRemoteRepository,
+    private val userRemoteRepository: UserRemoteRepository,
+    private val localRepository: JournalLocalRepository,
+
+    @ApplicationContext private val applicationContext: Context
 ) : ViewModel() {
 
-    fun saveText(emotionId: String, content: String, context: Context): Job =
-        viewModelScope.launch(Dispatchers.IO) {
-            var sync = false
-            var time: Timestamp? = null
+    private val prefs = applicationContext.getSharedPreferences("user_cache", Context.MODE_PRIVATE)
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
+    fun saveText(emotionId: String, content: String) {
+
+        applicationScope.launch(){
             try {
-                time = repository.insertOne(emotionId, content)
-                repositoryuser.updateLoginStreak()
-                repositoryuser.updateLastEntry(time)
-                sync = true
-                Log.d("LOCAL_DB", "✅ Guardado remoto OK")
+
+                    val time = remoteRepository.insertOne(emotionId, content)
+                    localRepository.updateCache()
+                    userRemoteRepository.updateLoginStreak()
+                    userRemoteRepository.updateLastEntry(time)
+                    Log.d("LOCAL_DB", "✅ Guardado remoto OK")
+
+
 
             } catch (e: Exception) {
-                Log.e("LOCAL_DB", "❌ Error remoto", e)
-                if (!NetworkUtils.isNetworkAvailable(context.applicationContext)) {
-                    WorkManager.getInstance(context.applicationContext).enqueueUniqueWork(
-                        SyncJournalWorker.UNIQUE_NAME,
-                        ExistingWorkPolicy.KEEP,
-                        SyncJournalWorker.request()
-                    )
-                    Log.d("LOCAL_DB", "WorkManager programado para reintentar")
-                }
-            } finally {
 
-                withContext(NonCancellable) {
-                    val localTimestamp = time ?: Timestamp.now()
-                    val journal = JournalEntity(
-                        emotionId = emotionId,
-                        description = content,
-                        createdAt = localTimestamp,
-                        userId = repositoryuser.getUserId(),
-                        sync = sync
-                    )
+                Log.e("LOCAL_DB", "❌ Error en la operación remota, guardando localmente.", e)
 
-                    localRepository.insertJournal(journal)
-                    Log.d("LOCAL_DB", "Guardado local completado: $journal")
-                }
             }
         }
-}
+    }
+
+    fun saveLocallyAndScheduleSync(emotionId: String, content: String) {
+
+        applicationScope.launch(Dispatchers.IO){
+            val userId = prefs.getString("uid",null)
+
+            val journal = JournalEntity(
+                emotionId = emotionId,
+                description = content,
+                createdAt = Timestamp.now(),
+                userId = userId,
+                sync = false
+            )
+
+            localRepository.insertJournal(journal)
+            Log.d("LOCAL_DB", "Guardado local completado: $journal")
+
+
+
+        }
+        val workRequest = OneTimeWorkRequestBuilder<SyncJournalWorker>()
+            .setConstraints(
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+            )
+            .build()
+
+        WorkManager.getInstance(applicationContext).enqueueUniqueWork(
+            SyncJournalWorker.UNIQUE_NAME,
+            ExistingWorkPolicy.KEEP,
+            workRequest
+        )
+        Log.d("LOCAL_DB", "WorkManager programado para sincronizar más tarde.")}
+    }
+
+
+
 

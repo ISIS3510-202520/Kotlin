@@ -10,11 +10,13 @@ import com.example.here4u.data.local.repositories.JournalLocalRepository
 import com.example.here4u.data.remote.repositories.UserRemoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DateFormat.getTimeInstance
 import java.util.Calendar
 import javax.inject.Inject
@@ -36,19 +38,35 @@ class HomeViewModel @Inject constructor(
     private val _lastFive = MutableLiveData<List<JournalEntity>>()
     val lastFive: LiveData<List<JournalEntity>> get() = _lastFive
 
+
+
     init {
         refreshMoodText()
         startAutoUpdate()
         refreshUserStreak()
-        _lastFive.value = localRepo.getCachedJournals()
+
         viewModelScope.launch {
-            localRepo.updateCache()
-            _lastFive.postValue(localRepo.getCachedJournals())
+            localRepo.cacheFlow.collect { cached ->
+                _lastFive.postValue(cached)
+            }
+
+
         }
 
+        viewModelScope.launch(Dispatchers.IO) {
+            localRepo.updateCache()
+        }
     }
 
 
+
+    suspend fun updatecache(){
+        localRepo.updateCache()
+    }
+
+    fun updatelastfive(){
+        _lastFive.value = localRepo.getCachedJournals()
+    }
 
     fun refreshMoodText(){
 

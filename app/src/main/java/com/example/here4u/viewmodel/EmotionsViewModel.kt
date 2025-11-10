@@ -26,8 +26,6 @@ class EmotionsViewModel @Inject constructor(
     private val localRepository: EmotionLocalRepository
 ) : ViewModel() {
 
-
-
     val emotions: StateFlow<List<EmotionRemote>> =
         repository.getAll()
             .stateIn(
@@ -36,8 +34,6 @@ class EmotionsViewModel @Inject constructor(
                 initialValue = emptyList()
             )
 
-
-    // 🔄 Sincroniza los datos remotos hacia la base de datos local
     fun syncEmotionsToLocal() {
         viewModelScope.launch {
             val remoteEmotions = emotions.value

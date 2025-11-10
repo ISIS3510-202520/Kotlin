@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- ✅ Permisos necesarios -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:ignore="UnusedAttribute" />
     <uses-permission android:name="android.permission.ACTION_DIAL" />
@@ -19,6 +20,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Here4u"
         tools:targetApi="31">
+
+        <!-- 🚨 Desactiva la inicialización automática de WorkManager -->
+        <meta-data
+            android:name="androidx.work.WorkManagerInitializer"
+            android:value="disabled" />
+
+        <!-- 🚫 Elimina la inicialización automática de AndroidX Startup -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="remove" />
+
+        <!-- ✅ Actividades -->
         <activity
             android:name=".view.journaling.Journaling"
             android:exported="false" />
@@ -32,33 +47,33 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".view.home.home"
-
-            android:exported="false"/>
-
+            android:exported="false" />
         <activity
             android:name=".view.login.Signup"
             android:exported="false" />
-
         <activity
             android:name=".view.login.ForgotPassword"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".view.exercises.ExercisesActivity"
-            android:exported="false"/>
-        <activity android:name=".view.emergency.Emergency"
-            android:exported="false"/>
-        <activity android:name=".view.emergency.CreateContact"
-            android:exported="false"/>
-        <activity android:name=".view.profile.ProfileActivity"
-            android:exported="false"/>
-        <provider
+            android:exported="false" />
+        <activity
+            android:name=".view.emergency.Emergency"
+            android:exported="false" />
+        <activity
+            android:name=".view.emergency.CreateContact"
+            android:exported="false" />
+        <activity
+            android:name=".view.profile.ProfileActivity"
+            android:exported="false" />
 
+        <!-- ✅ File provider -->
+        <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
@@ -68,18 +83,5 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            android:exported="false"
-            tools:node="remove" />
-
-        <meta-data
-            android:name="androidx.work.WorkManagerInitializer"
-            android:value="androidx.startup"
-            tools:node="remove"/>
-
-
     </application>
-
 </manifest>

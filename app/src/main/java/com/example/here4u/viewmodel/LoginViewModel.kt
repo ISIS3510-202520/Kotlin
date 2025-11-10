@@ -66,9 +66,7 @@ class LoginViewModel @Inject constructor(
                     )
                 }
             }
-        }
-        viewModelScope.launch {
-            localRepository.updateCache()
+
         }
     }
 

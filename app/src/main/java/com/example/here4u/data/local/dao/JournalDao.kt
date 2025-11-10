@@ -1,4 +1,5 @@
 package com.example.here4u.data.local.dao
+import android.util.Log
 import androidx.room.*
 import com.example.here4u.data.local.entity.JournalEntity
 
@@ -7,7 +8,8 @@ interface JournalDao {
     @Query("SELECT * FROM journal_table WHERE userId = :userId")
     suspend fun getJournalsByUserId(userId: String?): List<JournalEntity>
     @Insert
-    suspend fun insertJournal(journal: JournalEntity)
+    suspend fun insertJournal(journal: JournalEntity){
+        Log.d("THREAD_CHECK", "Insert on thread=${Thread.currentThread().name}")}
 
     @Query("SELECT * FROM journal_table  WHERE sync = 0 ")
     suspend fun getPending(): List<JournalEntity>

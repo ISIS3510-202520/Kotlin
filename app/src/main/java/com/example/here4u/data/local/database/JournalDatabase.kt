@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.here4u.data.local.converter.JournalConverter
 
-@Database(entities = [JournalEntity::class], version = 1, exportSchema = false)
+@Database(entities = [JournalEntity::class], version = 4, exportSchema = false)
 @TypeConverters(JournalConverter::class)
 abstract class JournalDatabase: RoomDatabase() {
     abstract fun journalDao(): JournalDao

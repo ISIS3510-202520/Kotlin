@@ -82,7 +82,11 @@ class Journaling : AppCompatActivity() {
             }
 
             binding.textViewerror.visibility = View.GONE
-            viewModel.saveText(emotionId, text,this)
+            if (NetworkUtils.isNetworkAvailable(this)){
+            viewModel.saveText(emotionId, text)}
+            else{
+                viewModel.saveLocallyAndScheduleSync(emotionId,text)
+            }
 
             val bundle = Bundle().apply {
                 putString("emotion_id", emotionId)
@@ -97,6 +101,7 @@ class Journaling : AppCompatActivity() {
             }
             startActivity(i)
             finish()
+
         }
     }
 }
