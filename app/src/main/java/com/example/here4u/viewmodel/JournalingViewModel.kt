@@ -55,6 +55,7 @@ class JournalingViewModel @Inject constructor(
 
 
             } catch (e: Exception) {
+                saveLocallyAndScheduleSync(emotionId, content)
                 Log.e("LOCAL_DB", "❌ Error en la operación remota, guardando localmente.", e)
 
             }
