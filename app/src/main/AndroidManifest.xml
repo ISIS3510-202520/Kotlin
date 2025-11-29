@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- ✅ Permisos necesarios -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:ignore="UnusedAttribute" />
+    <uses-permission
+        android:name="com.google.android.gms.permission.AD_ID"
+        tools:ignore="UnusedAttribute" />
     <uses-permission android:name="android.permission.ACTION_DIAL" />
 
     <application
@@ -20,20 +21,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Here4u"
         tools:targetApi="31">
-
-        <!-- 🚨 Desactiva la inicialización automática de WorkManager -->
+        <activity
+            android:name=".view.exercises.BreathingExerciseActivity"
+            android:exported="false"
+             />
         <meta-data
             android:name="androidx.work.WorkManagerInitializer"
-            android:value="disabled" />
-
-        <!-- 🚫 Elimina la inicialización automática de AndroidX Startup -->
+            android:value="disabled" /> <!-- 🚫 Elimina la inicialización automática de AndroidX Startup -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
-            tools:node="remove" />
-
-        <!-- ✅ Actividades -->
+            tools:node="remove" /> <!-- ✅ Actividades -->
         <activity
             android:name=".view.journaling.Journaling"
             android:exported="false" />
@@ -47,6 +46,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -71,15 +71,12 @@
         <activity
             android:name=".view.profile.ProfileActivity"
             android:exported="false" />
-
         <activity
             android:name=".view.achivements.achivements"
-          android:exported="false" />
-      <activity
-            android:name=".view.emergency.DetailContactActivity"
             android:exported="false" />
-
-        <!-- ✅ File provider -->
+        <activity
+            android:name=".view.emergency.DetailContactActivity"
+            android:exported="false" /> <!-- ✅ File provider -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -89,8 +86,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-
-
     </application>
+
 </manifest>
