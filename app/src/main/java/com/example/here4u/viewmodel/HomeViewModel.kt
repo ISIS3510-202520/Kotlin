@@ -89,9 +89,11 @@ class HomeViewModel @Inject constructor(
         mood.value = resId
 
 }
-
     fun refreshUserStreak() = viewModelScope.launch {
-        val streakPair = userRepository.getUserStreak()
+
+        val streakPair = withContext(Dispatchers.IO) {
+            userRepository.getUserStreak()
+        }
         streakPair?.let {
             _streak.value = it.first
         }

@@ -1,14 +1,12 @@
 package com.example.here4u.view.login
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.example.here4u.R
+import com.example.here4u.databinding.ActivityForgotPasswordBinding
 import com.example.here4u.viewmodel.ForgotPasswordResult
 import com.example.here4u.viewmodel.ForgotPasswordViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,15 +20,14 @@ import java.net.Socket
 @AndroidEntryPoint
 class ForgotPassword : AppCompatActivity() {
 
+    private lateinit var binding: ActivityForgotPasswordBinding
     private val forgotPasswordViewModel: ForgotPasswordViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_forgot_password)
 
-        val emailField = findViewById<EditText>(R.id.etRecoverEmail)
-        val sendButton = findViewById<Button>(R.id.btnRecover)
-        val backButton = findViewById<Button>(R.id.btnBack)
+        binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         forgotPasswordViewModel.forgotPasswordResult.observe(this, Observer { result ->
             when (result) {
@@ -46,29 +43,28 @@ class ForgotPassword : AppCompatActivity() {
             }
         })
 
-        sendButton.setOnClickListener {
-            val email = emailField.text.toString().trim()
+        binding.btnRecover.setOnClickListener {
+            val email = binding.etRecoverEmail.text.toString().trim()
             forgotPasswordViewModel.sendPasswordReset(email)
         }
-        backButton.setOnClickListener {
+
+        binding.btnBack.setOnClickListener {
             finish()
         }
-        checkInternetConnection(sendButton)
+
+        checkInternetConnection(binding.btnRecover)
     }
 
-    private fun checkInternetConnection(sendButton: Button) {
+    private fun checkInternetConnection(sendButton: android.widget.Button) {
         lifecycleScope.launch(Dispatchers.Main) {
             var wasConnected: Boolean? = null
 
             while (true) {
                 val isConnected = withContext(Dispatchers.IO) { isConnectedToInternet() }
 
-
                 if (isConnected != wasConnected) {
                     sendButton.isEnabled = isConnected
-
                     sendButton.alpha = if (isConnected) 1f else 0.5f
-
                     wasConnected = isConnected
                 }
 
