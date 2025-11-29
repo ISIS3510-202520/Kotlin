@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.here4u.R
 
-// achivements changes
+// achivements changesqqq
 class achivements : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
