@@ -74,6 +74,9 @@
 
         <activity
             android:name=".view.achivements.achivements"
+          android:exported="false" />
+      <activity
+            android:name=".view.emergency.DetailContactActivity"
             android:exported="false" />
 
         <!-- ✅ File provider -->
