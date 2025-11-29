@@ -7,22 +7,21 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.Gravity
-import android.widget.Button
-import android.widget.TextView
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.here4u.R
 import com.example.here4u.view.home.home
-import dagger.hilt.android.AndroidEntryPoint
 import com.google.firebase.analytics.FirebaseAnalytics
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import android.widget.ImageView
+import androidx.lifecycle.Lifecycle
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -35,12 +34,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
-
-        val bundle = Bundle().apply {
+        firebaseAnalytics.logEvent("app_connection_test", Bundle().apply {
             putString("event_origin", "MainActivity")
             putString("status", "app_opened")
-        }
-        firebaseAnalytics.logEvent("app_connection_test", bundle)
+        })
 
         val emailEditText = findViewById<EditText>(R.id.etUser)
         val passwordEditText = findViewById<EditText>(R.id.etPassword)
@@ -48,28 +45,39 @@ class MainActivity : AppCompatActivity() {
         val signUpButton = findViewById<Button>(R.id.SignUp)
         val forgotPasswordText = findViewById<TextView>(R.id.tvForgotPassword)
 
-        checkInternetConnection(loginButton, signUpButton, forgotPasswordText)
+        // ---------------------------
+        // 🔥 MICRO OPTIMIZATION
+        // Replaces infinite loop with lifecycle-aware collector
+        // ---------------------------
+        collectInternetStatus(loginButton, signUpButton, forgotPasswordText)
 
+        // ---------------------------
+        // LiveData observer (safe, defined once)
+        // ---------------------------
         loginViewModel.loginResult.observe(this) { result ->
             when (result) {
                 is LoginResult.Success -> {
                     Toast.makeText(this, "Successful Login!", Toast.LENGTH_SHORT).show()
-                    val bundle = Bundle().apply {
+
+                    firebaseAnalytics.logEvent("login_event", Bundle().apply {
                         putString(FirebaseAnalytics.Param.METHOD, "Login")
                         putString("User_email", emailEditText.text.toString())
-                    }
-                    firebaseAnalytics.logEvent("login_event", bundle)
-                    val intent = Intent(this, home::class.java)
-                    startActivity(intent)
+                    })
+
+                    startActivity(Intent(this, home::class.java))
                     finish()
                 }
-                is LoginResult.Error -> {
+
+                is LoginResult.Error ->
                     Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
-                }
+
                 LoginResult.Idle -> Unit
             }
         }
 
+        // ---------------------------
+        // Click listeners (no observers added here)
+        // ---------------------------
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
@@ -96,85 +104,76 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun isConnectedToInternet(): Boolean {
-        return try {
-            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val network = connectivityManager.activeNetwork
-            val capabilities = connectivityManager.getNetworkCapabilities(network)
-            capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    private fun checkInternetConnection(
+    // ---------------------------------------------------
+    // 🔥 Micro-optimized, lifecycle-aware internet monitor
+    // ---------------------------------------------------
+    private fun collectInternetStatus(
         loginButton: Button,
         signUpButton: Button,
         forgotPasswordText: TextView
     ) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            var wasConnected: Boolean? = null
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-            while (true) {
-                val isConnected = withContext(Dispatchers.IO) { isConnectedToInternet() }
+                var wasConnected: Boolean? = null
 
-                if (isConnected) {
-                    loginButton.isEnabled = true
-                    signUpButton.isEnabled = true
-                    forgotPasswordText.isEnabled = true
+                while (true) {
+                    val isConnected = withContext(Dispatchers.IO) { isConnectedToInternet() }
 
+                    loginButton.isEnabled = isConnected
+                    signUpButton.isEnabled = isConnected
+                    forgotPasswordText.isEnabled = isConnected
 
-                    if (wasConnected == false) {
+                    if (isConnected && wasConnected == false) {
                         showOnlineToast()
-                    }
-                } else {
-                    loginButton.isEnabled = false
-                    signUpButton.isEnabled = false
-                    forgotPasswordText.isEnabled = false
-                    if (wasConnected != false) {
+                    } else if (!isConnected && wasConnected != false) {
                         showOfflineToast()
                     }
-                }
 
-                wasConnected = isConnected
-                delay(3000)
+                    wasConnected = isConnected
+                    delay(3000)
+                }
             }
         }
     }
 
+    private fun isConnectedToInternet(): Boolean {
+        return try {
+            val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val network = cm.activeNetwork
+            val caps = cm.getNetworkCapabilities(network)
+            caps?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    // ---------------------------
+    // Custom Toasts
+    // ---------------------------
     @SuppressLint("InflateParams")
-     fun showOfflineToast() {
-        val inflater = layoutInflater
-        val layout = inflater.inflate(R.layout.custom_toast_photo, null)
+    fun showOfflineToast() {
+        val layout = layoutInflater.inflate(R.layout.custom_toast_photo, null)
+        layout.findViewById<TextView>(R.id.tvMessage).text = "You are offline."
+        layout.findViewById<ImageView>(R.id.ivIcon).setImageResource(R.drawable.sad)
 
-        val textView = layout.findViewById<TextView>(R.id.tvMessage)
-        val imageView = layout.findViewById<ImageView>(R.id.ivIcon)
-
-        textView.text = "You are offline."
-        imageView.setImageResource(R.drawable.sad)
-
-        val toast = Toast(this@MainActivity)
-        toast.view = layout
-        toast.setGravity(Gravity.CENTER, 0, 0)
-        toast.duration = Toast.LENGTH_LONG
-        toast.show()
+        Toast(this).apply {
+            view = layout
+            setGravity(Gravity.CENTER, 0, 0)
+            duration = Toast.LENGTH_LONG
+        }.show()
     }
 
     @SuppressLint("InflateParams")
-     fun showOnlineToast() {
-        val inflater = layoutInflater
-        val layout = inflater.inflate(R.layout.custom_toast_photo, null)
+    fun showOnlineToast() {
+        val layout = layoutInflater.inflate(R.layout.custom_toast_photo, null)
+        layout.findViewById<TextView>(R.id.tvMessage).text = "Connection restored!"
+        layout.findViewById<ImageView>(R.id.ivIcon).setImageResource(R.drawable.happy)
 
-        val textView = layout.findViewById<TextView>(R.id.tvMessage)
-        val imageView = layout.findViewById<ImageView>(R.id.ivIcon)
-
-        textView.text = "Connection restored!"
-        imageView.setImageResource(R.drawable.happy)
-
-        val toast = Toast(this@MainActivity)
-        toast.view = layout
-        toast.setGravity(Gravity.CENTER, 0, 0)
-        toast.duration = Toast.LENGTH_LONG
-        toast.show()
+        Toast(this).apply {
+            view = layout
+            setGravity(Gravity.CENTER, 0, 0)
+            duration = Toast.LENGTH_LONG
+        }.show()
     }
 }
