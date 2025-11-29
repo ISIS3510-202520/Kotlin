@@ -72,6 +72,13 @@
             android:name=".view.profile.ProfileActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".view.achivements.achivements"
+          android:exported="false" />
+      <activity
+            android:name=".view.emergency.DetailContactActivity"
+            android:exported="false" />
+
         <!-- ✅ File provider -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -82,6 +89,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+
 
     </application>
 </manifest>

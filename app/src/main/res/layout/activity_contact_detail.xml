@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    android:background="#FAFAFA">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Emergency contact of Test"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A"
+            android:layout_marginTop="12dp"/>
+
+        <!-- User Icon -->
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_profile"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/bg_circle_lightblue"
+            android:padding="18dp"/>
+
+        <!-- Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginTop="36dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test"
+            android:padding="14dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_field_gray"
+            android:textSize="16sp" />
+
+        <!-- Email -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginTop="24dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test@gmail.com"
+            android:padding="14dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_field_gray"
+            android:textSize="16sp" />
+
+        <!-- Phone -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginTop="24dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0123456789"
+            android:padding="14dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_field_gray"
+            android:textSize="16sp" />
+
+        <!-- Relation -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Relation"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginTop="24dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tester"
+            android:padding="14dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_field_gray"
+            android:textSize="16sp" />
+
+        <!-- Delete Button -->
+        <Button
+            android:id="@+id/btnDeleteContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🗑 Delete Contact"
+            android:background="@drawable/bg_button_delete"
+            android:textColor="#8A1510"
+            android:textStyle="bold"
+            android:layout_marginTop="36dp"
+            android:padding="14dp"/>
+
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="← Back"
+            android:background="@drawable/bg_button_back"
+            android:textColor="#0A3D62"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:padding="14dp"/>
+
+    </LinearLayout>
+
+</ScrollView>

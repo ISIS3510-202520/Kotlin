@@ -36,6 +36,7 @@ import com.example.here4u.utils.NetworkUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.io.File
+import  com.example.here4u.view.achivements.achivements
 
 
 @AndroidEntryPoint
@@ -128,6 +129,11 @@ class home : AppCompatActivity() {
         }
 
         // Journals inflater
+        binding.btnAchievements.setOnClickListener {
+            startActivity(Intent(this, achivements::class.java))
+
+        }
+
         val container = binding.containerJournals
         val inflater = LayoutInflater.from(this)
 
