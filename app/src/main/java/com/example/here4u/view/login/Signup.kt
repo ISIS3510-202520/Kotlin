@@ -1,9 +1,12 @@
 package com.example.here4u.view.login
 
-import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -16,10 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.InetSocketAddress
-import java.net.Socket
-import android.widget.Toast
-
 
 @AndroidEntryPoint
 class Signup : AppCompatActivity() {
@@ -39,10 +38,11 @@ class Signup : AppCompatActivity() {
         signupViewModel.signupResult.observe(this, Observer { result ->
             when (result) {
                 is SignupResult.Success -> {
+                    Toast.makeText(this, "Registro exitoso", Toast.LENGTH_SHORT).show()
                     finish()
                 }
                 is SignupResult.Error -> {
-
+                    Toast.makeText(this, "Error: ${result.message}", Toast.LENGTH_SHORT).show()
                 }
                 else -> {}
             }
@@ -60,24 +60,25 @@ class Signup : AppCompatActivity() {
             finish()
         }
 
-        checkInternetConnection(signupButton)
+        monitorWifiConnection(signupButton)
     }
 
-    private fun checkInternetConnection(signupButton: Button) {
+    private fun monitorWifiConnection(signupButton: Button) {
         lifecycleScope.launch(Dispatchers.Main) {
             var wasConnected: Boolean? = null
 
-
             while (true) {
-                val isConnected = withContext(Dispatchers.IO) { isConnectedToInternet() }
-
+                val isConnected = withContext(Dispatchers.IO) { isConnectedToWifi() }
 
                 if (isConnected != wasConnected) {
                     signupButton.isEnabled = isConnected
-
-
-
-
+                    if (!isConnected) {
+                        Toast.makeText(
+                            this@Signup,
+                            "Conéctate a una red Wi-Fi para registrarte",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     wasConnected = isConnected
                 }
 
@@ -86,15 +87,11 @@ class Signup : AppCompatActivity() {
         }
     }
 
-    private fun isConnectedToInternet(): Boolean {
-        return try {
-            val socket = Socket()
-            socket.connect(InetSocketAddress("8.8.8.8", 53), 1500)
-            socket.close()
-            true
-        } catch (e: Exception) {
-            false
-        }
+    private fun isConnectedToWifi(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
     }
-
 }
