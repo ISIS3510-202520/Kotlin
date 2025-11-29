@@ -134,11 +134,6 @@ class home : AppCompatActivity() {
 
         }
 
-        binding.btnAchievements.setOnClickListener {
-            startActivity(Intent(this, achivements::class.java))
-
-        }
-
         val container = binding.containerJournals
         val inflater = LayoutInflater.from(this)
 

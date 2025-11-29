@@ -30,6 +30,8 @@ import androidx.lifecycle.LifecycleOwner
 import com.example.here4u.data.mappers.toRemote
 import android.net.ConnectivityManager
 import android.content.Context
+import com.example.here4u.view.exercises.BreathingExerciseActivity
+import com.example.here4u.view.exercises.ExercisesActivity
 import kotlinx.coroutines.delay
 
 
@@ -112,6 +114,8 @@ class Emergency : AppCompatActivity() {
         binding.btnCall.setOnClickListener {
             checkPermission()
         }
+        binding.btnBreath.setOnClickListener {startActivity(Intent(this,
+            BreathingExerciseActivity::class.java))}
 
         binding.btnBack.setOnClickListener {
             finish()

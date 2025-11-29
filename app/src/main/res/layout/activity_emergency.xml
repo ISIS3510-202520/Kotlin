@@ -74,6 +74,15 @@
             android:layout_marginBottom="24dp" />
 
         <Button
+            android:id="@+id/btnBreath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/buttonPink"
+            android:text="Breath"
+            android:textColor="#000000" />
+
+        <Button
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
