@@ -45,6 +45,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
+import  com.example.here4u.view.achivements.achivements
+
 
 @AndroidEntryPoint
 class home : AppCompatActivity() {
@@ -129,6 +131,11 @@ class home : AppCompatActivity() {
         }
         binding.userboton.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
+
+        }
+
+        binding.btnAchievements.setOnClickListener {
+            startActivity(Intent(this, achivements::class.java))
 
         }
 
